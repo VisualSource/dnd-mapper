@@ -9,6 +9,7 @@
 		"beforeBuildCommand": "pnpm build",
 		"frontendDist": "../dist"
 	},
+	"plugins": {},
 	"app": {
 		"windows": [
 			{
@@ -29,6 +30,10 @@
 			}
 		],
 		"security": {
+			"assetProtocol": {
+				"enable": true,
+				"scope": ["$DOCUMENT/*", "$DOWNLOAD/*", "$PICTURE/*"]
+			},
 			"csp": null
 		}
 	},
