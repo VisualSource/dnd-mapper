@@ -1,0 +1,46 @@
+{
+	"$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+	"productName": "dnd-mapper",
+	"version": "0.1.0",
+	"identifier": "us.visualsource.dnd-mapper",
+	"build": {
+		"beforeDevCommand": "pnpm dev",
+		"devUrl": "http://localhost:1420",
+		"beforeBuildCommand": "pnpm build",
+		"frontendDist": "../dist"
+	},
+	"app": {
+		"windows": [
+			{
+				"title": "dnd-mapper",
+				"label": "main",
+				"width": 800,
+				"height": 600,
+				"dragDropEnabled": false
+			},
+			{
+				"title": "Map",
+				"label": "display",
+				"url": "/display",
+				"resizable": true,
+				"decorations": false,
+				"dragDropEnabled": false,
+				"visible": false
+			}
+		],
+		"security": {
+			"csp": null
+		}
+	},
+	"bundle": {
+		"active": true,
+		"targets": "all",
+		"icon": [
+			"icons/32x32.png",
+			"icons/128x128.png",
+			"icons/128x128@2x.png",
+			"icons/icon.icns",
+			"icons/icon.ico"
+		]
+	}
+}

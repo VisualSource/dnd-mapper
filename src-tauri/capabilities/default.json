@@ -1,0 +1,19 @@
+{
+	"$schema": "../gen/schemas/desktop-schema.json",
+	"identifier": "default",
+	"description": "Capability for the main window",
+	"windows": ["main", "display"],
+	"permissions": [
+		"core:window:allow-show",
+		"core:window:allow-is-visible",
+		"core:window:allow-start-dragging",
+		"core:window:allow-set-fullscreen",
+		"core:window:allow-toggle-maximize",
+		"core:window:allow-hide",
+		"core:event:allow-listen",
+		"core:event:allow-unlisten",
+		"core:event:allow-emit-to",
+		"core:event:allow-emit",
+		"shell:allow-open"
+	]
+}
