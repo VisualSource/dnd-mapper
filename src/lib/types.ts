@@ -1,0 +1,1 @@
+export type Entity = { id: string, name: string, image: string, initiative: number, isPlayerControlled: boolean, health: number, maxHealth: number, tempHealth: number }

@@ -88,7 +88,7 @@ class Renderer {
 
   constructor() {
     loadExternalImage(JIMMY).then(image => {
-      const jimmy = new Player("Jimmy", "TEST_ID", "small", image);
+      const jimmy = new Player("Jimmy", "TEST_ID", "mid", image);
       jimmy.setPosition(GRID_CELL_SIZE * 4, GRID_CELL_SIZE * 5)
       this.addEntity(jimmy);
       this.render();
