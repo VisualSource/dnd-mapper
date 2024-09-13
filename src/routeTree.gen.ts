@@ -11,24 +11,36 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as StageEditorImport } from './routes/stage-editor'
+import { Route as EntityEditorImport } from './routes/entity-editor'
 import { Route as DisplayImport } from './routes/display'
-import { Route as ControlImport } from './routes/control'
 import { Route as IndexImport } from './routes/index'
+import { Route as ControlIdImport } from './routes/control.$id'
 
 // Create/Update Routes
+
+const StageEditorRoute = StageEditorImport.update({
+  path: '/stage-editor',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const EntityEditorRoute = EntityEditorImport.update({
+  path: '/entity-editor',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const DisplayRoute = DisplayImport.update({
   path: '/display',
   getParentRoute: () => rootRoute,
 } as any)
 
-const ControlRoute = ControlImport.update({
-  path: '/control',
+const IndexRoute = IndexImport.update({
+  path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
-  path: '/',
+const ControlIdRoute = ControlIdImport.update({
+  path: '/control/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -43,18 +55,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/control': {
-      id: '/control'
-      path: '/control'
-      fullPath: '/control'
-      preLoaderRoute: typeof ControlImport
-      parentRoute: typeof rootRoute
-    }
     '/display': {
       id: '/display'
       path: '/display'
       fullPath: '/display'
       preLoaderRoute: typeof DisplayImport
+      parentRoute: typeof rootRoute
+    }
+    '/entity-editor': {
+      id: '/entity-editor'
+      path: '/entity-editor'
+      fullPath: '/entity-editor'
+      preLoaderRoute: typeof EntityEditorImport
+      parentRoute: typeof rootRoute
+    }
+    '/stage-editor': {
+      id: '/stage-editor'
+      path: '/stage-editor'
+      fullPath: '/stage-editor'
+      preLoaderRoute: typeof StageEditorImport
+      parentRoute: typeof rootRoute
+    }
+    '/control/$id': {
+      id: '/control/$id'
+      path: '/control/$id'
+      fullPath: '/control/$id'
+      preLoaderRoute: typeof ControlIdImport
       parentRoute: typeof rootRoute
     }
   }
@@ -64,42 +90,63 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/control': typeof ControlRoute
   '/display': typeof DisplayRoute
+  '/entity-editor': typeof EntityEditorRoute
+  '/stage-editor': typeof StageEditorRoute
+  '/control/$id': typeof ControlIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/control': typeof ControlRoute
   '/display': typeof DisplayRoute
+  '/entity-editor': typeof EntityEditorRoute
+  '/stage-editor': typeof StageEditorRoute
+  '/control/$id': typeof ControlIdRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/control': typeof ControlRoute
   '/display': typeof DisplayRoute
+  '/entity-editor': typeof EntityEditorRoute
+  '/stage-editor': typeof StageEditorRoute
+  '/control/$id': typeof ControlIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/control' | '/display'
+  fullPaths:
+    | '/'
+    | '/display'
+    | '/entity-editor'
+    | '/stage-editor'
+    | '/control/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/control' | '/display'
-  id: '__root__' | '/' | '/control' | '/display'
+  to: '/' | '/display' | '/entity-editor' | '/stage-editor' | '/control/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/display'
+    | '/entity-editor'
+    | '/stage-editor'
+    | '/control/$id'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ControlRoute: typeof ControlRoute
   DisplayRoute: typeof DisplayRoute
+  EntityEditorRoute: typeof EntityEditorRoute
+  StageEditorRoute: typeof StageEditorRoute
+  ControlIdRoute: typeof ControlIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ControlRoute: ControlRoute,
   DisplayRoute: DisplayRoute,
+  EntityEditorRoute: EntityEditorRoute,
+  StageEditorRoute: StageEditorRoute,
+  ControlIdRoute: ControlIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -115,18 +162,26 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/control",
-        "/display"
+        "/display",
+        "/entity-editor",
+        "/stage-editor",
+        "/control/$id"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/control": {
-      "filePath": "control.tsx"
-    },
     "/display": {
       "filePath": "display.tsx"
+    },
+    "/entity-editor": {
+      "filePath": "entity-editor.tsx"
+    },
+    "/stage-editor": {
+      "filePath": "stage-editor.tsx"
+    },
+    "/control/$id": {
+      "filePath": "control.$id.tsx"
     }
   }
 }

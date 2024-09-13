@@ -8,11 +8,10 @@ function Index() {
     return (
         <div>
             <div>
-                <button type="button">Create New</button>
+                <Link to="/stage-editor">Stage Editor</Link>
+                <Link to="/entity-editor">Entity Editor</Link>
+                <button type="button">Run Stage</button>
             </div>
-            <ul>
-                <Link to="/control">Content Name</Link>
-            </ul>
         </div>
     );
 }

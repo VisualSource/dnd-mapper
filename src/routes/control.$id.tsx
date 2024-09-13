@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link, useParams } from '@tanstack/react-router'
 import { Window } from "@tauri-apps/api/window";
 import { emitTo } from "@tauri-apps/api/event";
 import { useReducer, useRef } from 'react';
@@ -26,14 +26,17 @@ const reducer = (state: State, ev: { type: "set-state", data: State }) => {
 
 const DEFAULT_STATE = {
   units: [
-    { id: "a", image: "", initiative: 0, name: "Temp Name", health: 100, maxHealth: 100, tempHealth: 12, isPlayerControlled: false } as Entity,
-    { id: "b", image: "", initiative: 0, name: "Temp2 Name", health: 50, maxHealth: 50, tempHealth: 0, isPlayerControlled: false },
-    { id: "c", image: "", initiative: 0, name: "Temp3 Name", health: 44, maxHealth: 50, tempHealth: 0, isPlayerControlled: false }
+    { id: "a", image: "", displayOnMap: true, initiative: 0, name: "Temp Name", health: 100, maxHealth: 100, tempHealth: 12, isPlayerControlled: false } as Entity,
+    { id: "b", image: "", displayOnMap: true, initiative: 0, name: "Temp2 Name", health: 50, maxHealth: 50, tempHealth: 0, isPlayerControlled: false },
+    { id: "c", image: "", displayOnMap: true, initiative: 0, name: "Temp3 Name", health: 44, maxHealth: 50, tempHealth: 0, isPlayerControlled: false }
   ], round: 0, index: 0
 };
 
 const ControlPanel: React.FC = () => {
-  const addEntityDialogRef = useRef<{ show: () => void, hide: () => void }>(null);
+  const params = Route.useParams();
+
+  return (<div>Control Panel: {params.id}</div>)
+  /* const addEntityDialogRef = useRef<{ show: () => void, hide: () => void }>(null);
   const [state, dispatch] = useReducer(reducer, DEFAULT_STATE);
 
   return (
@@ -162,6 +165,7 @@ const ControlPanel: React.FC = () => {
       <section className='w-full p-2'>
         <div>
           <h1>Window Controls</h1>
+          <Link to="/">Exit</Link>
           <button type="button" onClick={async () => {
             const vis = await win.isVisible();
             if (!vis) {
@@ -175,19 +179,16 @@ const ControlPanel: React.FC = () => {
         <div>
           <h1>Stage</h1>
           <button onClick={() => addEntityDialogRef.current?.show()} type="button">Add Entity</button>
-          {/** Will move to stage in the list */}
+
           <button type="button">Next Stage</button>
-          <form>
-            <input placeholder='Stage' type="number" />
-            {/** Will move to stage in the list */}
-            <button type="button">GoTo Stage</button>
-          </form>
+
+          <button type="button">GoTo Stage</button>
         </div>
       </section>
     </div>
-  );
+  );*/
 }
 
-export const Route = createFileRoute('/control')({
+export const Route = createFileRoute('/control/$id')({
   component: ControlPanel
 })

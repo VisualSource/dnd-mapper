@@ -10,24 +10,29 @@
 		"tauri": "tauri"
 	},
 	"dependencies": {
-		"@tanstack/react-router": "^1.56.5",
-		"@tauri-apps/api": ">=2.0.0-rc.0",
-		"@tauri-apps/plugin-shell": ">=2.0.0-rc.0",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0"
+		"@tanstack/react-router": "^1.57.10",
+		"@tauri-apps/api": "2.0.0-rc.4",
+		"@tauri-apps/plugin-dialog": "2.0.0-rc.1",
+		"@tauri-apps/plugin-fs": "2.0.0-rc.2",
+		"@tauri-apps/plugin-shell": "2.0.0-rc.1",
+		"dexie": "^4.0.8",
+		"dexie-react-hooks": "^1.1.7",
+		"react": "^18.3.1",
+		"react-dom": "^18.3.1",
+		"use-debounce": "^10.0.3"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.8.3",
-		"@tanstack/router-devtools": "^1.56.5",
-		"@tanstack/router-plugin": "^1.57.1",
-		"@tauri-apps/cli": ">=2.0.0-rc.0",
-		"@types/react": "^18.2.15",
-		"@types/react-dom": "^18.2.7",
-		"@vitejs/plugin-react": "^4.2.1",
+		"@biomejs/biome": "^1.9.0",
+		"@tanstack/router-devtools": "^1.57.10",
+		"@tanstack/router-plugin": "^1.57.11",
+		"@tauri-apps/cli": "2.0.0-rc.13",
+		"@types/react": "^18.3.5",
+		"@types/react-dom": "^18.3.0",
+		"@vitejs/plugin-react": "^4.3.1",
 		"autoprefixer": "^10.4.20",
 		"postcss": "^8.4.45",
-		"tailwindcss": "^3.4.10",
+		"tailwindcss": "^3.4.11",
 		"typescript": "^5.6.2",
-		"vite": "^5.4.3"
+		"vite": "^5.4.4"
 	}
 }
