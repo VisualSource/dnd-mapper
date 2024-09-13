@@ -27,6 +27,15 @@
 				"decorations": false,
 				"dragDropEnabled": false,
 				"visible": false
+			},
+			{
+				"title": "Map",
+				"label": "display-editor",
+				"url": "/display-editor",
+				"resizable": true,
+				"decorations": false,
+				"dragDropEnabled": false,
+				"visible": false
 			}
 		],
 		"security": {

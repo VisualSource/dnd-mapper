@@ -1,194 +1,116 @@
-import { createFileRoute, Link, useParams } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { Window } from "@tauri-apps/api/window";
 import { emitTo } from "@tauri-apps/api/event";
-import { useReducer, useRef } from 'react';
-import { AddEntityDialog } from '../components/controls/AddEntityDialog';
-import type { Entity } from '../lib/types';
-
-const win = new Window("display");
+import { useRef, useState } from 'react';
 
 
-type State = {
-  units: Entity[]
-  round: number,
-  index: number;
-}
+import { StageSelectionDialog, type StageSelectionDialogHandle } from '../components/dialog/StageSelectionDialog';
+import { AdditionEntityDialog } from '../components/dialog/AdditionEntityDialog';
+import { DISPLAY_MAP_EVENTS, MAP_WINDOW_LABEL } from '../lib/consts';
+import { resloveStage } from '../lib/loader';
+import { EntityControlDialog, type EntityControlDialogHandle } from '../components/dialog/EntityControlDialog';
 
-const reducer = (state: State, ev: { type: "set-state", data: State }) => {
-  switch (ev.type) {
-    case "set-state": {
-      return ev.data;
-    }
-    default:
-      return state;
-  }
-}
+const appWindow = new Window("display");
 
-const DEFAULT_STATE = {
-  units: [
-    { id: "a", image: "", displayOnMap: true, initiative: 0, name: "Temp Name", health: 100, maxHealth: 100, tempHealth: 12, isPlayerControlled: false } as Entity,
-    { id: "b", image: "", displayOnMap: true, initiative: 0, name: "Temp2 Name", health: 50, maxHealth: 50, tempHealth: 0, isPlayerControlled: false },
-    { id: "c", image: "", displayOnMap: true, initiative: 0, name: "Temp3 Name", health: 44, maxHealth: 50, tempHealth: 0, isPlayerControlled: false }
-  ], round: 0, index: 0
-};
+const toggle = () => appWindow.isVisible().then(e => e ? appWindow.hide() : appWindow.show());
 
 const ControlPanel: React.FC = () => {
-  const params = Route.useParams();
-
-  return (<div>Control Panel: {params.id}</div>)
-  /* const addEntityDialogRef = useRef<{ show: () => void, hide: () => void }>(null);
-  const [state, dispatch] = useReducer(reducer, DEFAULT_STATE);
+  const stage = Route.useLoaderData();
+  const [queue, setQueue] = useState(stage.entities);
+  const [round, setRound] = useState<number>(1);
+  const [currentEntity, setCurrentEntity] = useState(0);
+  const navigate = useNavigate();
+  const ssdialogRef = useRef<StageSelectionDialogHandle>(null);
+  const aedialogRef = useRef<StageSelectionDialogHandle>(null);
+  const ecDialogRef = useRef<EntityControlDialogHandle>(null);
 
   return (
-    <div className='flex w-full'>
-      <AddEntityDialog ref={addEntityDialogRef} onClose={(items) => {
-        addEntityDialogRef.current?.hide();
-
-        state.units.push(...items);
-        state.units.sort((a, b) => b.initiative - a.initiative);
-
-        dispatch({ type: "set-state", data: { ...state } });
+    <div className='flex h-full'>
+      <EntityControlDialog ref={ecDialogRef} queue={queue} setQueue={setQueue} />
+      <StageSelectionDialog ref={ssdialogRef} onSelect={(id) => navigate({ to: "/control/$id", params: { id } })} />
+      <AdditionEntityDialog ref={aedialogRef} onAdd={async (entity) => {
+        const data = { entity: { ...entity }, instanceId: crypto.randomUUID(), y: 0, x: 0 };
+        await emitTo(MAP_WINDOW_LABEL, DISPLAY_MAP_EVENTS.Add, data);
+        setQueue(prev => [...prev, data]);
       }} />
-      <dialog id="unit-control">
-        <div className='flex flex-col p-2 gap-2'>
-          <div className='flex justify-between'>
-            <h1>Edit Entity</h1>
-            <button type="button" onClick={() => (document.getElementById("unit-control") as HTMLDialogElement).close()}>Close</button>
-          </div>
-          <form className="border" onSubmit={(ev) => {
-            ev.preventDefault();
-            const data = new FormData(ev.target as HTMLFormElement);
-
-            emitTo("display", "move-player", {
-              target: "TEST_ID",
-              move: {
-                x: Number.parseInt(data.get("x")?.toString() ?? "0"),
-                y: Number.parseInt(data.get("y")?.toString() ?? "0")
-              }
-            });
-          }}>
-            <div className='flex flex-col gap-4'>
-              <h1>Movement</h1>
-
-              <input required name="initiative" type="number" placeholder="Initiative" />
-
-              <div className='flex'>
-                <label>
-                  X: <input placeholder='x' type="number" name="x" />
-                </label>
-                <label>
-                  Y: <input placeholder='y' type="number" name="y" />
-                </label>
-              </div>
-
-              <button type="submit">Move</button>
-            </div>
-          </form>
-
-          <form className="border p-2" onSubmit={(e) => {
-            e.preventDefault();
-            const data = new FormData(e.currentTarget);
-            const amount = data.get("health_mod");
-            const type = data.get("health_type");
-
-            console.log(amount, type);
-
-          }}>
-            <div className='flex justify-center'>
-              <h1>HP: 100</h1>
-            </div>
-            <div className='flex gap-2 justify-center'>
-              <label className='flex items-center align-middle gap-1'>
-                <input type="radio" name="health_type" defaultValue="damage" />
-                Damage
-              </label>
-              <label className='flex items-center align-middle gap-1'>
-                <input type="radio" name="health_type" defaultValue="heal" />
-                Heal
-              </label>
-              <label className='flex items-center align-middle gap-1'>
-                <input type="radio" name="health_type" defaultValue="temp" />
-                Temp HP
-              </label>
-            </div>
-
-            <div className='flex flex-col items-center'>
-              <input name="health_mod" placeholder='amount' type="number" />
-              <button type="submit">Apply</button>
-            </div>
-          </form>
-
-          <form>
-            <label className='flex items-center align-middle gap-1'>
-              IsDead
-              <input type="checkbox" />
-            </label>
-            <p className="text-gray-400">(hides unit from board)</p>
-
-          </form>
-        </div>
-
-      </dialog>
-      <section className='w-full border-r p-2'>
+      <section>
         <header>
-          <h1>Round {state.round}</h1>
-          <button type="button" className='border text-white' onClick={() => {
-            const first = state.units.shift();
-            const units: Entity[] = state.units;
+          <h3>Round {round}</h3>
+          <button type="button" onClick={() => {
+            const temp = queue;
+            const len = temp.length;
+            const first = temp.shift();
             if (first) {
-              units.push(first);
+              setQueue([...temp, first]);
             }
-            state.index++;
-            if (state.index >= units.length) {
-              state.round++;
-              state.index = 0;
+            if (currentEntity + 1 < len) {
+              setCurrentEntity(prev => prev + 1);
+            } else {
+              setCurrentEntity(0);
+              setRound(e => e + 1);
             }
-
-            dispatch({ type: "set-state", data: { ...state, units } })
-          }}>Next Round</button>
-          <button type="button" className='border text-white'>Clear</button>
+          }}>Next</button>
         </header>
-        <ul className="space-y-4">
-          {state.units.map((e, i) => (
-            <li key={e.id} className={`bg-gray-500 ${i === 0 ? "shadow shadow-yellow-400 ml-6" : ""}`}>
-              <button type="button" className="w-full items-start" onClick={() => (document.getElementById("unit-control") as HTMLDialogElement).showModal()}>
-                <h1>{e.name}</h1>
-                <div>
-                  <span>HP: {e.health + e.tempHealth}/{e.maxHealth}</span>
+        <ul onClick={(ev) => {
+          const target = (ev.nativeEvent.target as HTMLElement).closest("li[data-id]")
+          if (!target) return;
+          const id = target.getAttribute("data-id");
+          if (!id) return;
+          ecDialogRef.current?.show(id);
+        }} onKeyUp={() => { }} onKeyDown={() => { }}>
+          {queue.map(e => (
+            <li key={e.instanceId} data-id={e.instanceId}>
+              <button type="button" className='flex'>
+                <div className="h-12 w-12 relative">
+                  <img className="h-full w-full object-cover" src={e.entity.image} alt={e.entity.name} />
                 </div>
+                <div>
+                  <h5>{e.nameOverride ?? e.entity.name} | {e.entity.initiative}</h5>
+                  {!e.entity.isPlayerControlled ? (<div>{e.entity.health + e.entity.tempHealth}/{e.entity.maxHealth}</div>) : null}
+                </div>
+
               </button>
             </li>
           ))}
         </ul>
-
       </section>
-      <section className='w-full p-2'>
+      <aside>
+        <h1>Stage</h1>
+        <p>{stage.name}</p>
+
         <div>
-          <h1>Window Controls</h1>
+          <button type="button" onClick={toggle}>Toggle Map Window</button>
           <Link to="/">Exit</Link>
-          <button type="button" onClick={async () => {
-            const vis = await win.isVisible();
-            if (!vis) {
-              win.show();
-            } else {
-              win.hide();
-            }
-          }}>Toggle Display</button>
         </div>
+
+        <button type="button" onClick={() => aedialogRef.current?.show()}>Add Entity</button>
+        <button type="button" onClick={() => setQueue(e => {
+          e.sort((a, b) => b.entity.initiative - a.entity.initiative);
+          return [...e];
+        })}>Sort Initiative</button>
 
         <div>
-          <h1>Stage</h1>
-          <button onClick={() => addEntityDialogRef.current?.show()} type="button">Add Entity</button>
-
-          <button type="button">Next Stage</button>
-
-          <button type="button">GoTo Stage</button>
+          <Link disabled to="/control/$id" params={{ id: stage.prevStage ?? "" }}>Prev Stage</Link>
+          <Link disabled to="/control/$id" params={{ id: stage.nextStage ?? "" }}>Next Stage</Link>
         </div>
-      </section>
+        <button type="button" onClick={() => ssdialogRef.current?.show()}>Goto Stage</button>
+      </aside>
     </div>
-  );*/
+  );
 }
 
 export const Route = createFileRoute('/control/$id')({
-  component: ControlPanel
+  component: ControlPanel,
+  async loader(ctx) {
+    const content = await resloveStage(ctx.params.id);
+    if (!content) throw new Error("No stage found!");
+    return content;
+  },
+  async onEnter(match) {
+    await emitTo(MAP_WINDOW_LABEL, DISPLAY_MAP_EVENTS.Init, match.loaderData);
+    await appWindow.show();
+  },
+  onLeave() {
+    appWindow.hide();
+  }
 })
