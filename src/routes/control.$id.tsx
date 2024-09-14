@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { Window } from "@tauri-apps/api/window";
+import { getCurrentWindow, Window } from "@tauri-apps/api/window";
 import { emitTo } from "@tauri-apps/api/event";
 import { useRef, useState } from 'react';
 
@@ -108,6 +108,7 @@ export const Route = createFileRoute('/control/$id')({
   },
   async onEnter(match) {
     await emitTo(MAP_WINDOW_LABEL, DISPLAY_MAP_EVENTS.Init, match.loaderData);
+    getCurrentWindow().setTitle(`DnD Mapper | ${match.loaderData?.name}`);
     await appWindow.show();
   },
   onLeave() {

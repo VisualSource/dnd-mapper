@@ -73,7 +73,7 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, { setQu
 
                 switch (type) {
                     case "heal": {
-                        const health = Math.max(item.entity.health + amount, item.entity.maxHealth);
+                        const health = Math.min(item.entity.health + amount, item.entity.maxHealth);
                         setQueue(prev => {
                             const idx = prev.findIndex(e => e.instanceId === item?.instanceId);
                             if (idx === -1) return prev;
@@ -95,7 +95,7 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, { setQu
                             });
                             return;
                         }
-                        const health = Math.max(0, item.entity.health - l);
+                        const health = Math.max(0, item.entity.health + l);
 
                         if (health <= 0) {
                             emitTo(MAP_WINDOW_LABEL, DISPLAY_MAP_EVENTS.Update, { target: item.instanceId, displayOnMap: false });
@@ -116,7 +116,7 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, { setQu
                         setQueue(prev => {
                             const idx = prev.findIndex(e => e.instanceId === item?.instanceId);
                             if (idx === -1) return prev;
-                            prev[idx].entity.tempHealth += amount;
+                            prev[idx].entity.tempHealth = amount;
                             return [...prev];
                         });
                         break;
@@ -152,11 +152,13 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, { setQu
                     displayOnMap
                     <input type="checkbox" defaultChecked={item?.entity.displayOnMap} onChange={(ev) => {
                         if (!item) return;
-                        emitTo(MAP_WINDOW_LABEL, DISPLAY_MAP_EVENTS.Update, { target: item.instanceId, displayOnMap: ev.currentTarget.checked });
+                        const value = ev.target.checked;
+
+                        emitTo(MAP_WINDOW_LABEL, DISPLAY_MAP_EVENTS.Update, { target: item.instanceId, displayOnMap: value });
                         setQueue(prev => {
                             const idx = prev.findIndex(e => e.instanceId === item?.instanceId);
                             if (idx === -1) return prev;
-                            prev[idx].entity.displayOnMap = ev.currentTarget.checked;
+                            prev[idx].entity.displayOnMap = value;
                             return [...prev];
                         });
 
