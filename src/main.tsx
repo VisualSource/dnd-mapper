@@ -3,6 +3,8 @@ import { StrictMode } from "react";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import "./index.css";
+import { getCurrentWindow } from "@tauri-apps/api/window";
+import { displayWindow, editorWindow } from "./lib/window";
 
 const router = createRouter({ routeTree });
 
@@ -11,6 +13,12 @@ declare module "@tanstack/react-router" {
     router: typeof router
   }
 }
+const win = getCurrentWindow();
+win.listen("tauri://close-requested", () => {
+  editorWindow.destroy();
+  displayWindow.destroy();
+  win.destroy();
+});
 
 createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>

@@ -33,7 +33,7 @@ export const StageList: React.FC<{ deletable?: boolean, filter?: string, group?:
                 <li key={e.id} data-id={e.id}>
                     <button type="button">
                         <div className="h-12 w-12 relative">
-                            <img className="h-full w-full object-cover" alt="background" src={e.backgroundImage} />
+                            <img className="h-full w-full object-cover" alt="background" src={e.background.image} />
                         </div>
                         <div>
                             <h1>{e.name}</h1>

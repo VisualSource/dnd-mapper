@@ -33,7 +33,7 @@
 				"label": "display-editor",
 				"url": "/display-editor",
 				"resizable": true,
-				"decorations": false,
+				"decorations": true,
 				"dragDropEnabled": false,
 				"visible": false
 			}

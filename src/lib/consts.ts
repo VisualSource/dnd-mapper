@@ -2,7 +2,6 @@ export const EDITOR_MAP_WINDOW_LABEL = "display-editor";
 export const MAP_WINDOW_LABEL = "display";
 
 export const EDITOR_MAP_EVENTS = {
-    "Init": "init",
     "Update": "update"
 } as const;
 

@@ -9,10 +9,8 @@ import { AdditionEntityDialog } from '../components/dialog/AdditionEntityDialog'
 import { DISPLAY_MAP_EVENTS, MAP_WINDOW_LABEL } from '../lib/consts';
 import { resloveStage } from '../lib/loader';
 import { EntityControlDialog, type EntityControlDialogHandle } from '../components/dialog/EntityControlDialog';
+import { displayWindow, displayWindowToggle } from '../lib/window';
 
-const appWindow = new Window("display");
-
-const toggle = () => appWindow.isVisible().then(e => e ? appWindow.hide() : appWindow.show());
 
 const ControlPanel: React.FC = () => {
   const stage = Route.useLoaderData();
@@ -79,7 +77,7 @@ const ControlPanel: React.FC = () => {
         <p>{stage.name}</p>
 
         <div>
-          <button type="button" onClick={toggle}>Toggle Map Window</button>
+          <button type="button" onClick={displayWindowToggle}>Toggle Map Window</button>
           <Link to="/">Exit</Link>
         </div>
 
@@ -109,9 +107,9 @@ export const Route = createFileRoute('/control/$id')({
   async onEnter(match) {
     await emitTo(MAP_WINDOW_LABEL, DISPLAY_MAP_EVENTS.Init, match.loaderData);
     getCurrentWindow().setTitle(`DnD Mapper | ${match.loaderData?.name}`);
-    await appWindow.show();
+    await displayWindow.show();
   },
   onLeave() {
-    appWindow.hide();
+    displayWindow.hide();
   }
 })

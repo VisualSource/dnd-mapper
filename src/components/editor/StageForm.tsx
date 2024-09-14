@@ -5,20 +5,23 @@ import { AdditionEntityDialog, type AdditionEntityDialogHandle } from "../dialog
 import { EDITOR_MAP_EVENTS, EDITOR_MAP_WINDOW_LABEL } from "../../lib/consts";
 import type { ResolvedStage, Stage } from "../../lib/types";
 import { ImageSelect } from "../ImageSelect";
-import { db } from "../../lib/db";
 
-export const StageForm: React.FC<{ stage?: Stage, onSubmit: (stage: Stage) => void }> = ({ stage, onSubmit }) => {
+export const StageForm: React.FC<{ stage?: ResolvedStage, onSubmit: (stage: Stage) => void }> = ({ stage, onSubmit }) => {
     const dialogRef = useRef<AdditionEntityDialogHandle>(null);
 
     const { register, control, handleSubmit, watch } = useForm<ResolvedStage>({
         async defaultValues() {
-            let value: ResolvedStage;
             if (!stage) {
-                value = {
+                return {
                     name: "",
-                    backgroundImage: "",
-                    backgroundPosition: { x: 0, y: 0 },
-                    backgroundSize: { h: 0, w: 0 },
+                    background: {
+                        image: "",
+                        position: { x: 0, y: 0 },
+                        autoCenter: true,
+                        offset: { x: 0, y: 0 },
+                        size: { w: 0, h: 0 },
+                        rotation: 0
+                    },
                     entities: [],
                     gridScale: 28,
                     id: crypto.randomUUID(),
@@ -26,27 +29,15 @@ export const StageForm: React.FC<{ stage?: Stage, onSubmit: (stage: Stage) => vo
                     prevStage: null,
                     stageGroup: null
                 } as ResolvedStage;
-            } else {
-                const items = await db.entity.where("id").anyOf(stage.entities.map(e => e.id)).toArray();
-
-                const a: ResolvedStage["entities"] = [];
-                for (const e of stage.entities) {
-                    const ent = items.find(d => d.id === e.id);
-                    if (!ent) continue;
-                    a.push({ x: e.x, y: e.y, instanceId: e.id, entity: ent });
-                }
-
-                value = { ...stage, entities: a };
             }
-            emitTo(EDITOR_MAP_WINDOW_LABEL, EDITOR_MAP_EVENTS.Init, value);
-            return value;
-
+            return stage;
         },
     });
     const entityField = useFieldArray({
         control,
         name: "entities"
     });
+    const backgoundAutoCenter = watch("background.autoCenter");
 
     useEffect(() => {
         const sub = watch((value, { type }) => {
@@ -57,7 +48,8 @@ export const StageForm: React.FC<{ stage?: Stage, onSubmit: (stage: Stage) => vo
         return () => sub.unsubscribe();
     }, [watch]);
 
-    const onFormSubmit = (state: ResolvedStage) => {
+    const onFormSubmit = async (state: ResolvedStage) => {
+        await emitTo(EDITOR_MAP_WINDOW_LABEL, EDITOR_MAP_EVENTS.Update, state);
         const value: Stage = { ...state, entities: state.entities.map(({ entity, ...rest }) => ({ ...rest, id: entity.id })) };
         onSubmit(value);
     }
@@ -74,37 +66,62 @@ export const StageForm: React.FC<{ stage?: Stage, onSubmit: (stage: Stage) => vo
 
                 <div className="flex flex-col gap-2">
                     <label htmlFor="stage-grid-scale">Grid Scale</label>
-                    <input  {...register("gridScale", { required: true })} id="stage-grid-scale" type="number" />
+                    <input  {...register("gridScale", { required: true, valueAsNumber: true })} id="stage-grid-scale" type="number" />
                     <p className="text-sm">The size of the grid cells (Default 28px)</p>
                 </div>
 
-                <ImageSelect control={control as never as Control<FieldValues>} name="backgroundImage" />
-                <div className="flex flex-col">
+                <ImageSelect control={control as never as Control<FieldValues>} name="background.image" />
+
+                <div>
+                    <label htmlFor="background.autoCenter">Auto Center</label>
+                    <input type="checkbox" id="background.autoCenter" {...register("background.autoCenter", {})} />
+                </div>
+
+                {!backgoundAutoCenter ? (<div className="flex flex-col">
                     <h2>Image Position</h2>
                     <div className="flex gap-2 w-full">
                         <div>
                             <label htmlFor="stage-backgroundPosition.x">X</label>
-                            <input  {...register("backgroundPosition.x", { required: true })} id="stage-backgroundPosition.x" className="w-full" type="number" placeholder="X" />
+                            <input  {...register("background.position.x", { required: true, valueAsNumber: true })} id="stage-backgroundPosition.x" className="w-full" type="number" placeholder="X" />
                         </div>
                         <div>
                             <label htmlFor="stage-backgroundPosition.y">Y</label>
-                            <input {...register("backgroundPosition.y", { required: true })} id="stage-backgroundPosition.y" className="w-full" type="number" placeholder="Y" />
+                            <input {...register("background.position.y", { required: true, valueAsNumber: true })} id="stage-backgroundPosition.y" className="w-full" type="number" placeholder="Y" />
                         </div>
                     </div>
-                </div>
+                </div>) : null}
 
                 <div className="flex flex-col">
                     <h2>Image Size</h2>
                     <div className="flex gap-2 w-full">
                         <div>
                             <label htmlFor="stage-backgroundSize.h">Width</label>
-                            <input {...register("backgroundSize.h", { required: true })} id="stage-backgroundSize.h" className="w-full" type="number" placeholder="W" />
+                            <input {...register("background.size.w", { required: true, valueAsNumber: true })} id="stage-backgroundSize.h" className="w-full" type="number" placeholder="W" />
                         </div>
                         <div>
                             <label htmlFor="stage-backgroundSize.w">Height</label>
-                            <input {...register("backgroundSize.w", { required: true })} id="stage-backgroundSize.w" className="w-full" type="number" placeholder="H" />
+                            <input {...register("background.size.h", { required: true, valueAsNumber: true })} id="stage-backgroundSize.w" className="w-full" type="number" placeholder="H" />
                         </div>
                     </div>
+                </div>
+
+                <div className="flex flex-col">
+                    <h2>Image Offset</h2>
+                    <div className="flex gap-2 w-full">
+                        <div>
+                            <label htmlFor="background.offset.x">X</label>
+                            <input  {...register("background.offset.x", { required: true, valueAsNumber: true })} id="background.offset.x" className="w-full" type="number" placeholder="X" />
+                        </div>
+                        <div>
+                            <label htmlFor="background.offset.y">Y</label>
+                            <input {...register("background.offset.y", { required: true, valueAsNumber: true })} id="background.offset.y" className="w-full" type="number" placeholder="Y" />
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex flex-col">
+                    <label htmlFor="background.rotation">Image Rotation</label>
+                    <input {...register("background.rotation", { required: true, valueAsNumber: true })} id="background.rotation" className="w-full" type="number" placeholder="360" />
                 </div>
 
                 <div className="flex flex-col">
@@ -124,8 +141,8 @@ export const StageForm: React.FC<{ stage?: Stage, onSubmit: (stage: Stage) => vo
                                 </div>
                                 <input {...register(`entities.${index}.nameOverride`)} placeholder="Name override" />
                                 <div>
-                                    <input {...register(`entities.${index}.x`)} type="number" placeholder="x" />
-                                    <input {...register(`entities.${index}.y`)} type="number" placeholder="y" />
+                                    <input {...register(`entities.${index}.x`, { valueAsNumber: true })} type="number" placeholder="x" />
+                                    <input {...register(`entities.${index}.y`, { valueAsNumber: true })} type="number" placeholder="y" />
                                 </div>
                             </li>
                         ))}

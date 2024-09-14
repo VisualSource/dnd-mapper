@@ -1,5 +1,15 @@
-export type EntityRef = { id: string, instanceId: string, x: number, y: number, nameOverride?: string };
+import type { PuckSize } from "./display/utils";
 
+export type EntityRef = { id: string, instanceId: string, x: number, y: number, nameOverride?: string };
+export type Background = {
+    image: string;
+    size: { w: number; h: number }
+    position: { x: number; y: number },
+    offset: { x: number; y: number },
+    autoCenter: boolean,
+    rotation: number;
+}
+export type BackgroundFull = Omit<Background, "image"> & { image: HTMLImageElement };
 export type Group = {
     id: number;
     name: string;
@@ -14,16 +24,15 @@ export type Entity = {
     displayOnMap: boolean,
     health: number,
     maxHealth: number,
-    tempHealth: number
+    tempHealth: number,
+    puckSize: PuckSize
 }
 
 export type Stage = {
     id: string;
     name: string;
     entities: EntityRef[],
-    backgroundImage: string;
-    backgroundPosition: { x: number, y: number }
-    backgroundSize: { w: number; h: number }
+    background: Background,
     gridScale: number;
     prevStage: string | null;
     nextStage: string | null;
