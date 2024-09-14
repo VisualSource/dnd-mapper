@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import type { ResolvedStage } from "../../lib/types";
 import { emitTo } from "@tauri-apps/api/event";
 import { DISPLAY_MAP_EVENTS, MAP_WINDOW_LABEL } from "../../lib/consts";
+import type { ResolvedStage } from "../../lib/types";
 
 export type EntityControlDialogHandle = { show: (id: string) => void, close: () => void }
 
