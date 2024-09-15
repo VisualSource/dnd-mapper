@@ -19,11 +19,11 @@ export const ImageSelect: React.FC<{ control: Control<FieldValues> | undefined, 
                         if (!file) return;
                         field.onChange(convertFileSrc(file));
                     }}>Select</button>
-
                 </div>
-                <span className="text-xs text-ellipsis max-w-11 overflow-hidden whitespace-nowrap">{field.value}</span>
                 {fieldState.error ? <p>{fieldState.error.message}</p> : null}
             </div>
         )} />
     );
 }
+
+//   <span className="text-xs text-ellipsis max-w-11 overflow-hidden whitespace-nowrap">{field.value}</span>

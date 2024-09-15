@@ -39,4 +39,5 @@ export type Stage = {
     stageGroup: string | null;
 }
 
-export type ResolvedStage = Omit<Stage, "entities"> & { entities: { instanceId: string, entity: Entity, x: number, y: number, nameOverride?: string }[] };
+export type ReslovedEntity = Omit<EntityRef, "id"> & { entity: Entity, z?: number };
+export type ResolvedStage = Omit<Stage, "entities"> & { entities: ReslovedEntity[] };

@@ -1,7 +1,7 @@
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import { Entity } from "./entity";
-import { EDITOR_MAP_EVENTS } from "../consts";
-import type { BackgroundFull, ResolvedStage } from "../types";
+import { DISPLAY_MAP_EVENTS, type DisplayEvent, EDITOR_MAP_EVENTS } from "../consts";
+import type { BackgroundFull, ReslovedEntity, ResolvedStage } from "../types";
 import { loadExternalImage } from "./utils";
 
 export class Renderer {
@@ -21,6 +21,9 @@ export class Renderer {
 
     public getEntity<T extends Entity>(id: string): T | undefined {
         return this.entityList.get(id) as T | undefined;
+    }
+    public removeEntity(id: string) {
+        this.entityList.delete(id);
     }
     public addEntity<T extends Entity>(entity: T) {
         if (this.entityList.has(entity.id)) throw new Error(`Entity with id ${entity.id} already exists`);
@@ -42,7 +45,6 @@ export class Renderer {
                 }
                 this.gridSize = gridScale;
                 for (const { nameOverride, entity, instanceId, x, y } of entities) {
-                    if (!entity.displayOnMap) continue;
                     try {
                         const i = await loadExternalImage(entity.image)
 
@@ -53,8 +55,9 @@ export class Renderer {
                             name: nameOverride ?? entity.name,
                             isPlayerControlled: entity.isPlayerControlled,
                             size: entity.puckSize,
-                            x: x * this.gridSize,
-                            y: y * this.gridSize
+                            display: entity.displayOnMap,
+                            x,
+                            y
                         });
 
                         this.entityList.set(instanceId, en);
@@ -69,6 +72,102 @@ export class Renderer {
             this.events.push(updateEvent);
             return;
         }
+
+        const initEvent = await listen<ResolvedStage>(DISPLAY_MAP_EVENTS.Init, async (ev) => {
+            console.log(ev);
+            const { background, gridScale, entities } = ev.payload;
+            this.gridSize = gridScale;
+
+            const i = await loadExternalImage(background.image)
+            this.background = { ...background, image: i };
+
+            for (const { nameOverride, entity, instanceId, x, y } of entities) {
+                try {
+                    const i = await loadExternalImage(entity.image)
+
+                    const en = new Entity({
+                        id: instanceId,
+                        display: entity.displayOnMap,
+                        gridSize: this.gridSize,
+                        image: i,
+                        name: nameOverride ?? entity.name,
+                        isPlayerControlled: entity.isPlayerControlled,
+                        size: entity.puckSize,
+                        x,
+                        y
+                    });
+
+                    this.entityList.set(instanceId, en);
+
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+
+
+            this.render();
+        });
+        const updateEvent = await listen<DisplayEvent>(DISPLAY_MAP_EVENTS.Update, async (ev) => {
+            console.log(ev);
+            switch (ev.payload.type) {
+                case "move": {
+                    const { target, x, y } = ev.payload.data;
+                    const entity = this.getEntity(target);
+                    if (!entity) break;
+                    entity.move(x, y);
+                    break;
+                }
+                case "display": {
+                    const { target, displayOnMap } = ev.payload.data;
+                    const entity = this.getEntity(target);
+                    if (!entity) break;
+                    entity.setDisplay(displayOnMap);
+                    break;
+                }
+                case "set-z": {
+                    const { target, z } = ev.payload.data;
+                    const entity = this.getEntity(target);
+                    if (!entity) break;
+                    entity.z = z;
+                    break;
+                }
+                case "set-puck": {
+                    const { target, size } = ev.payload.data;
+                    const entity = this.getEntity(target);
+                    if (!entity) break;
+                    entity.setSize(size);
+                    break;
+                }
+                default:
+                    break;
+            }
+            this.render();
+        });
+        const addEvent = await listen<ReslovedEntity>(DISPLAY_MAP_EVENTS.Add, async (ev) => {
+            const { entity, instanceId, nameOverride, x, y } = ev.payload;
+            const i = await loadExternalImage(entity.image)
+
+            this.addEntity(new Entity({
+                id: instanceId,
+                display: entity.displayOnMap,
+                gridSize: this.gridSize,
+                image: i,
+                name: nameOverride ?? entity.name,
+                isPlayerControlled: entity.isPlayerControlled,
+                size: entity.puckSize,
+                x,
+                y
+            }));
+
+            this.render();
+        });
+        const deleteEvent = await listen<{ target: string }>(DISPLAY_MAP_EVENTS.Delete, async (ev) => {
+            const { target } = ev.payload;
+            this.removeEntity(target);
+            this.render();
+        })
+
+        this.events.push(initEvent, updateEvent, addEvent, deleteEvent);
     }
 
     private async removeEvents() {
@@ -77,11 +176,8 @@ export class Renderer {
         }
     }
 
-
     private drawBackground(ctx: CanvasRenderingContext2D) {
         if (!this.background) return;
-
-        console.log(window.innerWidth, this.background.image.width, window.innerHeight, this.background.image.height);
 
         let x = 0;
         let y = 0;

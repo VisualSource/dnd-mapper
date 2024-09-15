@@ -12,6 +12,7 @@ export const AddEntityForm: React.FC<{ btnMsg?: string, resetOnSubmit?: boolean,
             maxHealth: 100,
             tempHealth: 0,
             image: "",
+            puckSize: "small",
             initiative: 0,
             name: "",
         }
@@ -34,6 +35,17 @@ export const AddEntityForm: React.FC<{ btnMsg?: string, resetOnSubmit?: boolean,
                 <label htmlFor="entity-initiative">Initiative</label>
                 <input id="entity-initiative" {...register("initiative", { required: true, valueAsNumber: true })} type="number" placeholder="Initiative" />
                 <p className="text-sm">The order of who go first</p>
+            </div>
+
+            <div className="flex flex-col gap-2">
+                <label htmlFor="pucksize">Initiative</label>
+                <select id="pucksize" {...register("puckSize", { required: true, })}>
+                    <option value="small" selected>Small</option>
+                    <option value="mid">Medium</option>
+                    <option value="large">Large</option>
+                </select>
+
+                <p className="text-sm">Size of the unit on the board</p>
             </div>
 
             <div className="flex flex-col gap-2">

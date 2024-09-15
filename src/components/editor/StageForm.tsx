@@ -5,10 +5,13 @@ import { AdditionEntityDialog, type AdditionEntityDialogHandle } from "../dialog
 import { EDITOR_MAP_EVENTS, EDITOR_MAP_WINDOW_LABEL } from "../../lib/consts";
 import type { ResolvedStage, Stage } from "../../lib/types";
 import { ImageSelect } from "../ImageSelect";
+import { useLiveQuery } from 'dexie-react-hooks';
+import { db } from '../../lib/db';
 
 export const StageForm: React.FC<{ stage?: ResolvedStage, onSubmit: (stage: Stage) => void }> = ({ stage, onSubmit }) => {
     const dialogRef = useRef<AdditionEntityDialogHandle>(null);
-
+    const stages = useLiveQuery(() => db.stage.filter(e => e.id !== stage?.id).toArray(), [stage?.id]);
+    const groupEditor = useLiveQuery(() => db.groups.toArray(), []);
     const { register, control, handleSubmit, watch } = useForm<ResolvedStage>({
         async defaultValues() {
             if (!stage) {
@@ -159,13 +162,19 @@ export const StageForm: React.FC<{ stage?: ResolvedStage, onSubmit: (stage: Stag
                     <div className="flex flex-col w-full">
                         <label htmlFor="stage-prev">Prev Stage</label>
                         <select id="stage-prev" {...register("prevStage", { required: true })}>
-                            <option>None</option>
+                            <option selected>None</option>
+                            {stages?.map(e => (
+                                <option value={e.id} key={e.id}>{e.name}</option>
+                            ))}
                         </select>
                     </div>
                     <div className="flex flex-col w-full">
                         <label htmlFor="stage-next">Next Stage</label>
                         <select id="stage-next" {...register("nextStage", { required: true })}>
-                            <option>None</option>
+                            <option selected>None</option>
+                            {stages?.map(e => (
+                                <option value={e.id} key={e.id}>{e.name}</option>
+                            ))}
                         </select>
                     </div>
                 </div>
@@ -174,7 +183,10 @@ export const StageForm: React.FC<{ stage?: ResolvedStage, onSubmit: (stage: Stag
                 <div className="flex flex-col">
                     <label htmlFor="stage-group">Stage Group</label>
                     <select id="stage-group" {...register("stageGroup", { required: true })}>
-                        <option>None</option>
+                        <option selected>None</option>
+                        {groupEditor?.map(e => (
+                            <option value={e.id} key={e.id}>{e.name}</option>
+                        ))}
                     </select>
                 </div>
 

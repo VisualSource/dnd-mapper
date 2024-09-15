@@ -1,15 +1,76 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from "react";
-import { emitTo } from "@tauri-apps/api/event";
-import { DISPLAY_MAP_EVENTS, MAP_WINDOW_LABEL } from "../../lib/consts";
-import type { ResolvedStage } from "../../lib/types";
+import { forwardRef, useEffect, useImperativeHandle, useReducer, useRef, useState } from "react";
+import type { ReslovedEntity } from "../../lib/types";
+import { emitUpdateEvent } from "../../lib/window";
+import type { PuckSize } from "../../lib/display/utils";
+
+type State = { update: null | string, initiative: number, z: number, puck: PuckSize, display: boolean };
+const reducer = (state: State, ev: { type: string, value: string | number | boolean }) => ({ ...state, [ev.type]: ev.value, update: ev.type } as State);
 
 export type EntityControlDialogHandle = { show: (id: string) => void, close: () => void }
+type Props = {
+    setQueue: React.Dispatch<React.SetStateAction<ReslovedEntity[]>>,
+    queue: ReslovedEntity[]
+};
 
-export const EntityControlDialog = forwardRef<EntityControlDialogHandle, { setQueue: (callback: (prev: ResolvedStage["entities"]) => ResolvedStage["entities"]) => void, queue: ResolvedStage["entities"] }>(({ queue, setQueue }, ref) => {
+export const EntityControlDialog = forwardRef<EntityControlDialogHandle, Props>(({ queue, setQueue }, ref) => {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const [view, setView] = useState<string | null>(null);
-
     const item = queue.find(e => e.instanceId === view);
+    const id = item?.instanceId;
+    const [state, dispatch] = useReducer(reducer, {
+        initiative: item?.entity.initiative ?? 0,
+        z: item?.z ?? 0,
+        puck: item?.entity.puckSize ?? "small",
+        display: item?.entity.displayOnMap ?? true,
+        update: null
+    });
+
+    useEffect(() => {
+        if (!state.update || !id) return;
+        switch (state.update) {
+            case "display": {
+                emitUpdateEvent("display", { displayOnMap: state.display, target: id });
+                setQueue(prev => {
+                    const idx = prev.findIndex(e => e.instanceId === id);
+                    if (idx === -1) return prev;
+                    prev[idx].entity.displayOnMap = state.display;
+                    return [...prev];
+                });
+                break;
+            }
+            case "puck": {
+                emitUpdateEvent("set-puck", { target: id, size: state.puck });
+                setQueue(prev => {
+                    const idx = prev.findIndex(e => e.instanceId === id);
+                    if (idx === -1) return prev;
+                    prev[idx].entity.puckSize = state.puck
+                    return [...prev];
+                });
+                break;
+            }
+            case "z": {
+                emitUpdateEvent("set-z", { target: id, z: state.z });
+                setQueue(prev => {
+                    const idx = prev.findIndex(e => e.instanceId === id);
+                    if (idx === -1) return prev;
+                    prev[idx].z = state.z;
+                    return [...prev];
+                });
+                break;
+            }
+            case "initiative": {
+                setQueue(prev => {
+                    const idx = prev.findIndex(e => e.instanceId === id);
+                    if (idx === -1) return prev;
+                    prev[idx].entity.initiative = state.initiative;
+                    return [...prev];
+                });
+                break;
+            }
+            default:
+                break;
+        }
+    }, [state, id, setQueue])
 
     useImperativeHandle(ref, () => {
         return {
@@ -30,27 +91,47 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, { setQu
                 <button type="button" onClick={() => dialogRef.current?.close()}>X</button>
             </header>
 
+            <div>
+                <label htmlFor="initiative">Initiative</label>
+                <input id="initiative" value={state.initiative} onChange={(ev) => {
+                    dispatch({ type: "initiative", value: ev.target.valueAsNumber });
+                }} required name="initiative" type="number" placeholder="Initiative" />
+            </div>
+
+            <div>
+                <label htmlFor="Z-Index">Z-Index</label>
+                <input id="z-Index" value={state.z} onChange={(ev) => {
+                    dispatch({ type: "z", value: ev.target.valueAsNumber })
+                }} required name="z-index" type="number" placeholder="Initiative" />
+            </div>
+
+            <div>
+                <label htmlFor="pucksize">Puck Size</label>
+                <select id="pucksize" value={state.puck} onChange={(ev) => dispatch({ type: "puck", value: ev.target.value })}>
+                    <option value="small" selected>Small</option>
+                    <option value="mid">Medium</option>
+                    <option value="large">Large</option>
+                </select>
+            </div>
+
             <form className='flex flex-col gap-4' onSubmit={async (ev) => {
                 ev.preventDefault();
+                if (!item) return;
                 const data = new FormData(ev.currentTarget);
                 const x = Number.parseInt(data.get("x")?.toString() ?? "0");
                 const y = Number.parseInt(data.get("y")?.toString() ?? "0");
-                const i = Number.parseInt(data.get("initiative")?.toString() ?? "0");
 
-                await emitTo(MAP_WINDOW_LABEL, DISPLAY_MAP_EVENTS.Move, { target: item?.instanceId, x, y });
+                await emitUpdateEvent("move", { target: item.instanceId, x, y })
 
                 setQueue(prev => {
                     const idx = prev.findIndex(e => e.instanceId === item?.instanceId);
                     if (idx === -1) return prev;
                     prev[idx].x = x;
                     prev[idx].y = y;
-                    prev[idx].entity.initiative = i;
                     return [...prev];
                 });
             }}>
                 <h1>Movement</h1>
-
-                <input defaultValue={item?.entity.initiative} required name="initiative" type="number" placeholder="Initiative" />
 
                 <div className='flex'>
                     <label>
@@ -64,7 +145,7 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, { setQu
                 <button type="submit">Move</button>
             </form>
 
-            {!item?.entity.isPlayerControlled ? (<form className="border p-2" onSubmit={(e) => {
+            {!item?.entity.isPlayerControlled ? (<form className="border p-2" onSubmit={async (e) => {
                 e.preventDefault();
                 if (!item) return;
                 const data = new FormData(e.currentTarget);
@@ -98,7 +179,7 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, { setQu
                         const health = Math.max(0, item.entity.health + l);
 
                         if (health <= 0) {
-                            emitTo(MAP_WINDOW_LABEL, DISPLAY_MAP_EVENTS.Update, { target: item.instanceId, displayOnMap: false });
+                            await emitUpdateEvent("display", { target: item.instanceId, displayOnMap: true })
                         }
 
                         setQueue(prev => {
@@ -150,19 +231,7 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, { setQu
             <div>
                 <label className='flex items-center align-middle gap-1'>
                     displayOnMap
-                    <input type="checkbox" defaultChecked={item?.entity.displayOnMap} onChange={(ev) => {
-                        if (!item) return;
-                        const value = ev.target.checked;
-
-                        emitTo(MAP_WINDOW_LABEL, DISPLAY_MAP_EVENTS.Update, { target: item.instanceId, displayOnMap: value });
-                        setQueue(prev => {
-                            const idx = prev.findIndex(e => e.instanceId === item?.instanceId);
-                            if (idx === -1) return prev;
-                            prev[idx].entity.displayOnMap = value;
-                            return [...prev];
-                        });
-
-                    }} />
+                    <input type="checkbox" checked={state.display} onChange={async (ev) => dispatch({ type: "display", value: ev.target.checked })} />
                 </label>
                 <p className="text-gray-400">(hides unit from board)</p>
             </div>

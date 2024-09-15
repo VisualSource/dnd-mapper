@@ -9,6 +9,7 @@ type Args = {
     y?: number;
     name?: string;
     isPlayerControlled?: boolean
+    display: boolean;
 }
 // public id: string, size: PuckSize, protected image: HTMLImageElement, protected girdSize: number
 export class Entity extends EventTarget {
@@ -19,9 +20,10 @@ export class Entity extends EventTarget {
     public id: string;
     protected size = 1;
     protected image: HTMLImageElement;
+    private display = false;
     private name: string | undefined;
     protected isPlayerControlled = false;
-    constructor({ size, id, image, x = 0, y = 0, name, isPlayerControlled = false, gridSize }: Args) {
+    constructor({ size, id, display, image, x = 0, y = 0, name, isPlayerControlled = false, gridSize }: Args) {
         super();
         this.name = name;
         this.x = x;
@@ -31,34 +33,43 @@ export class Entity extends EventTarget {
         this.gridSize = gridSize;
         this.size = getPuckSize(size);
         this.isPlayerControlled = isPlayerControlled;
+        this.display = display;
+    }
+
+    public setSize(value: PuckSize) {
+        this.size = getPuckSize(value);
     }
 
     public move(x: number, y: number) {
-        const stepX = this.gridSize * x;
-        const stepY = this.gridSize * y;
-
-        this.x += stepX;
-        this.y += stepY;
+        this.x += x;
+        this.y += y;
     }
 
+    public setDisplay(value: boolean) {
+        this.display = value;
+    }
     public setPosition(x: number, y: number) {
         this.x = x;
         this.y = y;
     }
 
     public render(ctx: CanvasRenderingContext2D) {
+        if (!this.display) return;
         if (!this.image) {
             console.warn("Entity does not have image set; ignoring");
             return;
         }
         const wh = this.gridSize * this.size;
-        ctx.drawImage(this.image, this.x, this.y, wh, wh);
 
+
+        const x = (Math.floor((window.innerWidth / 2) / this.gridSize) + this.x) * this.gridSize;
+        const y = (Math.floor((window.innerHeight / 2) / this.gridSize) + this.y) * this.gridSize;
+        ctx.drawImage(this.image, x, y, wh, wh);
 
         if (this.isPlayerControlled && this.name) {
             ctx.font = "10px serif";
             ctx.fillStyle = "white"
-            ctx.fillText(this.name, this.x + 10, this.y + 5);
+            ctx.fillText(this.name, x + 10, y + 5);
         }
     }
 }
