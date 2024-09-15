@@ -3,6 +3,7 @@ import { StrictMode } from "react";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import "./index.css";
+import { Toaster } from "@/components/ui/toaster"
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { displayWindow, editorWindow } from "./lib/window";
 
@@ -23,5 +24,6 @@ win.listen("tauri://close-requested", () => {
 createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <RouterProvider router={router} />
+    <Toaster />
   </StrictMode>,
 );

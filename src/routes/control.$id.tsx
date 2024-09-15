@@ -10,6 +10,11 @@ import { DISPLAY_MAP_EVENTS, MAP_WINDOW_LABEL } from '../lib/consts';
 import { resloveStage } from '../lib/loader';
 import { EntityControlDialog, type EntityControlDialogHandle } from '../components/dialog/EntityControlDialog';
 import { displayWindow, displayWindowToggle } from '../lib/window';
+import { Separator } from '@/components/ui/separator';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { FileQuestion } from 'lucide-react';
 
 
 const ControlPanel: React.FC = () => {
@@ -23,7 +28,7 @@ const ControlPanel: React.FC = () => {
   const ecDialogRef = useRef<EntityControlDialogHandle>(null);
 
   return (
-    <div className='flex h-full'>
+    <div className='flex h-full w-full'>
       <EntityControlDialog ref={ecDialogRef} queue={queue} setQueue={setQueue} />
       <StageSelectionDialog ref={ssdialogRef} onSelect={(id) => navigate({ to: "/control/$id", params: { id } })} />
       <AdditionEntityDialog ref={aedialogRef} onAdd={async (entity) => {
@@ -31,10 +36,10 @@ const ControlPanel: React.FC = () => {
         await emitTo(MAP_WINDOW_LABEL, DISPLAY_MAP_EVENTS.Add, data);
         setQueue(prev => [...prev, data]);
       }} />
-      <section>
-        <header>
-          <h3>Round {round}</h3>
-          <button type="button" onClick={() => {
+      <section className="w-8/12 flex flex-col border-r">
+        <header className='flex justify-between p-2'>
+          <h3 className='scroll-m-20 text-2xl font-semibold tracking-tight'>Round <span className="text-muted-foreground">{round}</span></h3>
+          <Button type="button" size="sm" onClick={() => {
             const temp = queue;
             const len = temp.length;
             const first = temp.shift();
@@ -47,51 +52,66 @@ const ControlPanel: React.FC = () => {
               setCurrentEntity(0);
               setRound(e => e + 1);
             }
-          }}>Next</button>
+          }}>Next</Button>
         </header>
-        <ul onClick={(ev) => {
+        <Separator />
+        <ul className="space-y-2 p-2" onClick={(ev) => {
           const target = (ev.nativeEvent.target as HTMLElement).closest("li[data-id]")
           if (!target) return;
           const id = target.getAttribute("data-id");
           if (!id) return;
-          ecDialogRef.current?.show(id);
+          const entity = queue.find(e => e.instanceId === id)
+          if (!entity) return;
+          ecDialogRef.current?.show(entity);
         }} onKeyUp={() => { }} onKeyDown={() => { }}>
-          {queue.map(e => (
-            <li key={e.instanceId} data-id={e.instanceId}>
-              <button type="button" className='flex'>
-                <div className="h-12 w-12 relative">
-                  <img className="h-full w-full object-cover" src={e.entity.image} alt={e.entity.name} />
-                </div>
+          {queue.map((e, i) => (
+            <li key={e.instanceId} data-id={e.instanceId} className={cn("p-2 border rounded-sm", { "opacity-35": !e.entity.displayOnMap, "bg-zinc-900": e.entity.displayOnMap && i === 0 })}>
+              <button type="button" className='flex gap-2'>
+                <Avatar>
+                  <AvatarFallback>
+                    <FileQuestion />
+                  </AvatarFallback>
+                  <AvatarImage src={e.entity.image} alt={e.entity.name} />
+                </Avatar>
                 <div>
-                  <h5>{e.nameOverride ?? e.entity.name} | {e.entity.initiative}</h5>
-                  {!e.entity.isPlayerControlled ? (<div>{e.entity.health + e.entity.tempHealth}/{e.entity.maxHealth}</div>) : null}
+                  <h5 className='font-semibold tracking-tight'>{e?.nameOverride?.length ? e.nameOverride : e.entity.name} | Initiative {e.entity.initiative}</h5>
+                  {!e.entity.isPlayerControlled ? (<div className="text-muted-foreground text-left">Health: <span className={cn({ "text-blue-400": e.entity.tempHealth > 0 })}>{e.entity.health + e.entity.tempHealth}</span>/{e.entity.maxHealth}</div>) : <div className="text-muted-foreground text-left">Player Controlled</div>}
                 </div>
-
               </button>
             </li>
           ))}
         </ul>
       </section>
-      <aside>
-        <h1>Stage</h1>
-        <p>{stage.name}</p>
-
+      <aside className='w-4/12 flex flex-col gap-4 p-2'>
         <div>
-          <button type="button" onClick={displayWindowToggle}>Toggle Map Window</button>
-          <Link to="/">Exit</Link>
+          <h1 className='scroll-m-20 text-2xl font-semibold tracking-tight'>Stage</h1>
+          <p>{stage.name}</p>
         </div>
 
-        <button type="button" onClick={() => aedialogRef.current?.show()}>Add Entity</button>
-        <button type="button" onClick={() => setQueue(e => {
-          e.sort((a, b) => b.entity.initiative - a.entity.initiative);
-          return [...e];
-        })}>Sort Initiative</button>
+        <Separator />
 
-        <div>
-          <Link disabled to="/control/$id" params={{ id: stage.prevStage ?? "" }}>Prev Stage</Link>
-          <Link disabled to="/control/$id" params={{ id: stage.nextStage ?? "" }}>Next Stage</Link>
+        <div className='flex w-full gap-2'>
+          <Button type="button" onClick={displayWindowToggle}>Toggle Map Window</Button>
+          <Link className={cn(buttonVariants({ variant: "secondary" }), "w-full")} to="/">Exit</Link>
         </div>
-        <button type="button" onClick={() => ssdialogRef.current?.show()}>Goto Stage</button>
+
+        <Separator />
+
+        <div className='flex gap-2 w-full'>
+          <Button type="button" variant="outline" className='w-full' onClick={() => aedialogRef.current?.show()}>Add Entity</Button>
+          <Button type="button" variant="outline" className='w-full' onClick={() => setQueue(e => {
+            e.sort((a, b) => b.entity.initiative - a.entity.initiative);
+            return [...e];
+          })}>Sort Initiative</Button>
+        </div>
+
+        <Separator />
+
+        <div className='flex gap-2'>
+          <Link className={cn(buttonVariants({ variant: "outline" }), "w-full")} disabled to="/control/$id" params={{ id: stage.prevStage ?? "" }}>Prev Stage</Link>
+          <Link className={cn(buttonVariants({ variant: "outline" }), "w-full")} disabled to="/control/$id" params={{ id: stage.nextStage ?? "" }}>Next Stage</Link>
+        </div>
+        <Button type="button" variant="secondary" onClick={() => ssdialogRef.current?.show()}>Goto Stage</Button>
       </aside>
     </div>
   );

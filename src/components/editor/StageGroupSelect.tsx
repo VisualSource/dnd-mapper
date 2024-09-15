@@ -1,17 +1,12 @@
 import { useLiveQuery } from "dexie-react-hooks";
 import { db } from "../../lib/db";
 
-export const StageGroupSelect: React.FC<{ onSelect: (value: string) => void, value?: string }> = ({ value, onSelect }) => {
-    const groups = useLiveQuery(() => db.groups.toArray(), []);
+import { ComboBox } from "../ui/combobox";
+
+export const StageGroupSelect: React.FC<{ container?: Element | null | undefined, onSelect: (value: string) => void, value?: string }> = ({ container, value, onSelect }) => {
+    const groups = useLiveQuery(() => db.groups.toArray().then(e => e.map(d => ({ id: d.id.toString(), value: d.name }))), []);
 
     return (
-        <select onSelect={(ev) => onSelect(ev.currentTarget.value)} value={value}>
-            <option value="">All</option>
-            {groups?.map(e => (
-                <option value={e.name} key={e.id}>
-                    {e.name}
-                </option>
-            ))}
-        </select>
+        <ComboBox container={container} options={groups} defaultValue={value} onSelect={e => onSelect(e)} />
     );
 }
