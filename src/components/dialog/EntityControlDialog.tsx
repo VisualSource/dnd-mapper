@@ -14,13 +14,6 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "../ui/select";
 import { Switch } from "../ui/switch";
 
 type State = {
@@ -36,16 +29,16 @@ const reducer = (
 	ev: {
 		type: string;
 		value:
-			| string
-			| number
-			| boolean
-			| {
-					id: string;
-					initiative: number;
-					z: number;
-					puck: PuckSize;
-					display: boolean;
-			  };
+		| string
+		| number
+		| boolean
+		| {
+			id: string;
+			initiative: number;
+			z: number;
+			puck: PuckSize;
+			display: boolean;
+		};
 	},
 ) => {
 	if (ev.type === "reset") {
