@@ -4,6 +4,7 @@
 		"enabled": true
 	},
 	"linter": {
+		"ignore": ["./src/components/ui/*.tsx", "./src/*.gen.ts"],
 		"enabled": true,
 		"rules": {
 			"recommended": true

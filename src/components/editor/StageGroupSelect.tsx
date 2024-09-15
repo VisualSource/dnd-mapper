@@ -3,10 +3,25 @@ import { db } from "../../lib/db";
 
 import { ComboBox } from "../ui/combobox";
 
-export const StageGroupSelect: React.FC<{ container?: Element | null | undefined, onSelect: (value: string) => void, value?: string }> = ({ container, value, onSelect }) => {
-    const groups = useLiveQuery(() => db.groups.toArray().then(e => e.map(d => ({ id: d.id.toString(), value: d.name }))), []);
+export const StageGroupSelect: React.FC<{
+	container?: Element | null | undefined;
+	onSelect: (value: string) => void;
+	value?: string;
+}> = ({ container, value, onSelect }) => {
+	const groups = useLiveQuery(
+		() =>
+			db.groups
+				.toArray()
+				.then((e) => e.map((d) => ({ id: d.id.toString(), value: d.name }))),
+		[],
+	);
 
-    return (
-        <ComboBox container={container} options={groups} defaultValue={value} onSelect={e => onSelect(e)} />
-    );
-}
+	return (
+		<ComboBox
+			container={container}
+			options={groups}
+			defaultValue={value}
+			onSelect={(e) => onSelect(e)}
+		/>
+	);
+};
