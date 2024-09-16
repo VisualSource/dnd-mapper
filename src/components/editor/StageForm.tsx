@@ -1,19 +1,9 @@
-import { emitTo } from "@tauri-apps/api/event";
-import { useLiveQuery } from "dexie-react-hooks";
-import { FileQuestion, Trash2 } from "lucide-react";
-import { useEffect, useRef } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { EDITOR_MAP_EVENTS, EDITOR_MAP_WINDOW_LABEL } from "../../lib/consts";
-import { db } from "../../lib/db";
-import type { ResolvedStage, Stage } from "../../lib/types";
-import { ImageSelect } from "../ImageSelect";
-import {
-	AdditionEntityDialog,
-	type AdditionEntityDialogHandle,
-} from "../dialog/AdditionEntityDialog";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
-import { ComboBox } from "../ui/combobox";
+import { FileQuestion, Trash2 } from "lucide-react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { emitTo } from "@tauri-apps/api/event";
+import { useEffect, useRef } from "react";
+
 import {
 	Form,
 	FormControl,
@@ -23,9 +13,20 @@ import {
 	FormLabel,
 	FormMessage,
 } from "../ui/form";
+import {
+	AdditionEntityDialog,
+	type AdditionEntityDialogHandle,
+} from "../dialog/AdditionEntityDialog";
+import { EDITOR_MAP_EVENTS, EDITOR_MAP_WINDOW_LABEL } from "../../lib/consts";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import type { ResolvedStage, Stage } from "../../lib/types";
+import { ImageSelect } from "../ImageSelect";
+import { ComboBox } from "../ui/combobox";
+import { Button } from "../ui/button";
+import { Switch } from "../ui/switch";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Switch } from "../ui/switch";
+import { db } from "../../lib/db";
 
 export const StageForm: React.FC<{
 	stage?: ResolvedStage;
@@ -197,7 +198,7 @@ export const StageForm: React.FC<{
 										Auto Center Background
 									</FormLabel>
 									<FormDescription>
-										Allows Centers image regardless of window resizing.
+										Allows centering of image regardless of window size.
 									</FormDescription>
 								</div>
 								<FormControl>
@@ -348,7 +349,7 @@ export const StageForm: React.FC<{
 								name="background.offset.x"
 								render={({ field }) => (
 									<FormItem className="w-full">
-										<FormLabel>Width</FormLabel>
+										<FormLabel>X</FormLabel>
 										<FormControl>
 											<Input
 												{...field}
@@ -373,7 +374,7 @@ export const StageForm: React.FC<{
 								name="background.offset.y"
 								render={({ field }) => (
 									<FormItem className="w-full">
-										<FormLabel>Height</FormLabel>
+										<FormLabel>Y</FormLabel>
 										<FormControl>
 											<Input
 												{...field}
@@ -525,7 +526,7 @@ export const StageForm: React.FC<{
 
 					<FormField
 						control={form.control}
-						name="nextStage"
+						name="stageGroup"
 						render={({ field }) => (
 							<FormItem className="flex flex-col w-full">
 								<FormLabel>Stage Group</FormLabel>

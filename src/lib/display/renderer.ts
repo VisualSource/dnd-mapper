@@ -83,7 +83,7 @@ export class Renderer {
 		const initEvent = await listen<ResolvedStage>(
 			DISPLAY_MAP_EVENTS.Init,
 			async (ev) => {
-				console.log(ev);
+				this.entityList.clear();
 				const { background, gridScale, entities } = ev.payload;
 				this.gridSize = gridScale;
 
@@ -118,7 +118,6 @@ export class Renderer {
 		const updateEvent = await listen<DisplayEvent>(
 			DISPLAY_MAP_EVENTS.Update,
 			async (ev) => {
-				console.log(ev);
 				switch (ev.payload.type) {
 					case "move": {
 						const { target, x, y } = ev.payload.data;
@@ -289,7 +288,7 @@ export class Renderer {
 			this.drawGrid(this.ctx);
 
 			const data = Array.from(this.entityList.values());
-			data.sort((a, b) => b.z - a.z);
+			data.sort((a, b) => a.z - b.z);
 
 			for (const entity of data) {
 				entity.render(this.ctx);

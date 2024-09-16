@@ -1,7 +1,7 @@
 {
 	"$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-	"productName": "dnd-mapper",
-	"version": "0.1.2",
+	"productName": "DnD Mapper",
+	"version": "0.1.3",
 	"identifier": "us.visualsource.dnd-mapper",
 	"build": {
 		"beforeDevCommand": "pnpm dev",
@@ -54,6 +54,7 @@
 		}
 	},
 	"bundle": {
+		"category": "Utility",
 		"createUpdaterArtifacts": true,
 		"active": true,
 		"targets": "all",

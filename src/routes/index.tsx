@@ -3,16 +3,19 @@ import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
 import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import { useEffect, useRef, useState } from "react";
+import { getVersion } from "@tauri-apps/api/app";
 import {
 	StageSelectionDialog,
 	type StageSelectionDialogHandle,
 } from "../components/dialog/StageSelectionDialog";
+import { useLiveQuery } from "dexie-react-hooks";
 
 export const Route = createFileRoute("/")({
 	component: Index,
 });
 
 function Index() {
+	const version = useLiveQuery(() => getVersion(), []);
 	const [isReady, setIsReady] = useState(false);
 	const navigate = useNavigate();
 	const dialogRef = useRef<StageSelectionDialogHandle>(null);
@@ -51,6 +54,9 @@ function Index() {
 					</Button>
 				</div>
 			</div>
+			{version ? (
+				<div className="absolute z-10 right-2 bottom-1">V{version}</div>
+			) : null}
 			{isReady ? (
 				<Particles
 					options={{

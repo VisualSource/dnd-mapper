@@ -1,14 +1,8 @@
 import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
-import { emitTo } from "@tauri-apps/api/event";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { useRef, useState } from "react";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/utils";
+import { emitTo } from "@tauri-apps/api/event";
 import { FileQuestion } from "lucide-react";
-import { AdditionEntityDialog } from "../components/dialog/AdditionEntityDialog";
+import { useRef, useState } from "react";
 import {
 	EntityControlDialog,
 	type EntityControlDialogHandle,
@@ -17,9 +11,14 @@ import {
 	StageSelectionDialog,
 	type StageSelectionDialogHandle,
 } from "../components/dialog/StageSelectionDialog";
+import { AdditionEntityDialog } from "../components/dialog/AdditionEntityDialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DISPLAY_MAP_EVENTS, MAP_WINDOW_LABEL } from "../lib/consts";
-import { resloveStage } from "../lib/loader";
 import { displayWindow, displayWindowToggle } from "../lib/window";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { resloveStage } from "../lib/loader";
+import { cn } from "@/lib/utils";
 
 const ControlPanel: React.FC = () => {
 	const stage = Route.useLoaderData();
@@ -117,7 +116,9 @@ const ControlPanel: React.FC = () => {
 								<div>
 									<h5 className="font-semibold tracking-tight">
 										{e?.nameOverride?.length ? e.nameOverride : e.entity.name} |
-										Initiative {e.entity.initiative}
+										<span className="text-muted-foreground ml-1">
+											Initiative {e.entity.initiative}
+										</span>
 									</h5>
 									{!e.entity.isPlayerControlled ? (
 										<div className="text-muted-foreground text-left">
@@ -195,7 +196,7 @@ const ControlPanel: React.FC = () => {
 				<div className="flex gap-2">
 					<Link
 						className={cn(buttonVariants({ variant: "outline" }), "w-full")}
-						disabled
+						disabled={stage.prevStage === "None" || !stage.prevStage}
 						to="/control/$id"
 						params={{ id: stage.prevStage ?? "" }}
 					>
@@ -203,7 +204,7 @@ const ControlPanel: React.FC = () => {
 					</Link>
 					<Link
 						className={cn(buttonVariants({ variant: "outline" }), "w-full")}
-						disabled
+						disabled={stage.nextStage === "None" || !stage.nextStage}
 						to="/control/$id"
 						params={{ id: stage.nextStage ?? "" }}
 					>

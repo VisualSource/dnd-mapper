@@ -4,6 +4,7 @@
 	"description": "Capability for the main window",
 	"windows": ["main", "display", "display-editor"],
 	"permissions": [
+		"core:app:allow-version",
 		"core:window:allow-show",
 		"core:window:allow-is-visible",
 		"core:window:allow-set-title",

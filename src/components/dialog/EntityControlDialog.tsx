@@ -15,6 +15,13 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Switch } from "../ui/switch";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "../ui/select";
 
 type State = {
 	update: null | string;
@@ -29,16 +36,16 @@ const reducer = (
 	ev: {
 		type: string;
 		value:
-		| string
-		| number
-		| boolean
-		| {
-			id: string;
-			initiative: number;
-			z: number;
-			puck: PuckSize;
-			display: boolean;
-		};
+			| string
+			| number
+			| boolean
+			| {
+					id: string;
+					initiative: number;
+					z: number;
+					puck: PuckSize;
+					display: boolean;
+			  };
 	},
 ) => {
 	if (ev.type === "reset") {
@@ -181,8 +188,8 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, Props>(
 					</Button>
 				</header>
 
-				<div className="flex flex-col gap-2 px-2">
-					<div>
+				<div className="flex flex-col gap-2 px-2 pb-2 pt-2">
+					<div className="flex flex-col gap-2">
 						<Label>Initiative</Label>
 						<Input
 							id="initiative"
@@ -200,7 +207,7 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, Props>(
 						/>
 					</div>
 
-					<div>
+					<div className="flex flex-col gap-2">
 						<Label>Z Index</Label>
 						<Input
 							id="z-Index"
@@ -213,25 +220,31 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, Props>(
 							type="number"
 							placeholder="Initiative"
 						/>
+						<p className="text-muted-foreground text-sm">
+							The order in which entity are drawn. Higher z values will be
+							placed on top of entity's with lower z values.
+						</p>
 					</div>
 
-					<div className="flex flex-col">
+					<div className="flex flex-col gap-2">
 						<Label>Puck Size</Label>
-						<select
-							className="mt-1 flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-							onChange={(ev) =>
-								dispatch({ type: "puck", value: ev.target.value })
-							}
+						<Select
 							defaultValue={state.puck}
+							onValueChange={(e) => dispatch({ type: "puck", value: e })}
 						>
-							<option value="small">Small (1 cell)</option>
-							<option value="mid">Medium (4 cells)</option>
-							<option value="large">Large (9 cells)</option>
-						</select>
+							<SelectTrigger>
+								<SelectValue placeholder="Select Puck Size" />
+							</SelectTrigger>
+							<SelectContent container={dialogRef.current}>
+								<SelectItem value="small">Small (1 cell)</SelectItem>
+								<SelectItem value="mid">Medium (4 cells)</SelectItem>
+								<SelectItem value="large">Large (9 cells)</SelectItem>
+							</SelectContent>
+						</Select>
 					</div>
 
 					<form
-						className="flex flex-col gap-4"
+						className="flex flex-col gap-4 w-full"
 						onSubmit={async (ev) => {
 							ev.preventDefault();
 							if (!item) return;
@@ -256,19 +269,21 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, Props>(
 							Movement
 						</h1>
 
-						<div className="flex gap-2">
-							<div>
+						<div className="flex gap-2 w-full items-center">
+							<div className="flex flex-col gap-2 w-full">
 								<Label>X</Label>
 								<Input
+									className="w-full"
 									defaultValue={item?.x}
 									placeholder="x"
 									type="number"
 									name="x"
 								/>
 							</div>
-							<div>
+							<div className="flex flex-col gap-2 w-full">
 								<Label>Y</Label>
 								<Input
+									className="w-full gap-2"
 									defaultValue={item?.y}
 									placeholder="y"
 									type="number"
@@ -410,7 +425,9 @@ export const EntityControlDialog = forwardRef<EntityControlDialogHandle, Props>(
 					<div className="flex flex-row items-center justify-between border p-4">
 						<div className="space-y-0.5">
 							<Label className="text-base">Display On Map</Label>
-							<p>Hides unit from board</p>
+							<p className="text-muted-foreground text-sm">
+								Hides unit from board
+							</p>
 						</div>
 						<Switch
 							checked={state.display}

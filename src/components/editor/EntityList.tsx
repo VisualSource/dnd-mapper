@@ -1,10 +1,10 @@
 import { confirm } from "@tauri-apps/plugin-dialog";
-import { useLiveQuery } from "dexie-react-hooks";
 import { FileQuestion, Trash2 } from "lucide-react";
-import { db } from "../../lib/db";
-import type { Entity } from "../../lib/types";
+import { useLiveQuery } from "dexie-react-hooks";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import type { Entity } from "../../lib/types";
 import { Button } from "../ui/button";
+import { db } from "../../lib/db";
 
 export const EntityList: React.FC<{
 	deletable?: boolean;
@@ -66,7 +66,7 @@ export const EntityList: React.FC<{
 							</Avatar>
 							<div className="flex flex-col">
 								<h1 className="text-left">{e.name}</h1>
-								<p className="text-sm text-muted-foreground">
+								<p className="text-sm text-muted-foreground text-left">
 									Initiative: {e.initiative}
 								</p>
 							</div>

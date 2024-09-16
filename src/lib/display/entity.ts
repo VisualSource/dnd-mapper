@@ -79,9 +79,9 @@ export class Entity extends EventTarget {
 			this.gridSize;
 		ctx.drawImage(this.image, x, y, wh, wh);
 
-		if (this.isPlayerControlled && this.name) {
+		if (this.isPlayerControlled && this.name?.length) {
 			ctx.font = "10px serif";
-			ctx.fillStyle = "white";
+			ctx.fillStyle = "yellow";
 			ctx.fillText(this.name, x + 10, y + 5);
 		}
 	}

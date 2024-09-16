@@ -8,12 +8,14 @@ import {
 import type { DisplayEventMap } from "./consts";
 
 export const editorWindow = new Window(EDITOR_MAP_WINDOW_LABEL);
+editorWindow.listen("tauri://close-requested", () => editorWindow.hide());
 export const toggleEditorWindow = () =>
 	editorWindow
 		.isVisible()
 		.then((e) => (e ? editorWindow.hide() : editorWindow.show()));
 
 export const displayWindow = new Window(MAP_WINDOW_LABEL);
+displayWindow.listen("tauri://close-requested", () => displayWindow.hide());
 export const displayWindowToggle = () =>
 	displayWindow
 		.isVisible()

@@ -15,36 +15,55 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
       - name: setup node
         uses: actions/setup-node@v4
         with:
           node-version: 21
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
         id: pnpm-install
         with:
           version: 9
           run_install: false
+          
       - name: Get pnpm store directory
         id: pnpm-cache
         shell: bash
         run: |
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v4
-        name: Setup pnpm cache
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
+
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
+
       - name: install frontend dependencies
         run: pnpm install
-      - name: Cache rust
-        uses: Swatinem/rust-cache@v2
-      - uses: tauri-apps/tauri-action@dev
+
+      - name: Rust Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            /src-tauri/target/ 
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Build tauri application
+        uses: tauri-apps/tauri-action@dev
         env:
           TAURI_SIGNING_PRIVATE_KEY:  ${{ secrets.TAURI_SIGNING_PRIVATE_KEY}}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
