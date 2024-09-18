@@ -2,8 +2,13 @@
 	"$schema": "../gen/schemas/desktop-schema.json",
 	"identifier": "default",
 	"description": "Capability for the main window",
-	"windows": ["main", "display", "display-editor"],
+	"windows": [
+		"main",
+		"display",
+		"display-editor"
+	],
 	"permissions": [
+		"log:default",
 		"core:app:allow-version",
 		"core:window:allow-show",
 		"core:window:allow-is-visible",

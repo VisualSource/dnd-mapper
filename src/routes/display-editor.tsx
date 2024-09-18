@@ -1,6 +1,6 @@
+import { TitleRenderer } from "@/lib/renderer/TitleRenderer";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-import { Renderer } from "../lib/display/renderer";
 
 export const Route = createFileRoute("/display-editor")({
 	component: DisplayEditorPage,
@@ -8,7 +8,7 @@ export const Route = createFileRoute("/display-editor")({
 
 function DisplayEditorPage() {
 	const ref = useRef<HTMLCanvasElement>(null);
-	const renderer = useRef(new Renderer(true));
+	const renderer = useRef(new TitleRenderer());
 
 	useEffect(() => {
 		if (ref.current) {

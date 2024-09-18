@@ -1,19 +1,23 @@
 import { RouterProvider, createRouter } from "@tanstack/react-router";
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { routeTree } from "./routeTree.gen";
-import "./index.css";
-import { Toaster } from "@/components/ui/toaster";
-import { getCurrentWindow } from "@tauri-apps/api/window";
-import { displayWindow, editorWindow } from "./lib/window";
+import { StrictMode } from "react";
 
-const router = createRouter({ routeTree });
+import { displayWindow, editorWindow } from "./lib/window";
+import { getCurrentWindow } from "@tauri-apps/api/window";
+import { Toaster } from "@/components/ui/toaster";
+import { routeTree } from "./routeTree.gen";
+import { initLogger } from "./lib/logger";
+import "./index.css";
 
 declare module "@tanstack/react-router" {
 	interface Register {
 		router: typeof router;
 	}
 }
+
+initLogger();
+const router = createRouter({ routeTree });
+
 const win = getCurrentWindow();
 win.listen("tauri://close-requested", () => {
 	editorWindow.destroy();
