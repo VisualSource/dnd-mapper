@@ -1,25 +1,28 @@
-import { Dungeon, parseDungeonSave, Polygon } from "./DungeonScrawl";
-import Level from "../../assets/dungeon-wide.json";
-import { UUID } from "crypto";
+import type { Color, Dungeon, Polygon } from "./dungeonScrawl/types";
+import Level from "../../assets/dungeon.json";
+import type { UUID } from "node:crypto";
 
-const toHex = (value: number) => `#${value.toString(16)}`;
-
-
+const toHex = (value: Color) => `#${value.colour.toString(16)}`;
 
 export class TitleRenderer {
     private mountCount = 0;
     private ctx: CanvasRenderingContext2D | null = null;
     private camera = { x: 0, y: 0 };
-    private gridCellDiameter = 36;
+    public map: Dungeon | null = null;
+    public selectedPage: UUID | null = null;
     public mount(canvas: HTMLCanvasElement) {
         this.mountCount++;
         if (this.mountCount !== 1) return;
 
-        this.ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
 
-        this.ctx!.canvas.width = window.innerWidth;
-        this.ctx!.canvas.height = window.innerHeight;
+        this.map = Level as unknown as Dungeon;
 
+        ctx.canvas.width = window.innerWidth;
+        ctx.canvas.height = window.innerHeight;
+
+        this.ctx = ctx;
 
         window.addEventListener("resize", this.resize);
 
@@ -39,17 +42,18 @@ export class TitleRenderer {
     }
 
 
-    private drawGrid(ctx: CanvasRenderingContext2D) {
-        ctx.strokeStyle = "lightgrey";
+    private drawGrid(ctx: CanvasRenderingContext2D, gridCellDiameter: number, lineWidth: number, color = "lightgrey") {
+        ctx.strokeStyle = color;
 
         ctx.beginPath();
+        ctx.lineWidth = lineWidth;
 
-        for (let x = 0; x <= ctx.canvas.width; x += this.gridCellDiameter) {
+        for (let x = 0; x <= ctx.canvas.width; x += gridCellDiameter) {
             ctx.moveTo(x, 0);
             ctx.lineTo(x, ctx.canvas.height);
         }
 
-        for (let y = 0; y <= ctx.canvas.height; y += this.gridCellDiameter) {
+        for (let y = 0; y <= ctx.canvas.height; y += gridCellDiameter) {
             ctx.moveTo(0, y);
             ctx.lineTo(ctx.canvas.width, y);
         }
@@ -80,90 +84,129 @@ export class TitleRenderer {
         ctx.lineWidth = 1;
     }
 
+    private process(pageId: UUID) {
+        if (!this.map || !this.ctx) return;
+        let geomertyId: UUID | null = null;
+        const children: UUID[] = [];
 
-    public render() {
-        if (!this.ctx) return;
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        const page = this.map.state.document.nodes[pageId];
 
-        const data = (Level as unknown as Dungeon)
-        const document = data.state.document;
+        if (page.type !== "PAGE") throw new Error("Expected node to be a page");
 
-        const process = (children: UUID[], geomertyId?: UUID) => {
-            if (!this.ctx) return;
-            for (const child of children) {
-                const node = document.nodes[child];
-                if (!node) continue;
+        children.push(...page.children);
 
-                switch (node.type) {
-                    case "PAGE": {
-                        process(node.children, geomertyId);
-                        break;
-                    }
-                    case "IMAGES": {
-                        break;
-                    }
-                    case "TEMPLATE": {
-                        if (node.visible) process(node.children, geomertyId);
-                        break;
-                    }
-                    case "GEOMETRY":
-                        if (node.visible) process(node.children, node.geometryId);
-                        break;
-                    case "FOLDER": {
-                        if (node.name === "Grid") {
-                            this.drawGrid(this.ctx);
-                            break;
-                        }
-                        if (node.visible) process(node.children, geomertyId);
-                        break;
-                    }
-                    case "GRID":
+        while (children.length > 0) {
+            const nodeId = children.shift();
+            if (!nodeId) {
+                console.log("No nodes found");
+                break;
+            }
 
-                        break;
-                    case "MULTIPOLYGON": {
-                        if (!geomertyId || !node.visible) break;
-                        const geomerty = data.data.geometry[geomertyId].polygons;
+            const node = this.map.state.document.nodes[nodeId];
+            if (!node) {
+                console.warn(`Missing node with id of "${nodeId}"`);
+                break;
+            }
 
-
-                        if (node.fill.visible) {
-                            for (const poly of geomerty) {
-                                for (const part of poly) {
-                                    this.drawPolygonFill(part, this.ctx, toHex(node.fill.colour.colour))
-                                }
-
-
-                            }
-                        }
-                        if (node.stroke.visible) {
-                            for (const poly of data.data.geometry[geomertyId].polygons) {
-                                for (const part of poly) {
-                                    this.drawPolygonStroke(part, this.ctx, toHex(node.stroke.colour.colour), node.stroke.width);
-                                }
-
-                            }
-
-                        }
-
-                        break;
-                    }
-                    default:
-                        break;
+            switch (node.type) {
+                case "PAGE":
+                    throw new Error("Should not be processing a page node!");
+                case "IMAGES": {
+                    break;
                 }
+                case "TEMPLATE": {
+                    if (!node.visible) break;
+
+                    children.unshift(...node.children)
+
+                    break;
+                }
+                case "GEOMETRY": {
+                    if (!node.visible) break;
+                    geomertyId = node.geometryId
+
+                    children.unshift(...node.children);
+
+                    break;
+                }
+                case "FOLDER": {
+                    if (!node.visible) break;
+
+                    children.unshift(...node.children);
+
+                    break;
+                }
+                case "GRID": {
+                    geomertyId = null;
+
+                    this.drawGrid(
+                        this.ctx,
+                        page.grid.cellDiameter,
+                        page.grid.linesOptions.width,
+                        toHex(page.grid.sharedOptions.colour)
+                    );
+
+                    break;
+                }
+                case "MULTIPOLYGON": {
+                    if (!node.visible || !geomertyId) break;
+
+                    const geomerty = this.map.data.geometry[geomertyId];
+
+                    if (node.fill.visible) {
+                        for (const item of geomerty.polygons) {
+                            for (const g of item) {
+                                this.drawPolygonFill(g, this.ctx, toHex(node.fill.colour));
+                            }
+                        }
+                        for (const item of geomerty.polylines) {
+                            const start = item[0];
+                            const end = item[1];
+                            this.ctx.fillStyle = toHex(node.fill.colour);
+                            this.ctx.moveTo(start[0], start[1]);
+                            this.ctx.lineTo(end[0], end[1]);
+                        }
+
+                    }
+
+                    if (node.stroke.visible) {
+                        for (const item of geomerty.polygons) {
+                            for (const g of item) {
+                                this.drawPolygonStroke(g, this.ctx, toHex(node.stroke.colour), node.stroke.width);
+                            }
+                        }
+                        for (const item of geomerty.polylines) {
+                            const start = item[0];
+                            const end = item[1];
+                            this.ctx.lineWidth = node.stroke.width;
+                            this.ctx.fillStyle = toHex(node.fill.colour);
+                            this.ctx.moveTo(start[0], start[1]);
+                            this.ctx.lineTo(end[0], end[1]);
+                        }
+                    }
+
+                    break;
+                }
+                default:
+                    console.info("Unknown node");
+                    break;
             }
         }
+    }
 
 
-        const docNode = document.nodes[document.documentNodeId];
-        process(docNode.children);
+    public render() {
 
-        /* // Floor
-         this.drawPolygonFill(geo, this.ctx, toHex(16777215));
- 
-         //grid
-         this.drawGrid(this.ctx);
- 
-         // Walls
-         this.drawPolygonStroke(geo, this.ctx, toHex(1513239), 3);*/
+        if (!this.ctx || !this.map) return;
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+
+
+        const document = this.map.state.document;
+        const selectedPage = this.selectedPage ?? document.nodes[document.documentNodeId].selectedPage
+
+        this.process(selectedPage);
+
+        // draw entities, other objects
 
     }
 

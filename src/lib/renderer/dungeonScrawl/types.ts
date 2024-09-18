@@ -1,12 +1,15 @@
-import type { UUID } from "crypto";
+import type { UUID } from "node:crypto";
 
 export type Polygon = [number, number][]
-
+export type Color = {
+    colour: number;
+    alpha: number;
+}
 type DocumentNode = {
     type: "DOCUMENT";
     id: "document";
     name: string;
-    selectedPage: string;
+    selectedPage: UUID;
     children: UUID[]
 }
 
@@ -179,17 +182,7 @@ type FolderNode = {
     children: UUID[];
 }
 
-type ReslovedChildren<T, C = unknown> = Omit<T, "children"> & { children: C[] };
-
 type Node = PageNode | ImagesNode | TemplateNode | GeometryNode | GridNode | MultiPolygonNode | FolderNode;
-type ResolvedPageNode = ReslovedChildren<PageNode>;
-type ReslovedImagesNode = ReslovedChildren<ImagesNode>;
-type ReslovedTemplateNode = ReslovedChildren<TemplateNode>;
-type ReslovedGeometryNode = ReslovedChildren<GeometryNode> & { geometry: Dungeon["data"]["geometry"][UUID] };
-type ReslovedFolderNode = ReslovedChildren<FolderNode>;
-type ReslovedNodeWithChildren = ResolvedPageNode | ReslovedImagesNode | ReslovedTemplateNode | ReslovedGeometryNode | ReslovedFolderNode
-type ReslovedNode = ReslovedNodeWithChildren | GridNode | MultiPolygonNode;
-
 
 export type Dungeon = {
     version: number;
@@ -209,48 +202,9 @@ export type Dungeon = {
         geometry: {
             [value: UUID]: {
                 polygons: Polygon[][],
-                polylines: unknown[]
+                polylines: ([number, number][])[]
             }
         }
-        assets: {}
-    }
-}
-
-
-function resolveChildren(doc: Dungeon, childrenIds: UUID[]): ReslovedNode[] {
-    const children: ReslovedNode[] = [];
-
-    for (const child of childrenIds) {
-        const node = doc.state.document.nodes[child];
-        if (!node) continue;
-
-        if ("children" in node) {
-            const childs = resolveChildren(doc, node.children);
-            (node as ReslovedNodeWithChildren).children = childs;
-        }
-
-        if (node.type === "GEOMETRY") {
-            (node as ReslovedGeometryNode).geometry = doc.data.geometry[node.geometryId]
-        }
-
-        children.push({ ...node } as ReslovedNode);
-    }
-
-
-    return children;
-}
-
-export function parseDungeonSave(value: Dungeon) {
-    if (value.version !== 1) throw new Error("Unsupported Version")
-
-    const doc = value.state.document;
-
-    const docConfig = doc.nodes[doc.documentNodeId];
-    const children = resolveChildren(value, docConfig.children);
-
-
-    return {
-        ...docConfig,
-        children,
+        assets: unknown
     }
 }
