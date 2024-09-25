@@ -1,6 +1,5 @@
 import type { UUID } from "node:crypto";
 
-export type Polygon = [number, number][]
 export type Color = {
     colour: number;
     alpha: number;
@@ -11,6 +10,18 @@ type DocumentNode = {
     name: string;
     selectedPage: UUID;
     children: UUID[]
+}
+
+export type Transform = [number, number, number, number, number, number];
+
+type DungeonAssetNode = {
+    type: "DUNGEON_ASSET",
+    id: UUID,
+    alpha: number;
+    parentId: string;
+    visible: boolean,
+    children: UUID[];
+    transform: Transform;
 }
 
 type PageNode = {
@@ -182,7 +193,65 @@ type FolderNode = {
     children: UUID[];
 }
 
-type Node = PageNode | ImagesNode | TemplateNode | GeometryNode | GridNode | MultiPolygonNode | FolderNode;
+type ShadowNode = {
+    type: "SHADOW";
+    id: UUID;
+    alpha: number,
+    name: string,
+    parentId: UUID,
+    visible: boolean,
+    castFromInternalLines: boolean,
+    tx: number;
+    ty: number;
+    colour: Color;
+    lineWidth: number,
+    roughOptions: "low" | "off"
+}
+
+type HatchingNode = {
+    type: "HATCHING"
+    id: UUID,
+    alpha: number;
+    name: string,
+    parentId: UUID,
+    visible: boolean;
+    variant: string;
+    squareOptions: {
+        padding: number;
+        lineCount: number;
+    };
+    sharedOptions: {
+        wallDistance: number,
+        strokeWidth: number,
+        strokeColour: Color
+    }
+}
+
+type BufferShadingNode = {
+    type: "BUFFER_SHADING",
+    id: UUID;
+    alpha: number,
+    name: string,
+    parentId: UUID;
+    visible: boolean;
+    wallDistance: number;
+    roughness: number;
+    fill: {
+        visible: boolean;
+        colour: Color;
+    },
+    stroke: {
+        visible: boolean,
+        colour: Color;
+        width: number;
+    }
+}
+
+type Node = PageNode | ImagesNode | TemplateNode | GeometryNode | GridNode | MultiPolygonNode | FolderNode | DungeonAssetNode | ShadowNode | HatchingNode | BufferShadingNode;
+
+export type Point = [number, number];
+export type Shape = Point[];
+export type Polygon = Shape[];
 
 export type Dungeon = {
     version: number;
@@ -201,8 +270,8 @@ export type Dungeon = {
     data: {
         geometry: {
             [value: UUID]: {
-                polygons: Polygon[][],
-                polylines: ([number, number][])[]
+                polygons: Polygon[],
+                polylines: Shape[]
             }
         }
         assets: unknown

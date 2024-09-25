@@ -48,7 +48,11 @@
 		"security": {
 			"assetProtocol": {
 				"enable": true,
-				"scope": ["$DOCUMENT/*", "$DOWNLOAD/*", "$PICTURE/*"]
+				"scope": [
+					"$DOCUMENT/*",
+					"$DOWNLOAD/*",
+					"$PICTURE/*"
+				]
 			},
 			"csp": null
 		}

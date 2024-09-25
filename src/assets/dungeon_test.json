@@ -8,22 +8,21 @@
                     "type": "DOCUMENT",
                     "id": "document",
                     "name": "My campaign",
-                    "selectedPage": "e8201adf-2afd-4db9-bc7e-12c8627cb08a",
+                    "selectedPage": "6703eb45-0a22-4150-b9c8-9a6d9184d868",
                     "children": [
-                        "e8201adf-2afd-4db9-bc7e-12c8627cb08a"
+                        "6703eb45-0a22-4150-b9c8-9a6d9184d868"
                     ]
                 },
-                "e8201adf-2afd-4db9-bc7e-12c8627cb08a": {
+                "6703eb45-0a22-4150-b9c8-9a6d9184d868": {
                     "type": "PAGE",
-                    "id": "e8201adf-2afd-4db9-bc7e-12c8627cb08a",
+                    "id": "6703eb45-0a22-4150-b9c8-9a6d9184d868",
                     "parentId": "document",
                     "name": "",
                     "children": [
-                        "a571aef3-319d-494e-ba3f-939850c51fba",
-                        "b89c197b-fdb2-4069-9845-93ab1406e551"
+                        "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152"
                     ],
                     "selection": [
-                        "a571aef3-319d-494e-ba3f-939850c51fba"
+                        "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152"
                     ],
                     "alpha": 1,
                     "objectSelection": [],
@@ -66,66 +65,57 @@
                         "alpha": 1
                     }
                 },
-                "b89c197b-fdb2-4069-9845-93ab1406e551": {
-                    "type": "IMAGES",
-                    "id": "b89c197b-fdb2-4069-9845-93ab1406e551",
-                    "alpha": 1,
-                    "parentId": "e8201adf-2afd-4db9-bc7e-12c8627cb08a",
-                    "name": "Images",
-                    "visible": true,
-                    "children": []
-                },
-                "a571aef3-319d-494e-ba3f-939850c51fba": {
+                "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152": {
                     "type": "TEMPLATE",
-                    "id": "a571aef3-319d-494e-ba3f-939850c51fba",
+                    "id": "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152",
                     "alpha": 1,
-                    "parentId": "e8201adf-2afd-4db9-bc7e-12c8627cb08a",
-                    "name": "Dungeon layer 1",
+                    "parentId": "6703eb45-0a22-4150-b9c8-9a6d9184d868",
+                    "name": "Dungeon layer 2",
                     "visible": true,
                     "children": [
-                        "349b191b-5599-424a-b1fe-f7b6bded73e8"
+                        "3a294b6a-a81d-4834-9ef3-73b45450dea0"
                     ],
                     "template": {
                         "type": "CLASSIC",
-                        "dungeonShape": "349b191b-5599-424a-b1fe-f7b6bded73e8",
-                        "floor": "74a34011-2e0f-4c3f-bd4d-45b15fa04561",
-                        "grid": "02d1561e-29d0-40f7-928b-3ed2a948369b",
-                        "walls": "68d6568d-d9c3-4488-9a38-5b9603606028"
+                        "dungeonShape": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
+                        "floor": "dfc44fe8-896a-4994-b941-59499171da18",
+                        "grid": "98dfc3ff-675a-4d2c-a2df-342aeb2c0bd6",
+                        "walls": "5fb44ece-df1a-43a8-b2fc-5ba80a69bb85"
                     }
                 },
-                "349b191b-5599-424a-b1fe-f7b6bded73e8": {
+                "3a294b6a-a81d-4834-9ef3-73b45450dea0": {
                     "type": "GEOMETRY",
-                    "id": "349b191b-5599-424a-b1fe-f7b6bded73e8",
+                    "id": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
                     "alpha": 1,
-                    "parentId": "a571aef3-319d-494e-ba3f-939850c51fba",
-                    "name": "Dungeon layer 1",
+                    "parentId": "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152",
+                    "name": "Dungeon layer 2",
                     "visible": true,
                     "children": [
-                        "74a34011-2e0f-4c3f-bd4d-45b15fa04561",
-                        "f0f798b6-9a86-4e1a-8c10-3997b227f489",
-                        "68d6568d-d9c3-4488-9a38-5b9603606028"
+                        "dfc44fe8-896a-4994-b941-59499171da18",
+                        "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d",
+                        "5fb44ece-df1a-43a8-b2fc-5ba80a69bb85"
                     ],
                     "backgroundEffect": {},
-                    "geometryId": "3ec73d52-4cd6-4c70-b3f7-00be25051cfb"
+                    "geometryId": "e6b7fa65-eb85-489a-bd9f-84373943552f"
                 },
-                "f0f798b6-9a86-4e1a-8c10-3997b227f489": {
+                "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d": {
                     "type": "FOLDER",
-                    "id": "f0f798b6-9a86-4e1a-8c10-3997b227f489",
+                    "id": "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d",
                     "alpha": 1,
-                    "parentId": "349b191b-5599-424a-b1fe-f7b6bded73e8",
+                    "parentId": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
                     "name": "Grid",
                     "visible": true,
                     "children": [
-                        "84b778b7-f245-41c6-84d5-2ff6ade39aeb",
-                        "02d1561e-29d0-40f7-928b-3ed2a948369b"
+                        "e22b9f67-54c8-48f9-88fb-d877fda9345f",
+                        "98dfc3ff-675a-4d2c-a2df-342aeb2c0bd6"
                     ]
                 },
-                "02d1561e-29d0-40f7-928b-3ed2a948369b": {
+                "98dfc3ff-675a-4d2c-a2df-342aeb2c0bd6": {
                     "type": "GRID",
-                    "id": "02d1561e-29d0-40f7-928b-3ed2a948369b",
+                    "id": "98dfc3ff-675a-4d2c-a2df-342aeb2c0bd6",
                     "alpha": 1,
                     "name": "Grid",
-                    "parentId": "f0f798b6-9a86-4e1a-8c10-3997b227f489",
+                    "parentId": "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d",
                     "visible": true,
                     "gridType": "square",
                     "variant": "clean",
@@ -165,12 +155,12 @@
                         }
                     }
                 },
-                "84b778b7-f245-41c6-84d5-2ff6ade39aeb": {
+                "e22b9f67-54c8-48f9-88fb-d877fda9345f": {
                     "type": "MULTIPOLYGON",
-                    "id": "84b778b7-f245-41c6-84d5-2ff6ade39aeb",
+                    "id": "e22b9f67-54c8-48f9-88fb-d877fda9345f",
                     "alpha": 1,
                     "name": "Mask",
-                    "parentId": "f0f798b6-9a86-4e1a-8c10-3997b227f489",
+                    "parentId": "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d",
                     "mask": true,
                     "visible": true,
                     "blendMode": "normal",
@@ -191,12 +181,12 @@
                         }
                     }
                 },
-                "74a34011-2e0f-4c3f-bd4d-45b15fa04561": {
+                "dfc44fe8-896a-4994-b941-59499171da18": {
                     "type": "MULTIPOLYGON",
-                    "id": "74a34011-2e0f-4c3f-bd4d-45b15fa04561",
+                    "id": "dfc44fe8-896a-4994-b941-59499171da18",
                     "alpha": 1,
                     "name": "Floor",
-                    "parentId": "349b191b-5599-424a-b1fe-f7b6bded73e8",
+                    "parentId": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
                     "mask": false,
                     "visible": true,
                     "blendMode": "normal",
@@ -217,12 +207,12 @@
                         }
                     }
                 },
-                "68d6568d-d9c3-4488-9a38-5b9603606028": {
+                "5fb44ece-df1a-43a8-b2fc-5ba80a69bb85": {
                     "type": "MULTIPOLYGON",
-                    "id": "68d6568d-d9c3-4488-9a38-5b9603606028",
+                    "id": "5fb44ece-df1a-43a8-b2fc-5ba80a69bb85",
                     "alpha": 1,
                     "name": "Walls",
-                    "parentId": "349b191b-5599-424a-b1fe-f7b6bded73e8",
+                    "parentId": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
                     "mask": false,
                     "visible": true,
                     "blendMode": "normal",
@@ -251,61 +241,85 @@
     },
     "data": {
         "geometry": {
-            "3ec73d52-4cd6-4c70-b3f7-00be25051cfb": {
+            "e6b7fa65-eb85-489a-bd9f-84373943552f": {
                 "polygons": [
                     [
                         [
                             [
-                                396.01,
-                                180.01
+                                288.01,
+                                36.01
                             ],
                             [
-                                539.99,
-                                180.01
+                                863.99,
+                                36.01
                             ],
                             [
-                                539.99,
-                                234.01
+                                863.99,
+                                324.01
                             ],
                             [
-                                540.01,
-                                234.01
+                                1026.01,
+                                324.01
                             ],
                             [
-                                540.01,
-                                180.01
-                            ],
-                            [
-                                683.99,
-                                180.01
-                            ],
-                            [
-                                683.99,
+                                1026.01,
                                 323.99
                             ],
                             [
-                                540.01,
+                                936.01,
                                 323.99
                             ],
                             [
-                                540.01,
-                                269.99
+                                936.01,
+                                36.01
                             ],
                             [
-                                539.99,
-                                269.99
+                                1223.99,
+                                36.01
                             ],
                             [
-                                539.99,
+                                1223.99,
                                 323.99
                             ],
                             [
-                                396.01,
+                                1133.99,
                                 323.99
                             ],
                             [
-                                396.01,
-                                180.01
+                                1133.99,
+                                324.01
+                            ],
+                            [
+                                1223.99,
+                                324.01
+                            ],
+                            [
+                                1223.99,
+                                737.99
+                            ],
+                            [
+                                864.01,
+                                737.99
+                            ],
+                            [
+                                864.01,
+                                467.99
+                            ],
+                            [
+                                863.99,
+                                467.99
+                            ],
+                            [
+                                863.99,
+                                755.99
+                            ],
+                            [
+                                288.01,
+                                755.99
+                            ],
+                            [
+                                288.01,
+                                36.01
                             ]
                         ]
                     ]
