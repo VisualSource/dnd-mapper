@@ -8,23 +8,22 @@
                     "type": "DOCUMENT",
                     "id": "document",
                     "name": "My campaign",
-                    "selectedPage": "6703eb45-0a22-4150-b9c8-9a6d9184d868",
+                    "selectedPage": "5f3fb1e0-6bd1-45fa-bab3-3a45616b1b33",
                     "children": [
-                        "6703eb45-0a22-4150-b9c8-9a6d9184d868"
+                        "5f3fb1e0-6bd1-45fa-bab3-3a45616b1b33"
                     ]
                 },
-                "6703eb45-0a22-4150-b9c8-9a6d9184d868": {
+                "5f3fb1e0-6bd1-45fa-bab3-3a45616b1b33": {
                     "type": "PAGE",
-                    "id": "6703eb45-0a22-4150-b9c8-9a6d9184d868",
+                    "id": "5f3fb1e0-6bd1-45fa-bab3-3a45616b1b33",
                     "parentId": "document",
-                    "name": "",
+                    "name": "Dungeon of the Void Lady",
                     "children": [
-                        "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152",
-                        "e941d899-307d-4e9e-808f-c0ffdc515de7",
-                        "4c9db029-5571-4b9b-ab5b-00a73933a2e0"
+                        "52fd4fa3-a89d-4cbb-8878-8644dcbc44c2",
+                        "e394316f-8f2b-465c-bae9-47d374b3b68f"
                     ],
                     "selection": [
-                        "4c9db029-5571-4b9b-ab5b-00a73933a2e0"
+                        "52fd4fa3-a89d-4cbb-8878-8644dcbc44c2"
                     ],
                     "alpha": 1,
                     "objectSelection": [],
@@ -67,57 +66,716 @@
                         "alpha": 1
                     }
                 },
-                "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152": {
-                    "type": "TEMPLATE",
-                    "id": "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152",
+                "e394316f-8f2b-465c-bae9-47d374b3b68f": {
+                    "type": "IMAGES",
+                    "id": "e394316f-8f2b-465c-bae9-47d374b3b68f",
                     "alpha": 1,
-                    "parentId": "6703eb45-0a22-4150-b9c8-9a6d9184d868",
-                    "name": "Dungeon layer 2",
+                    "parentId": "5f3fb1e0-6bd1-45fa-bab3-3a45616b1b33",
+                    "name": "Images",
                     "visible": true,
                     "children": [
-                        "3a294b6a-a81d-4834-9ef3-73b45450dea0"
+                        "5dc95c5e-7aa8-410e-a9b7-0f7562057b02",
+                        "0799d030-a058-4e75-9e03-aa074885eca6",
+                        "87e44e47-89bd-4a80-9e73-c308a6446699",
+                        "72299e40-0fdb-46f1-b233-e05e58a34abd",
+                        "8855c660-098a-47ad-9688-e1f15f543c08",
+                        "92605541-c264-4eb8-aaa2-aaa1d7c879cc",
+                        "ad782784-d953-462c-93a4-0a3510fab079",
+                        "b3f298cd-e668-4bf6-b163-af67fd980513",
+                        "7ea65716-4850-40fd-9f73-1023c885d4ad",
+                        "28d2603b-72be-4c31-a71b-802539d3641f",
+                        "b13fc57c-4e23-4cdc-9aa2-8e498d885ba8"
+                    ]
+                },
+                "5dc95c5e-7aa8-410e-a9b7-0f7562057b02": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "5dc95c5e-7aa8-410e-a9b7-0f7562057b02",
+                    "alpha": 1,
+                    "name": "Door",
+                    "parentId": "e394316f-8f2b-465c-bae9-47d374b3b68f",
+                    "children": [
+                        "fd9e6068-84ca-4b32-9be0-ddc9c3e83d58"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "fd9e6068-84ca-4b32-9be0-ddc9c3e83d58": {
+                    "type": "GEOMETRY",
+                    "id": "fd9e6068-84ca-4b32-9be0-ddc9c3e83d58",
+                    "alpha": 1,
+                    "parentId": "5dc95c5e-7aa8-410e-a9b7-0f7562057b02",
+                    "name": "Door geometry",
+                    "visible": true,
+                    "children": [
+                        "1fab7ebb-b054-4e06-9181-df0929331702"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "12c4dacb-c9eb-4b5f-a807-6b8586ce1f27"
+                },
+                "1fab7ebb-b054-4e06-9181-df0929331702": {
+                    "type": "MULTIPOLYGON",
+                    "id": "1fab7ebb-b054-4e06-9181-df0929331702",
+                    "alpha": 1,
+                    "name": "Door style",
+                    "parentId": "fd9e6068-84ca-4b32-9be0-ddc9c3e83d58",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "0799d030-a058-4e75-9e03-aa074885eca6": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "0799d030-a058-4e75-9e03-aa074885eca6",
+                    "alpha": 1,
+                    "name": "Door",
+                    "parentId": "e394316f-8f2b-465c-bae9-47d374b3b68f",
+                    "children": [
+                        "4b7987e5-d01b-486d-bc5e-fee678aaf323"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "4b7987e5-d01b-486d-bc5e-fee678aaf323": {
+                    "type": "GEOMETRY",
+                    "id": "4b7987e5-d01b-486d-bc5e-fee678aaf323",
+                    "alpha": 1,
+                    "parentId": "0799d030-a058-4e75-9e03-aa074885eca6",
+                    "name": "Door geometry",
+                    "visible": true,
+                    "children": [
+                        "398f4142-f4ef-4d77-803c-3b86c8c199c4"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "88e1e829-6181-4585-b82d-b8255d48b179"
+                },
+                "398f4142-f4ef-4d77-803c-3b86c8c199c4": {
+                    "type": "MULTIPOLYGON",
+                    "id": "398f4142-f4ef-4d77-803c-3b86c8c199c4",
+                    "alpha": 1,
+                    "name": "Door style",
+                    "parentId": "4b7987e5-d01b-486d-bc5e-fee678aaf323",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "87e44e47-89bd-4a80-9e73-c308a6446699": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "87e44e47-89bd-4a80-9e73-c308a6446699",
+                    "alpha": 1,
+                    "name": "Door",
+                    "parentId": "e394316f-8f2b-465c-bae9-47d374b3b68f",
+                    "children": [
+                        "9d790b8d-bc38-4716-9d51-4bd16b8023f4"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "9d790b8d-bc38-4716-9d51-4bd16b8023f4": {
+                    "type": "GEOMETRY",
+                    "id": "9d790b8d-bc38-4716-9d51-4bd16b8023f4",
+                    "alpha": 1,
+                    "parentId": "87e44e47-89bd-4a80-9e73-c308a6446699",
+                    "name": "Door geometry",
+                    "visible": true,
+                    "children": [
+                        "bdbaab7e-0b4d-4a32-9889-f13cd90111f0"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "33b68a15-3425-4371-9ed4-d045d8a5556d"
+                },
+                "bdbaab7e-0b4d-4a32-9889-f13cd90111f0": {
+                    "type": "MULTIPOLYGON",
+                    "id": "bdbaab7e-0b4d-4a32-9889-f13cd90111f0",
+                    "alpha": 1,
+                    "name": "Door style",
+                    "parentId": "9d790b8d-bc38-4716-9d51-4bd16b8023f4",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "72299e40-0fdb-46f1-b233-e05e58a34abd": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "72299e40-0fdb-46f1-b233-e05e58a34abd",
+                    "alpha": 1,
+                    "name": "Door",
+                    "parentId": "e394316f-8f2b-465c-bae9-47d374b3b68f",
+                    "children": [
+                        "51aa392a-1a85-4adf-8273-b110872c4148"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "51aa392a-1a85-4adf-8273-b110872c4148": {
+                    "type": "GEOMETRY",
+                    "id": "51aa392a-1a85-4adf-8273-b110872c4148",
+                    "alpha": 1,
+                    "parentId": "72299e40-0fdb-46f1-b233-e05e58a34abd",
+                    "name": "Door geometry",
+                    "visible": true,
+                    "children": [
+                        "558acffc-9538-4e75-8b4a-5c421dd340df"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "329bb120-512e-4ce4-9277-c7faacf36998"
+                },
+                "558acffc-9538-4e75-8b4a-5c421dd340df": {
+                    "type": "MULTIPOLYGON",
+                    "id": "558acffc-9538-4e75-8b4a-5c421dd340df",
+                    "alpha": 1,
+                    "name": "Door style",
+                    "parentId": "51aa392a-1a85-4adf-8273-b110872c4148",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "8855c660-098a-47ad-9688-e1f15f543c08": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "8855c660-098a-47ad-9688-e1f15f543c08",
+                    "alpha": 1,
+                    "name": "Door",
+                    "parentId": "e394316f-8f2b-465c-bae9-47d374b3b68f",
+                    "children": [
+                        "9a0fa6f1-1f67-4fc4-9808-2a356789b60d"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "9a0fa6f1-1f67-4fc4-9808-2a356789b60d": {
+                    "type": "GEOMETRY",
+                    "id": "9a0fa6f1-1f67-4fc4-9808-2a356789b60d",
+                    "alpha": 1,
+                    "parentId": "8855c660-098a-47ad-9688-e1f15f543c08",
+                    "name": "Door geometry",
+                    "visible": true,
+                    "children": [
+                        "5d7c73ee-ce56-472b-abd0-39b5dfe2d4e3"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "fb52ac71-5087-4b51-ab32-5479d2f76e81"
+                },
+                "5d7c73ee-ce56-472b-abd0-39b5dfe2d4e3": {
+                    "type": "MULTIPOLYGON",
+                    "id": "5d7c73ee-ce56-472b-abd0-39b5dfe2d4e3",
+                    "alpha": 1,
+                    "name": "Door style",
+                    "parentId": "9a0fa6f1-1f67-4fc4-9808-2a356789b60d",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "92605541-c264-4eb8-aaa2-aaa1d7c879cc": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "92605541-c264-4eb8-aaa2-aaa1d7c879cc",
+                    "alpha": 1,
+                    "name": "Door",
+                    "parentId": "e394316f-8f2b-465c-bae9-47d374b3b68f",
+                    "children": [
+                        "75a885b3-116d-4423-983a-b9137881941c"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "75a885b3-116d-4423-983a-b9137881941c": {
+                    "type": "GEOMETRY",
+                    "id": "75a885b3-116d-4423-983a-b9137881941c",
+                    "alpha": 1,
+                    "parentId": "92605541-c264-4eb8-aaa2-aaa1d7c879cc",
+                    "name": "Door geometry",
+                    "visible": true,
+                    "children": [
+                        "4607df5d-d609-4cdc-afa1-af05f35593c7"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "cda7e8d3-a195-4a00-aa1e-ade4e9f2881b"
+                },
+                "4607df5d-d609-4cdc-afa1-af05f35593c7": {
+                    "type": "MULTIPOLYGON",
+                    "id": "4607df5d-d609-4cdc-afa1-af05f35593c7",
+                    "alpha": 1,
+                    "name": "Door style",
+                    "parentId": "75a885b3-116d-4423-983a-b9137881941c",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "ad782784-d953-462c-93a4-0a3510fab079": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "ad782784-d953-462c-93a4-0a3510fab079",
+                    "alpha": 1,
+                    "name": "Door",
+                    "parentId": "e394316f-8f2b-465c-bae9-47d374b3b68f",
+                    "children": [
+                        "f3d64b62-11c4-49de-85bd-176c3a75a352"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "f3d64b62-11c4-49de-85bd-176c3a75a352": {
+                    "type": "GEOMETRY",
+                    "id": "f3d64b62-11c4-49de-85bd-176c3a75a352",
+                    "alpha": 1,
+                    "parentId": "ad782784-d953-462c-93a4-0a3510fab079",
+                    "name": "Door geometry",
+                    "visible": true,
+                    "children": [
+                        "9f2f323a-eb3a-457b-b881-04bcc6d0c98e"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "4a52a1d1-193c-41ec-af2e-9e8067506b88"
+                },
+                "9f2f323a-eb3a-457b-b881-04bcc6d0c98e": {
+                    "type": "MULTIPOLYGON",
+                    "id": "9f2f323a-eb3a-457b-b881-04bcc6d0c98e",
+                    "alpha": 1,
+                    "name": "Door style",
+                    "parentId": "f3d64b62-11c4-49de-85bd-176c3a75a352",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "b3f298cd-e668-4bf6-b163-af67fd980513": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "b3f298cd-e668-4bf6-b163-af67fd980513",
+                    "alpha": 1,
+                    "name": "Door",
+                    "parentId": "e394316f-8f2b-465c-bae9-47d374b3b68f",
+                    "children": [
+                        "741e335e-226a-4643-a0e8-872cc82af3e4"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "741e335e-226a-4643-a0e8-872cc82af3e4": {
+                    "type": "GEOMETRY",
+                    "id": "741e335e-226a-4643-a0e8-872cc82af3e4",
+                    "alpha": 1,
+                    "parentId": "b3f298cd-e668-4bf6-b163-af67fd980513",
+                    "name": "Door geometry",
+                    "visible": true,
+                    "children": [
+                        "81fedfd4-c883-4799-9ae9-21d1137e7459"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "902ea69a-d520-45e8-9a94-33066220e2a6"
+                },
+                "81fedfd4-c883-4799-9ae9-21d1137e7459": {
+                    "type": "MULTIPOLYGON",
+                    "id": "81fedfd4-c883-4799-9ae9-21d1137e7459",
+                    "alpha": 1,
+                    "name": "Door style",
+                    "parentId": "741e335e-226a-4643-a0e8-872cc82af3e4",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "7ea65716-4850-40fd-9f73-1023c885d4ad": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "7ea65716-4850-40fd-9f73-1023c885d4ad",
+                    "alpha": 1,
+                    "name": "Door",
+                    "parentId": "e394316f-8f2b-465c-bae9-47d374b3b68f",
+                    "children": [
+                        "845b0fc6-bbcb-431f-8da5-bcfba23067b5"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "845b0fc6-bbcb-431f-8da5-bcfba23067b5": {
+                    "type": "GEOMETRY",
+                    "id": "845b0fc6-bbcb-431f-8da5-bcfba23067b5",
+                    "alpha": 1,
+                    "parentId": "7ea65716-4850-40fd-9f73-1023c885d4ad",
+                    "name": "Door geometry",
+                    "visible": true,
+                    "children": [
+                        "53298fda-6bea-4317-874a-9b6224c6c989"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "1faefda6-7ebc-419b-af05-44677e9758ba"
+                },
+                "53298fda-6bea-4317-874a-9b6224c6c989": {
+                    "type": "MULTIPOLYGON",
+                    "id": "53298fda-6bea-4317-874a-9b6224c6c989",
+                    "alpha": 1,
+                    "name": "Door style",
+                    "parentId": "845b0fc6-bbcb-431f-8da5-bcfba23067b5",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "28d2603b-72be-4c31-a71b-802539d3641f": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "28d2603b-72be-4c31-a71b-802539d3641f",
+                    "alpha": 1,
+                    "name": "Door",
+                    "parentId": "e394316f-8f2b-465c-bae9-47d374b3b68f",
+                    "children": [
+                        "5d747d42-fabe-4756-be19-94ceeaf26ba3"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "5d747d42-fabe-4756-be19-94ceeaf26ba3": {
+                    "type": "GEOMETRY",
+                    "id": "5d747d42-fabe-4756-be19-94ceeaf26ba3",
+                    "alpha": 1,
+                    "parentId": "28d2603b-72be-4c31-a71b-802539d3641f",
+                    "name": "Door geometry",
+                    "visible": true,
+                    "children": [
+                        "a1f1c19d-4c60-49d4-9a87-5cc7880801a4"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "396a7c97-1404-42ac-bc0d-2db977cb57be"
+                },
+                "a1f1c19d-4c60-49d4-9a87-5cc7880801a4": {
+                    "type": "MULTIPOLYGON",
+                    "id": "a1f1c19d-4c60-49d4-9a87-5cc7880801a4",
+                    "alpha": 1,
+                    "name": "Door style",
+                    "parentId": "5d747d42-fabe-4756-be19-94ceeaf26ba3",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "b13fc57c-4e23-4cdc-9aa2-8e498d885ba8": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "b13fc57c-4e23-4cdc-9aa2-8e498d885ba8",
+                    "alpha": 1,
+                    "name": "Door",
+                    "parentId": "e394316f-8f2b-465c-bae9-47d374b3b68f",
+                    "children": [
+                        "dee20b1a-3706-4e5b-ac9a-3c433fa00255"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "dee20b1a-3706-4e5b-ac9a-3c433fa00255": {
+                    "type": "GEOMETRY",
+                    "id": "dee20b1a-3706-4e5b-ac9a-3c433fa00255",
+                    "alpha": 1,
+                    "parentId": "b13fc57c-4e23-4cdc-9aa2-8e498d885ba8",
+                    "name": "Door geometry",
+                    "visible": true,
+                    "children": [
+                        "91480e74-f78a-43b0-978b-8ed17fc8a538"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "ae85824a-2f46-4e36-8a5e-69c1a51e908b"
+                },
+                "91480e74-f78a-43b0-978b-8ed17fc8a538": {
+                    "type": "MULTIPOLYGON",
+                    "id": "91480e74-f78a-43b0-978b-8ed17fc8a538",
+                    "alpha": 1,
+                    "name": "Door style",
+                    "parentId": "dee20b1a-3706-4e5b-ac9a-3c433fa00255",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "52fd4fa3-a89d-4cbb-8878-8644dcbc44c2": {
+                    "type": "TEMPLATE",
+                    "id": "52fd4fa3-a89d-4cbb-8878-8644dcbc44c2",
+                    "alpha": 1,
+                    "parentId": "5f3fb1e0-6bd1-45fa-bab3-3a45616b1b33",
+                    "name": "Dungeon layer 1",
+                    "visible": true,
+                    "children": [
+                        "1cbafa68-1fcd-4841-815f-aa872f329d34"
                     ],
                     "template": {
                         "type": "CLASSIC",
-                        "dungeonShape": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
-                        "floor": "dfc44fe8-896a-4994-b941-59499171da18",
-                        "grid": "98dfc3ff-675a-4d2c-a2df-342aeb2c0bd6",
-                        "walls": "5fb44ece-df1a-43a8-b2fc-5ba80a69bb85"
+                        "dungeonShape": "1cbafa68-1fcd-4841-815f-aa872f329d34",
+                        "floor": "a7db457e-8a1d-49d0-a0a5-c2a7f2e00cc4",
+                        "grid": "911954f3-dc26-402f-9fb8-6688938e6b3b",
+                        "walls": "4a8ce039-8db4-4577-bb2c-297c1129f02e"
                     }
                 },
-                "3a294b6a-a81d-4834-9ef3-73b45450dea0": {
+                "1cbafa68-1fcd-4841-815f-aa872f329d34": {
                     "type": "GEOMETRY",
-                    "id": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
+                    "id": "1cbafa68-1fcd-4841-815f-aa872f329d34",
                     "alpha": 1,
-                    "parentId": "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152",
-                    "name": "Dungeon layer 2",
+                    "parentId": "52fd4fa3-a89d-4cbb-8878-8644dcbc44c2",
+                    "name": "Dungeon layer 1",
                     "visible": true,
                     "children": [
-                        "dfc44fe8-896a-4994-b941-59499171da18",
-                        "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d",
-                        "5fb44ece-df1a-43a8-b2fc-5ba80a69bb85"
+                        "a7db457e-8a1d-49d0-a0a5-c2a7f2e00cc4",
+                        "fcd699c5-b5d2-4a06-bcea-b492c90428ce",
+                        "4a8ce039-8db4-4577-bb2c-297c1129f02e"
                     ],
                     "backgroundEffect": {},
-                    "geometryId": "cc1dfdc8-466c-4289-975c-a67a59bcbd3d"
+                    "geometryId": "117f5646-d8a5-46bc-9529-14ed8135aa3c"
                 },
-                "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d": {
+                "fcd699c5-b5d2-4a06-bcea-b492c90428ce": {
                     "type": "FOLDER",
-                    "id": "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d",
+                    "id": "fcd699c5-b5d2-4a06-bcea-b492c90428ce",
                     "alpha": 1,
-                    "parentId": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
+                    "parentId": "1cbafa68-1fcd-4841-815f-aa872f329d34",
                     "name": "Grid",
                     "visible": true,
                     "children": [
-                        "e22b9f67-54c8-48f9-88fb-d877fda9345f",
-                        "98dfc3ff-675a-4d2c-a2df-342aeb2c0bd6"
+                        "8f06de9a-96cb-42d4-b5b3-b46d062c464f",
+                        "911954f3-dc26-402f-9fb8-6688938e6b3b"
                     ]
                 },
-                "98dfc3ff-675a-4d2c-a2df-342aeb2c0bd6": {
+                "911954f3-dc26-402f-9fb8-6688938e6b3b": {
                     "type": "GRID",
-                    "id": "98dfc3ff-675a-4d2c-a2df-342aeb2c0bd6",
+                    "id": "911954f3-dc26-402f-9fb8-6688938e6b3b",
                     "alpha": 1,
                     "name": "Grid",
-                    "parentId": "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d",
+                    "parentId": "fcd699c5-b5d2-4a06-bcea-b492c90428ce",
                     "visible": true,
                     "gridType": "square",
                     "variant": "clean",
@@ -157,12 +815,12 @@
                         }
                     }
                 },
-                "e22b9f67-54c8-48f9-88fb-d877fda9345f": {
+                "8f06de9a-96cb-42d4-b5b3-b46d062c464f": {
                     "type": "MULTIPOLYGON",
-                    "id": "e22b9f67-54c8-48f9-88fb-d877fda9345f",
+                    "id": "8f06de9a-96cb-42d4-b5b3-b46d062c464f",
                     "alpha": 1,
                     "name": "Mask",
-                    "parentId": "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d",
+                    "parentId": "fcd699c5-b5d2-4a06-bcea-b492c90428ce",
                     "mask": true,
                     "visible": true,
                     "blendMode": "normal",
@@ -183,12 +841,12 @@
                         }
                     }
                 },
-                "dfc44fe8-896a-4994-b941-59499171da18": {
+                "a7db457e-8a1d-49d0-a0a5-c2a7f2e00cc4": {
                     "type": "MULTIPOLYGON",
-                    "id": "dfc44fe8-896a-4994-b941-59499171da18",
+                    "id": "a7db457e-8a1d-49d0-a0a5-c2a7f2e00cc4",
                     "alpha": 1,
                     "name": "Floor",
-                    "parentId": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
+                    "parentId": "1cbafa68-1fcd-4841-815f-aa872f329d34",
                     "mask": false,
                     "visible": true,
                     "blendMode": "normal",
@@ -209,12 +867,12 @@
                         }
                     }
                 },
-                "5fb44ece-df1a-43a8-b2fc-5ba80a69bb85": {
+                "4a8ce039-8db4-4577-bb2c-297c1129f02e": {
                     "type": "MULTIPOLYGON",
-                    "id": "5fb44ece-df1a-43a8-b2fc-5ba80a69bb85",
+                    "id": "4a8ce039-8db4-4577-bb2c-297c1129f02e",
                     "alpha": 1,
                     "name": "Walls",
-                    "parentId": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
+                    "parentId": "1cbafa68-1fcd-4841-815f-aa872f329d34",
                     "mask": false,
                     "visible": true,
                     "blendMode": "normal",
@@ -223,122 +881,6 @@
                         "width": 3,
                         "colour": {
                             "colour": 1513239,
-                            "alpha": 1
-                        },
-                        "roughOptions": "off"
-                    },
-                    "fill": {
-                        "visible": false,
-                        "colour": {
-                            "colour": 16777215,
-                            "alpha": 1
-                        }
-                    }
-                },
-                "e941d899-307d-4e9e-808f-c0ffdc515de7": {
-                    "type": "DUNGEON_ASSET",
-                    "id": "e941d899-307d-4e9e-808f-c0ffdc515de7",
-                    "alpha": 1,
-                    "name": "Door",
-                    "parentId": "6703eb45-0a22-4150-b9c8-9a6d9184d868",
-                    "children": [
-                        "8639a1af-7962-4d68-8a67-4ebd3dd642eb"
-                    ],
-                    "visible": true,
-                    "transform": [
-                        1,
-                        0,
-                        0,
-                        1,
-                        0,
-                        0
-                    ]
-                },
-                "8639a1af-7962-4d68-8a67-4ebd3dd642eb": {
-                    "type": "GEOMETRY",
-                    "id": "8639a1af-7962-4d68-8a67-4ebd3dd642eb",
-                    "alpha": 1,
-                    "parentId": "e941d899-307d-4e9e-808f-c0ffdc515de7",
-                    "name": "Door geometry",
-                    "visible": true,
-                    "children": [
-                        "3f724b5d-1867-4309-a805-302c6ba2ace6"
-                    ],
-                    "backgroundEffect": {},
-                    "geometryId": "2e608d10-5e12-43dd-b9e5-cbf9afd61788"
-                },
-                "3f724b5d-1867-4309-a805-302c6ba2ace6": {
-                    "type": "MULTIPOLYGON",
-                    "id": "3f724b5d-1867-4309-a805-302c6ba2ace6",
-                    "alpha": 1,
-                    "name": "Door style",
-                    "parentId": "8639a1af-7962-4d68-8a67-4ebd3dd642eb",
-                    "mask": false,
-                    "visible": true,
-                    "blendMode": "normal",
-                    "stroke": {
-                        "visible": true,
-                        "width": 2,
-                        "colour": {
-                            "colour": 0,
-                            "alpha": 1
-                        },
-                        "roughOptions": "off"
-                    },
-                    "fill": {
-                        "visible": true,
-                        "colour": {
-                            "colour": 16777215,
-                            "alpha": 1
-                        }
-                    }
-                },
-                "4c9db029-5571-4b9b-ab5b-00a73933a2e0": {
-                    "type": "DUNGEON_ASSET",
-                    "id": "4c9db029-5571-4b9b-ab5b-00a73933a2e0",
-                    "alpha": 1,
-                    "name": "Stairs",
-                    "parentId": "6703eb45-0a22-4150-b9c8-9a6d9184d868",
-                    "children": [
-                        "7db3868f-dc33-4f44-87df-a9794a4a7849"
-                    ],
-                    "visible": true,
-                    "transform": [
-                        1,
-                        0,
-                        0,
-                        1,
-                        0,
-                        0
-                    ]
-                },
-                "7db3868f-dc33-4f44-87df-a9794a4a7849": {
-                    "type": "GEOMETRY",
-                    "id": "7db3868f-dc33-4f44-87df-a9794a4a7849",
-                    "alpha": 1,
-                    "parentId": "4c9db029-5571-4b9b-ab5b-00a73933a2e0",
-                    "name": "Stairs geometry",
-                    "visible": true,
-                    "children": [
-                        "b5d314d5-cdba-46d0-ac09-d37bee728c82"
-                    ],
-                    "backgroundEffect": {},
-                    "geometryId": "0006e508-8ffc-4430-9e69-8f7f1d7efe23"
-                },
-                "b5d314d5-cdba-46d0-ac09-d37bee728c82": {
-                    "type": "MULTIPOLYGON",
-                    "id": "b5d314d5-cdba-46d0-ac09-d37bee728c82",
-                    "alpha": 1,
-                    "name": "Stairs style",
-                    "parentId": "7db3868f-dc33-4f44-87df-a9794a4a7849",
-                    "mask": false,
-                    "visible": true,
-                    "blendMode": "normal",
-                    "stroke": {
-                        "visible": true,
-                        "width": 2,
-                        "colour": {
-                            "colour": 0,
                             "alpha": 1
                         },
                         "roughOptions": "off"
@@ -359,383 +901,1094 @@
     },
     "data": {
         "geometry": {
-            "cc1dfdc8-466c-4289-975c-a67a59bcbd3d": {
+            "12c4dacb-c9eb-4b5f-a807-6b8586ce1f27": {
                 "polygons": [
                     [
                         [
                             [
-                                288.01,
-                                36.01
+                                22,
+                                6
                             ],
                             [
-                                863.99,
-                                36.01
+                                22,
+                                30
                             ],
                             [
-                                863.99,
-                                324.01
+                                14,
+                                30
                             ],
                             [
-                                1026.01,
-                                324.01
+                                14,
+                                6
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": [
+                    [
+                        [
+                            18,
+                            0
+                        ],
+                        [
+                            18,
+                            6
+                        ]
+                    ],
+                    [
+                        [
+                            18,
+                            30
+                        ],
+                        [
+                            18,
+                            36
+                        ]
+                    ]
+                ]
+            },
+            "88e1e829-6181-4585-b82d-b8255d48b179": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                114,
+                                -130
                             ],
                             [
-                                1026.01,
-                                323.99
+                                138,
+                                -130
                             ],
                             [
-                                936.01,
-                                323.99
+                                138,
+                                -122
                             ],
                             [
-                                936.01,
-                                36.01
+                                114,
+                                -122
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": [
+                    [
+                        [
+                            108,
+                            -126
+                        ],
+                        [
+                            114,
+                            -126
+                        ]
+                    ],
+                    [
+                        [
+                            138,
+                            -126
+                        ],
+                        [
+                            144,
+                            -126
+                        ]
+                    ]
+                ]
+            },
+            "33b68a15-3425-4371-9ed4-d045d8a5556d": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                42,
+                                -202
                             ],
                             [
-                                1223.99,
-                                36.01
+                                66,
+                                -202
                             ],
                             [
-                                1223.99,
-                                323.99
+                                66,
+                                -194
                             ],
                             [
-                                1133.99,
-                                323.99
+                                42,
+                                -194
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": [
+                    [
+                        [
+                            36,
+                            -198
+                        ],
+                        [
+                            42,
+                            -198
+                        ]
+                    ],
+                    [
+                        [
+                            66,
+                            -198
+                        ],
+                        [
+                            72,
+                            -198
+                        ]
+                    ]
+                ]
+            },
+            "329bb120-512e-4ce4-9277-c7faacf36998": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                -86,
+                                -282
                             ],
                             [
-                                1133.99,
-                                324.01
+                                -86,
+                                -258
                             ],
                             [
-                                1223.99,
-                                324.01
+                                -94,
+                                -258
                             ],
                             [
-                                1223.99,
-                                504.01
+                                -94,
+                                -282
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": [
+                    [
+                        [
+                            -90,
+                            -288
+                        ],
+                        [
+                            -90,
+                            -282
+                        ]
+                    ],
+                    [
+                        [
+                            -90,
+                            -258
+                        ],
+                        [
+                            -90,
+                            -252
+                        ]
+                    ]
+                ]
+            },
+            "fb52ac71-5087-4b51-ab32-5479d2f76e81": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                -138,
+                                -202
                             ],
                             [
-                                1224,
-                                504.01
+                                -114,
+                                -202
                             ],
                             [
-                                1224,
-                                504
+                                -114,
+                                -194
                             ],
                             [
-                                1368,
-                                504
+                                -138,
+                                -194
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": [
+                    [
+                        [
+                            -144,
+                            -198
+                        ],
+                        [
+                            -138,
+                            -198
+                        ]
+                    ],
+                    [
+                        [
+                            -114,
+                            -198
+                        ],
+                        [
+                            -108,
+                            -198
+                        ]
+                    ]
+                ]
+            },
+            "cda7e8d3-a195-4a00-aa1e-ade4e9f2881b": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                -194,
+                                -282
                             ],
                             [
-                                1440,
-                                684
+                                -194,
+                                -258
                             ],
                             [
-                                1224,
-                                684
+                                -202,
+                                -258
                             ],
                             [
-                                1224,
-                                683.99
+                                -202,
+                                -282
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": [
+                    [
+                        [
+                            -198,
+                            -288
+                        ],
+                        [
+                            -198,
+                            -282
+                        ]
+                    ],
+                    [
+                        [
+                            -198,
+                            -258
+                        ],
+                        [
+                            -198,
+                            -252
+                        ]
+                    ]
+                ]
+            },
+            "4a52a1d1-193c-41ec-af2e-9e8067506b88": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                -210,
+                                -130
                             ],
                             [
-                                1223.99,
-                                683.99
+                                -186,
+                                -130
                             ],
                             [
-                                1223.99,
-                                737.99
+                                -186,
+                                -122
                             ],
                             [
-                                864.01,
-                                737.99
+                                -210,
+                                -122
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": [
+                    [
+                        [
+                            -216,
+                            -126
+                        ],
+                        [
+                            -210,
+                            -126
+                        ]
+                    ],
+                    [
+                        [
+                            -186,
+                            -126
+                        ],
+                        [
+                            -180,
+                            -126
+                        ]
+                    ]
+                ]
+            },
+            "902ea69a-d520-45e8-9a94-33066220e2a6": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                -266,
+                                -102
                             ],
                             [
-                                864.01,
-                                467.99
+                                -266,
+                                -78
                             ],
                             [
-                                863.99,
-                                467.99
+                                -274,
+                                -78
                             ],
                             [
-                                863.99,
-                                755.99
+                                -274,
+                                -102
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": [
+                    [
+                        [
+                            -270,
+                            -108
+                        ],
+                        [
+                            -270,
+                            -102
+                        ]
+                    ],
+                    [
+                        [
+                            -270,
+                            -78
+                        ],
+                        [
+                            -270,
+                            -72
+                        ]
+                    ]
+                ]
+            },
+            "1faefda6-7ebc-419b-af05-44677e9758ba": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                -410,
+                                -102
                             ],
                             [
-                                288.01,
-                                755.99
+                                -410,
+                                -78
                             ],
                             [
-                                288.01,
-                                36.01
+                                -418,
+                                -78
+                            ],
+                            [
+                                -418,
+                                -102
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": [
+                    [
+                        [
+                            -414,
+                            -108
+                        ],
+                        [
+                            -414,
+                            -102
+                        ]
+                    ],
+                    [
+                        [
+                            -414,
+                            -78
+                        ],
+                        [
+                            -414,
+                            -72
+                        ]
+                    ]
+                ]
+            },
+            "396a7c97-1404-42ac-bc0d-2db977cb57be": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                -498,
+                                -22
+                            ],
+                            [
+                                -474,
+                                -22
+                            ],
+                            [
+                                -474,
+                                -14
+                            ],
+                            [
+                                -498,
+                                -14
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": [
+                    [
+                        [
+                            -504,
+                            -18
+                        ],
+                        [
+                            -498,
+                            -18
+                        ]
+                    ],
+                    [
+                        [
+                            -474,
+                            -18
+                        ],
+                        [
+                            -468,
+                            -18
+                        ]
+                    ]
+                ]
+            },
+            "ae85824a-2f46-4e36-8a5e-69c1a51e908b": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                -338,
+                                -282
+                            ],
+                            [
+                                -338,
+                                -258
+                            ],
+                            [
+                                -346,
+                                -258
+                            ],
+                            [
+                                -346,
+                                -282
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": [
+                    [
+                        [
+                            -342,
+                            -288
+                        ],
+                        [
+                            -342,
+                            -282
+                        ]
+                    ],
+                    [
+                        [
+                            -342,
+                            -258
+                        ],
+                        [
+                            -342,
+                            -252
+                        ]
+                    ]
+                ]
+            },
+            "117f5646-d8a5-46bc-9529-14ed8135aa3c": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                -576,
+                                -144
+                            ],
+                            [
+                                -432,
+                                -144
+                            ],
+                            [
+                                -432,
+                                -108
+                            ],
+                            [
+                                -216,
+                                -108
+                            ],
+                            [
+                                -216,
+                                -180
+                            ],
+                            [
+                                -144,
+                                -180
+                            ],
+                            [
+                                -144,
+                                -216
+                            ],
+                            [
+                                -180,
+                                -216
+                            ],
+                            [
+                                -180,
+                                -252
+                            ],
+                            [
+                                -215.94261918328604,
+                                -252
+                            ],
+                            [
+                                -218.4248580094369,
+                                -245.73058038079085
+                            ],
+                            [
+                                -221.87330824638514,
+                                -239.45787268619716
+                            ],
+                            [
+                                -226.08074516178002,
+                                -233.66683258432468
+                            ],
+                            [
+                                -230.98081496206476,
+                                -228.44878823697954
+                            ],
+                            [
+                                -236.49624061932903,
+                                -223.88603132062798
+                            ],
+                            [
+                                -242.54004057620222,
+                                -220.05051923749977
+                            ],
+                            [
+                                -249.01690049697334,
+                                -217.00274030436967
+                            ],
+                            [
+                                -255.82467643160328,
+                                -214.79075981566803
+                            ],
+                            [
+                                -262.85600568683464,
+                                -213.44946202507475
+                            ],
+                            [
+                                -270,
+                                -213
+                            ],
+                            [
+                                -277.14399431316536,
+                                -213.44946202507475
+                            ],
+                            [
+                                -284.1753235683967,
+                                -214.79075981566803
+                            ],
+                            [
+                                -290.98309950302666,
+                                -217.00274030436967
+                            ],
+                            [
+                                -297.4599594237978,
+                                -220.05051923749977
+                            ],
+                            [
+                                -303.503759380671,
+                                -223.88603132062798
+                            ],
+                            [
+                                -309.01918503793524,
+                                -228.44878823697954
+                            ],
+                            [
+                                -313.91925483822,
+                                -233.66683258432468
+                            ],
+                            [
+                                -318.12669175361486,
+                                -239.45787268619722
+                            ],
+                            [
+                                -321.5751419905631,
+                                -245.73058038079085
+                            ],
+                            [
+                                -324.05738081671393,
+                                -252
+                            ],
+                            [
+                                -360,
+                                -252
+                            ],
+                            [
+                                -360,
+                                -288
+                            ],
+                            [
+                                -324.05738081671393,
+                                -288
+                            ],
+                            [
+                                -321.5751419905631,
+                                -294.26941961920915
+                            ],
+                            [
+                                -318.12669175361486,
+                                -300.5421273138028
+                            ],
+                            [
+                                -313.91925483822,
+                                -306.3331674156753
+                            ],
+                            [
+                                -309.01918503793524,
+                                -311.55121176302043
+                            ],
+                            [
+                                -303.503759380671,
+                                -316.113968679372
+                            ],
+                            [
+                                -297.4599594237978,
+                                -319.94948076250023
+                            ],
+                            [
+                                -290.98309950302666,
+                                -322.9972596956303
+                            ],
+                            [
+                                -284.1753235683967,
+                                -325.209240184332
+                            ],
+                            [
+                                -277.14399431316536,
+                                -326.55053797492525
+                            ],
+                            [
+                                -270,
+                                -327
+                            ],
+                            [
+                                -262.85600568683464,
+                                -326.55053797492525
+                            ],
+                            [
+                                -255.82467643160328,
+                                -325.209240184332
+                            ],
+                            [
+                                -249.01690049697334,
+                                -322.9972596956303
+                            ],
+                            [
+                                -242.54004057620222,
+                                -319.94948076250023
+                            ],
+                            [
+                                -236.49624061932903,
+                                -316.113968679372
+                            ],
+                            [
+                                -230.98081496206476,
+                                -311.55121176302043
+                            ],
+                            [
+                                -226.08074516178002,
+                                -306.3331674156753
+                            ],
+                            [
+                                -221.87330824638514,
+                                -300.5421273138028
+                            ],
+                            [
+                                -218.4248580094369,
+                                -294.26941961920915
+                            ],
+                            [
+                                -215.94261918328604,
+                                -288
+                            ],
+                            [
+                                -180,
+                                -288
+                            ],
+                            [
+                                -180,
+                                -324
+                            ],
+                            [
+                                -108,
+                                -324
+                            ],
+                            [
+                                -108,
+                                -288
+                            ],
+                            [
+                                -72,
+                                -288
+                            ],
+                            [
+                                -72,
+                                -468
+                            ],
+                            [
+                                180,
+                                -468
+                            ],
+                            [
+                                180,
+                                -216
+                            ],
+                            [
+                                72,
+                                -216
+                            ],
+                            [
+                                72,
+                                -180
+                            ],
+                            [
+                                144,
+                                -180
+                            ],
+                            [
+                                144,
+                                -108
+                            ],
+                            [
+                                252,
+                                -108
+                            ],
+                            [
+                                252,
+                                144
+                            ],
+                            [
+                                36,
+                                144
+                            ],
+                            [
+                                36,
+                                36
+                            ],
+                            [
+                                0,
+                                36
+                            ],
+                            [
+                                0,
+                                0
+                            ],
+                            [
+                                36,
+                                0
+                            ],
+                            [
+                                36,
+                                -108
+                            ],
+                            [
+                                108,
+                                -108
+                            ],
+                            [
+                                108,
+                                -144
+                            ],
+                            [
+                                -180,
+                                -144
+                            ],
+                            [
+                                -180,
+                                -108
+                            ],
+                            [
+                                -144,
+                                -108
+                            ],
+                            [
+                                -144,
+                                0
+                            ],
+                            [
+                                -252,
+                                0
+                            ],
+                            [
+                                -252,
+                                -72
+                            ],
+                            [
+                                -432,
+                                -72
+                            ],
+                            [
+                                -432,
+                                -36
+                            ],
+                            [
+                                -468,
+                                -36
+                            ],
+                            [
+                                -468,
+                                0
+                            ],
+                            [
+                                -468.103017823794,
+                                0
+                            ],
+                            [
+                                -465.01690049697334,
+                                1.0027403043696737
+                            ],
+                            [
+                                -458.5400405762022,
+                                4.050519237499778
+                            ],
+                            [
+                                -452.496240619329,
+                                7.886031320627993
+                            ],
+                            [
+                                -446.98081496206476,
+                                12.448788236979546
+                            ],
+                            [
+                                -442.08074516178,
+                                17.666832584324688
+                            ],
+                            [
+                                -437.87330824638514,
+                                23.4578726861972
+                            ],
+                            [
+                                -434.4248580094369,
+                                29.73058038079086
+                            ],
+                            [
+                                -431.78977857117627,
+                                36.386031320628
+                            ],
+                            [
+                                -430.00962670846474,
+                                43.3192650686137
+                            ],
+                            [
+                                -429.1124764795885,
+                                50.420940386829145
+                            ],
+                            [
+                                -429.1124764795885,
+                                57.57905961317087
+                            ],
+                            [
+                                -430.00962670846474,
+                                64.68073493138633
+                            ],
+                            [
+                                -431.78977857117627,
+                                71.61396867937202
+                            ],
+                            [
+                                -434.4248580094369,
+                                78.26941961920915
+                            ],
+                            [
+                                -437.87330824638514,
+                                84.54212731380282
+                            ],
+                            [
+                                -442.08074516178,
+                                90.33316741567532
+                            ],
+                            [
+                                -446.98081496206476,
+                                95.55121176302046
+                            ],
+                            [
+                                -452.496240619329,
+                                100.11396867937201
+                            ],
+                            [
+                                -458.5400405762022,
+                                103.94948076250023
+                            ],
+                            [
+                                -465.01690049697334,
+                                106.99725969563033
+                            ],
+                            [
+                                -471.8246764316033,
+                                109.20924018433197
+                            ],
+                            [
+                                -478.85600568683464,
+                                110.55053797492525
+                            ],
+                            [
+                                -486,
+                                111
+                            ],
+                            [
+                                -493.14399431316536,
+                                110.55053797492525
+                            ],
+                            [
+                                -500.1753235683967,
+                                109.20924018433197
+                            ],
+                            [
+                                -506.98309950302666,
+                                106.99725969563033
+                            ],
+                            [
+                                -513.4599594237977,
+                                103.94948076250023
+                            ],
+                            [
+                                -519.503759380671,
+                                100.11396867937201
+                            ],
+                            [
+                                -525.0191850379352,
+                                95.55121176302046
+                            ],
+                            [
+                                -529.91925483822,
+                                90.33316741567532
+                            ],
+                            [
+                                -534.1266917536149,
+                                84.54212731380278
+                            ],
+                            [
+                                -537.5751419905631,
+                                78.26941961920912
+                            ],
+                            [
+                                -540.2102214288237,
+                                71.61396867937202
+                            ],
+                            [
+                                -541.9903732915352,
+                                64.6807349313863
+                            ],
+                            [
+                                -542.8875235204115,
+                                57.57905961317085
+                            ],
+                            [
+                                -542.8875235204115,
+                                50.420940386829116
+                            ],
+                            [
+                                -541.9903732915352,
+                                43.31926506861366
+                            ],
+                            [
+                                -540.2102214288237,
+                                36.386031320628
+                            ],
+                            [
+                                -537.5751419905631,
+                                29.73058038079086
+                            ],
+                            [
+                                -534.1266917536149,
+                                23.457872686197184
+                            ],
+                            [
+                                -529.91925483822,
+                                17.666832584324673
+                            ],
+                            [
+                                -525.0191850379352,
+                                12.448788236979524
+                            ],
+                            [
+                                -519.503759380671,
+                                7.886031320627971
+                            ],
+                            [
+                                -513.4599594237977,
+                                4.050519237499778
+                            ],
+                            [
+                                -506.98309950302666,
+                                1.0027403043696665
+                            ],
+                            [
+                                -503.89698217620605,
+                                0
+                            ],
+                            [
+                                -504,
+                                0
+                            ],
+                            [
+                                -504,
+                                -36
+                            ],
+                            [
+                                -576,
+                                -36
+                            ],
+                            [
+                                -576,
+                                -144
+                            ]
+                        ],
+                        [
+                            [
+                                -108,
+                                -252
+                            ],
+                            [
+                                -108,
+                                -180
+                            ],
+                            [
+                                36,
+                                -180
+                            ],
+                            [
+                                36,
+                                -216
+                            ],
+                            [
+                                -72,
+                                -216
+                            ],
+                            [
+                                -72,
+                                -252
+                            ],
+                            [
+                                -108,
+                                -252
                             ]
                         ]
                     ]
                 ],
                 "polylines": []
-            },
-            "2e608d10-5e12-43dd-b9e5-cbf9afd61788": {
-                "polygons": [
-                    [
-                        [
-                            [
-                                1050,
-                                320
-                            ],
-                            [
-                                1110,
-                                320
-                            ],
-                            [
-                                1110,
-                                328
-                            ],
-                            [
-                                1050,
-                                328
-                            ]
-                        ]
-                    ]
-                ],
-                "polylines": [
-                    [
-                        [
-                            1044,
-                            324
-                        ],
-                        [
-                            1050,
-                            324
-                        ]
-                    ],
-                    [
-                        [
-                            1110,
-                            324
-                        ],
-                        [
-                            1116,
-                            324
-                        ]
-                    ]
-                ]
-            },
-            "0006e508-8ffc-4430-9e69-8f7f1d7efe23": {
-                "polygons": [],
-                "polylines": [
-                    [
-                        [
-                            432,
-                            72
-                        ],
-                        [
-                            324,
-                            72
-                        ]
-                    ],
-                    [
-                        [
-                            431.1,
-                            79.2
-                        ],
-                        [
-                            324.9,
-                            79.2
-                        ]
-                    ],
-                    [
-                        [
-                            430.2,
-                            86.4
-                        ],
-                        [
-                            325.8,
-                            86.4
-                        ]
-                    ],
-                    [
-                        [
-                            429.3,
-                            93.6
-                        ],
-                        [
-                            326.7,
-                            93.6
-                        ]
-                    ],
-                    [
-                        [
-                            428.4,
-                            100.8
-                        ],
-                        [
-                            327.6,
-                            100.8
-                        ]
-                    ],
-                    [
-                        [
-                            427.5,
-                            108
-                        ],
-                        [
-                            328.5,
-                            108
-                        ]
-                    ],
-                    [
-                        [
-                            426.6,
-                            115.2
-                        ],
-                        [
-                            329.4,
-                            115.2
-                        ]
-                    ],
-                    [
-                        [
-                            425.7,
-                            122.4
-                        ],
-                        [
-                            330.3,
-                            122.4
-                        ]
-                    ],
-                    [
-                        [
-                            424.8,
-                            129.6
-                        ],
-                        [
-                            331.2,
-                            129.6
-                        ]
-                    ],
-                    [
-                        [
-                            423.9,
-                            136.8
-                        ],
-                        [
-                            332.1,
-                            136.8
-                        ]
-                    ],
-                    [
-                        [
-                            423,
-                            144
-                        ],
-                        [
-                            333,
-                            144
-                        ]
-                    ],
-                    [
-                        [
-                            422.1,
-                            151.2
-                        ],
-                        [
-                            333.9,
-                            151.2
-                        ]
-                    ],
-                    [
-                        [
-                            421.2,
-                            158.4
-                        ],
-                        [
-                            334.8,
-                            158.4
-                        ]
-                    ],
-                    [
-                        [
-                            420.3,
-                            165.60000000000002
-                        ],
-                        [
-                            335.7,
-                            165.60000000000002
-                        ]
-                    ],
-                    [
-                        [
-                            419.4,
-                            172.8
-                        ],
-                        [
-                            336.6,
-                            172.8
-                        ]
-                    ],
-                    [
-                        [
-                            418.5,
-                            180
-                        ],
-                        [
-                            337.5,
-                            180
-                        ]
-                    ],
-                    [
-                        [
-                            417.6,
-                            187.2
-                        ],
-                        [
-                            338.4,
-                            187.2
-                        ]
-                    ],
-                    [
-                        [
-                            416.7,
-                            194.40000000000003
-                        ],
-                        [
-                            339.3,
-                            194.40000000000003
-                        ]
-                    ],
-                    [
-                        [
-                            415.8,
-                            201.6
-                        ],
-                        [
-                            340.2,
-                            201.6
-                        ]
-                    ],
-                    [
-                        [
-                            414.9,
-                            208.8
-                        ],
-                        [
-                            341.1,
-                            208.8
-                        ]
-                    ],
-                    [
-                        [
-                            414,
-                            216
-                        ],
-                        [
-                            342,
-                            216
-                        ]
-                    ]
-                ]
             }
         },
         "assets": {}

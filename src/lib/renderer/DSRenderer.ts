@@ -143,7 +143,13 @@ export default class DSRenderer {
 
         if (page.type !== "PAGE") throw new Error("Expected node to be a page");
 
+        const backgroundColor = toHex(page.background.colour);
+
+        this.ctx.canvas.style.backgroundColor = backgroundColor;
+
         children.push(...page.children);
+
+
 
         while (children.length > 0) {
             const nodeId = children.shift();
@@ -199,9 +205,10 @@ export default class DSRenderer {
                 }
                 case "GEOMETRY": {
                     if (!node.visible) break;
-                    geomertyId = node.geometryId
-
+                    // debugger;
+                    geomertyId = node.geometryId;
                     children.unshift(...node.children);
+                    //children.unshift(...node.children);
 
                     break;
                 }
@@ -232,9 +239,12 @@ export default class DSRenderer {
                     this.ctx.save();
 
                     if (node.fill.visible) {
-                        for (const polygon of geomerty.polygons) {
-                            for (const part of polygon) {
-                                this.drawPolygonFill(part, this.ctx, toHex(node.fill.colour));
+                        // main geomerty
+                        this.drawPolygonFill(geomerty.polygons[0][0], this.ctx, toHex(node.fill.colour));
+                        // remove hollow points
+                        if (geomerty.polygons[0].length > 1) {
+                            for (let i = 1; i < geomerty.polygons[0].length; i++) {
+                                this.drawPolygonFill(geomerty.polygons[0][i], this.ctx, backgroundColor);
                             }
                         }
                     }
@@ -276,7 +286,6 @@ export default class DSRenderer {
 
     private draw = () => {
         if (!this.ctx) return;
-
         this.ctx.canvas.height = window.innerHeight;
         this.ctx.canvas.width = window.innerWidth;
 

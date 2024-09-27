@@ -1,39 +1,34 @@
-import {
+/*import {
 	StageGroupDialog,
 	type StageGroupDialogHandle,
-} from "@/components/dialog/StageGroupDialog";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
+} from "@/components/dialog/StageGroupDialog";*/
+//import { Button, buttonVariants } from "@/components/ui/button";
+
 import {
-	Link,
+	//Link,
 	Outlet,
 	createFileRoute,
-	useMatchRoute,
-	useNavigate,
+	//useMatchRoute,
+	//useNavigate,
 } from "@tanstack/react-router";
-import { confirm } from "@tauri-apps/plugin-dialog";
-import { Trash2 } from "lucide-react";
-import { useRef, useState } from "react";
-import { useDebounce } from "use-debounce";
-import { StageGroupSelect } from "../components/editor/StageGroupSelect";
-import { StageList } from "../components/editor/StageList";
-import { db } from "../lib/db";
-import { editorWindow, toggleEditorWindow } from "../lib/window";
+//import { confirm } from "@tauri-apps/plugin-dialog";
+//import { Trash2 } from "lucide-react";
+//import { useRef } from "react";
 
-const CreateStagePage: React.FC = () => {
-	const sgDialog = useRef<StageGroupDialogHandle>(null);
-	const matchRoute = useMatchRoute();
-	const naviagte = useNavigate();
-	const isEditing = matchRoute({ to: "/stage-editor/$id" });
-	const [group, setGroup] = useState<string>();
-	const [search, setSearch] = useState<string>();
-	const [query] = useDebounce(search, 1000);
+//import { db } from "../lib/db";
+import { editorWindow, /*toggleEditorWindow*/ } from "../lib/window";
 
-	return (
-		<div className="flex w-full">
+export const Route = createFileRoute("/stage-editor")({
+	component: () => <Outlet />,
+	onLeave() {
+		editorWindow.hide();
+	},
+});
+
+/*
+<div className="flex w-full">
 			<StageGroupDialog ref={sgDialog} />
-			<main className="overflow-hidden w-7/12 flex flex-col border-r">
+			<main className="overflow-hidden flex flex-col border-r">
 				<header className="flex justify-between p-2">
 					<Link
 						to="/"
@@ -80,41 +75,9 @@ const CreateStagePage: React.FC = () => {
 						) : null}
 					</div>
 				</header>
-				<Outlet />
+			
 			</main>
-			<aside className="flex flex-col overflow-hidden w-5/12 p-2">
-				<header className="flex w-full pb-2 gap-1">
-					<Input
-						value={search}
-						onChange={(e) => setSearch(e.target.value)}
-						placeholder="Search"
-						type="search"
-					/>
-					<StageGroupSelect onSelect={setGroup} value={group} />
-					<Link
-						to="/stage-editor/new"
-						className={buttonVariants({ variant: "secondary" })}
-					>
-						New
-					</Link>
-				</header>
-				<Separator className="mb-2" />
-				<StageList
-					deletable
-					group={group}
-					filter={query}
-					onClick={(stage) =>
-						naviagte({ to: "/stage-editor/$id", params: { id: stage.id } })
-					}
-				/>
-			</aside>
-		</div>
-	);
-};
 
-export const Route = createFileRoute("/stage-editor")({
-	component: CreateStagePage,
-	onLeave() {
-		editorWindow.hide();
-	},
-});
+		</div>
+
+*/

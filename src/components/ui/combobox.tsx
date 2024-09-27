@@ -17,11 +17,12 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 
 export const ComboBox: React.FC<{
+	name?: string,
 	container?: Element | null | undefined;
 	options?: { id: string; value: string }[];
 	defaultValue?: string;
 	onSelect: (value: string) => void;
-}> = ({ container, defaultValue, onSelect, options }) => {
+}> = ({ container, defaultValue, onSelect, options, name = "Option" }) => {
 	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState(defaultValue);
 
@@ -31,13 +32,13 @@ export const ComboBox: React.FC<{
 				<Button variant="outline" role="combobox" aria-expanded={open}>
 					{value
 						? options?.find((e) => e.id === value)?.value
-						: "Select Option"}
+						: `Select ${name}`}
 					<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent container={container} className="p-0">
 				<Command>
-					<CommandInput placeholder="Search options..." />
+					<CommandInput placeholder={`Search ${name}s...`} />
 					<CommandList>
 						<CommandEmpty>No options found.</CommandEmpty>
 						<CommandGroup>

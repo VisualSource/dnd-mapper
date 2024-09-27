@@ -6,11 +6,11 @@ const db = new Dexie("us.visualsource.dnd-mapper") as Dexie & {
 	stage: EntityTable<Stage, "id">;
 	groups: EntityTable<Group, "id">;
 };
-db.version(3).stores({
+db.version(4).stores({
 	entity:
 		"&id,name,image,initiative,isPlayerControlled,displayOnMap,health,maxHealth,tempHealth,puckSize",
 	stage:
-		"&id,name,*entities,background,gridScale,prevStage,nextStage,stageGroup",
+		"&id,name,*entities,dsFilepath,prevStage,nextStage,stageGroup",
 	groups: "id++,&name",
 });
 

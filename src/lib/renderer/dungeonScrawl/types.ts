@@ -17,6 +17,7 @@ export type Transform = [number, number, number, number, number, number];
 type DungeonAssetNode = {
     type: "DUNGEON_ASSET",
     id: UUID,
+    name: string,
     alpha: number;
     parentId: string;
     visible: boolean,
@@ -248,6 +249,7 @@ type BufferShadingNode = {
 }
 
 type Node = PageNode | ImagesNode | TemplateNode | GeometryNode | GridNode | MultiPolygonNode | FolderNode | DungeonAssetNode | ShadowNode | HatchingNode | BufferShadingNode;
+export type NodeType = Pick<Node, "type">["type"]
 
 export type Point = [number, number];
 export type Shape = Point[];

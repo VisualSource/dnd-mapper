@@ -36,11 +36,10 @@ export const StageList: React.FC<{
 	}
 
 	return (
-		<ul
+		<ul className="space-y-2"
 			onClick={(ev) => {
 				const el = ev.nativeEvent.target as HTMLElement;
-				const isBtn = el.getAttribute("data-no-load") !== null;
-				if (!el || isBtn) return;
+				if (!el) return;
 				const target = el.closest("li[data-id]");
 				if (!target) return;
 
@@ -50,8 +49,8 @@ export const StageList: React.FC<{
 				if (!item) return;
 				onClick(item);
 			}}
-			onKeyUp={() => {}}
-			onKeyDown={() => {}}
+			onKeyUp={() => { }}
+			onKeyDown={() => { }}
 		>
 			{stages.map((e) => (
 				<li
@@ -60,12 +59,7 @@ export const StageList: React.FC<{
 					className="flex w-full p-2 shadow bg-card border rounded-lg text-card-foreground"
 				>
 					<button type="button" className="flex gap-2 w-full">
-						<Avatar>
-							<AvatarFallback>
-								<FileQuestion />
-							</AvatarFallback>
-							<AvatarImage src={e.background.image} alt="background" />
-						</Avatar>
+
 						<div>
 							<h1>{e.name}</h1>
 							<p className="text-sm text-muted-foreground text-left">
@@ -76,11 +70,12 @@ export const StageList: React.FC<{
 					{deletable ? (
 						<div className="flex flex-col justify-center">
 							<Button
-								data-no-load
 								variant="destructive"
 								size="sm"
 								type="button"
-								onClick={async () => {
+								onClick={async (ev) => {
+									ev.preventDefault();
+									ev.stopPropagation();
 									const confirmed = await confirm("Are you sure?", {
 										title: "Delete Stage?",
 										kind: "warning",

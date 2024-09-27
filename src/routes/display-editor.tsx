@@ -1,68 +1,12 @@
+import { ContextMenu, ContextMenuCheckboxItem, ContextMenuItem, ContextMenuLabel, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger } from "@/components/ui/context-menu";
 import DSRenderer from "@/lib/renderer/DSRenderer";
+import { ContextMenuContent } from "@radix-ui/react-context-menu";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 
 export const Route = createFileRoute("/display-editor")({
 	component: DisplayEditorPage,
 });
-
-const MAX_ZOOM = 5
-const MIN_ZOOM = 0.1
-const SCROLL_SENSITIVITY = 0.0005
-let isDragging = false
-const dragStart = { x: 0, y: 0 }
-const cameraOffset = { x: window.innerWidth / 2, y: window.innerHeight / 2 }
-let cameraZoom = 1
-let lastZoom = cameraZoom
-
-function getEventLocation(e: TouchEvent | MouseEvent) {
-	if ((e as TouchEvent).touches && (e as TouchEvent).touches.length === 1) {
-		return { x: (e as TouchEvent).touches[0].clientX, y: (e as TouchEvent).touches[0].clientY }
-	}
-	return { x: (e as MouseEvent).clientX, y: (e as MouseEvent).clientY }
-}
-function onPointerDown(e: MouseEvent) {
-	isDragging = true
-	dragStart.x = getEventLocation(e).x / cameraZoom - cameraOffset.x
-	dragStart.y = getEventLocation(e).y / cameraZoom - cameraOffset.y
-}
-function onPointerUp(e: MouseEvent) {
-	isDragging = false
-	//initialPinchDistance = null
-	lastZoom = cameraZoom
-}
-
-function onPointerMove(e: MouseEvent) {
-	if (isDragging) {
-		cameraOffset.x = getEventLocation(e).x / cameraZoom - dragStart.x
-		cameraOffset.y = getEventLocation(e).y / cameraZoom - dragStart.y
-	}
-}
-
-function drawRect(x: number, y: number, width: number, height: number, ctx: CanvasRenderingContext2D) {
-	ctx.fillRect(x, y, width, height)
-}
-
-function drawText(text: string, x: number, y: number, size: number, font: string, ctx: CanvasRenderingContext2D) {
-	ctx.font = `${size}px ${font}`
-	ctx.fillText(text, x, y)
-}
-function adjustZoom(zoomAmount: number, zoomFactor?: number) {
-	if (!isDragging) {
-		if (zoomAmount) {
-			cameraZoom += zoomAmount
-		}
-		else if (zoomFactor) {
-			console.log(zoomFactor)
-			cameraZoom = zoomFactor * lastZoom
-		}
-
-		cameraZoom = Math.min(cameraZoom, MAX_ZOOM)
-		cameraZoom = Math.max(cameraZoom, MIN_ZOOM)
-
-		console.log(zoomAmount)
-	}
-}
 
 function DisplayEditorPage() {
 	const ref = useRef<HTMLCanvasElement>(null);
@@ -72,6 +16,7 @@ function DisplayEditorPage() {
 		if (ref.current) {
 			renderer.current.mount(ref.current);
 		}
+
 		return () => {
 			renderer.current.unmount();
 		};
@@ -79,7 +24,53 @@ function DisplayEditorPage() {
 
 	return (
 		<div className="h-full w-full z-50 relative">
-			<canvas ref={ref} />
-		</div>
+			<ContextMenu>
+				<ContextMenuTrigger asChild>
+					<canvas ref={ref} />
+				</ContextMenuTrigger>
+				<ContextMenuContent className="w-64 bg-gray-950">
+					<ContextMenuItem inset>
+						Back
+						<ContextMenuShortcut>⌘[</ContextMenuShortcut>
+					</ContextMenuItem>
+					<ContextMenuItem inset disabled>
+						Forward
+						<ContextMenuShortcut>⌘]</ContextMenuShortcut>
+					</ContextMenuItem>
+					<ContextMenuItem inset>
+						Reload
+						<ContextMenuShortcut>⌘R</ContextMenuShortcut>
+					</ContextMenuItem>
+					<ContextMenuSub>
+						<ContextMenuSubTrigger inset>More Tools</ContextMenuSubTrigger>
+						<ContextMenuSubContent className="w-48">
+							<ContextMenuItem>
+								Save Page As...
+								<ContextMenuShortcut>⇧⌘S</ContextMenuShortcut>
+							</ContextMenuItem>
+							<ContextMenuItem>Create Shortcut...</ContextMenuItem>
+							<ContextMenuItem>Name Window...</ContextMenuItem>
+							<ContextMenuSeparator />
+							<ContextMenuItem>Developer Tools</ContextMenuItem>
+						</ContextMenuSubContent>
+					</ContextMenuSub>
+					<ContextMenuSeparator />
+					<ContextMenuCheckboxItem checked>
+						Show Bookmarks Bar
+						<ContextMenuShortcut>⌘⇧B</ContextMenuShortcut>
+					</ContextMenuCheckboxItem>
+					<ContextMenuCheckboxItem>Show Full URLs</ContextMenuCheckboxItem>
+					<ContextMenuSeparator />
+					<ContextMenuRadioGroup value="pedro">
+						<ContextMenuLabel inset>People</ContextMenuLabel>
+						<ContextMenuSeparator />
+						<ContextMenuRadioItem value="pedro">
+							Pedro Duarte
+						</ContextMenuRadioItem>
+						<ContextMenuRadioItem value="colm">Colm Tuite</ContextMenuRadioItem>
+					</ContextMenuRadioGroup>
+				</ContextMenuContent>
+			</ContextMenu>
+		</div >
 	);
 }

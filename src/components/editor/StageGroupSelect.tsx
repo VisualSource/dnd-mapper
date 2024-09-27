@@ -18,6 +18,7 @@ export const StageGroupSelect: React.FC<{
 
 	return (
 		<ComboBox
+			name="group"
 			container={container}
 			options={groups}
 			defaultValue={value}
