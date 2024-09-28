@@ -8,24 +8,28 @@
                     "type": "DOCUMENT",
                     "id": "document",
                     "name": "My campaign",
-                    "selectedPage": "6703eb45-0a22-4150-b9c8-9a6d9184d868",
+                    "selectedPage": "8f725113-116a-48b0-87ac-2a3d6f8d38d2",
                     "children": [
-                        "6703eb45-0a22-4150-b9c8-9a6d9184d868"
+                        "8f725113-116a-48b0-87ac-2a3d6f8d38d2"
                     ]
                 },
-                "6703eb45-0a22-4150-b9c8-9a6d9184d868": {
+                "8f725113-116a-48b0-87ac-2a3d6f8d38d2": {
                     "type": "PAGE",
-                    "id": "6703eb45-0a22-4150-b9c8-9a6d9184d868",
+                    "id": "8f725113-116a-48b0-87ac-2a3d6f8d38d2",
                     "parentId": "document",
                     "name": "",
                     "children": [
-                        "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152"
+                        "37a8b1fe-16bd-42e2-b731-07e735780b46",
+                        "4a38d2b4-718e-4074-8da5-f59bcad9aa20",
+                        "e660a320-b61e-43fa-a676-f75c109faf85"
                     ],
                     "selection": [
-                        "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152"
+                        "4a38d2b4-718e-4074-8da5-f59bcad9aa20"
                     ],
                     "alpha": 1,
-                    "objectSelection": [],
+                    "objectSelection": [
+                        "4b48f214-dec5-44c9-a9e0-e32200043ecf"
+                    ],
                     "pageTransform": "default",
                     "grid": {
                         "type": "square",
@@ -65,57 +69,71 @@
                         "alpha": 1
                     }
                 },
-                "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152": {
-                    "type": "TEMPLATE",
-                    "id": "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152",
+                "e660a320-b61e-43fa-a676-f75c109faf85": {
+                    "type": "IMAGES",
+                    "id": "e660a320-b61e-43fa-a676-f75c109faf85",
                     "alpha": 1,
-                    "parentId": "6703eb45-0a22-4150-b9c8-9a6d9184d868",
-                    "name": "Dungeon layer 2",
+                    "parentId": "8f725113-116a-48b0-87ac-2a3d6f8d38d2",
+                    "name": "Images",
                     "visible": true,
                     "children": [
-                        "3a294b6a-a81d-4834-9ef3-73b45450dea0"
+                        "ea883d01-1792-4571-9c38-51cf2c384538",
+                        "3f43f48a-8b35-4726-ac38-7a4c9b5e70c0",
+                        "86eff580-fb30-46ac-9da3-af54ba0d690a",
+                        "4b48f214-dec5-44c9-a9e0-e32200043ecf"
+                    ]
+                },
+                "37a8b1fe-16bd-42e2-b731-07e735780b46": {
+                    "type": "TEMPLATE",
+                    "id": "37a8b1fe-16bd-42e2-b731-07e735780b46",
+                    "alpha": 1,
+                    "parentId": "8f725113-116a-48b0-87ac-2a3d6f8d38d2",
+                    "name": "Dungeon layer 1",
+                    "visible": true,
+                    "children": [
+                        "ef562cbd-cd07-4b0f-810c-de41eaf891c9"
                     ],
                     "template": {
                         "type": "CLASSIC",
-                        "dungeonShape": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
-                        "floor": "dfc44fe8-896a-4994-b941-59499171da18",
-                        "grid": "98dfc3ff-675a-4d2c-a2df-342aeb2c0bd6",
-                        "walls": "5fb44ece-df1a-43a8-b2fc-5ba80a69bb85"
+                        "dungeonShape": "ef562cbd-cd07-4b0f-810c-de41eaf891c9",
+                        "floor": "4945ffa3-50e9-4c3d-95ba-a9ba00ddcd69",
+                        "grid": "c640e87a-825f-4b68-b5ca-b61516cbb330",
+                        "walls": "b1858f13-7e45-4769-8299-40bb18468942"
                     }
                 },
-                "3a294b6a-a81d-4834-9ef3-73b45450dea0": {
+                "ef562cbd-cd07-4b0f-810c-de41eaf891c9": {
                     "type": "GEOMETRY",
-                    "id": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
+                    "id": "ef562cbd-cd07-4b0f-810c-de41eaf891c9",
                     "alpha": 1,
-                    "parentId": "863d5b3d-46bf-4bc9-b0d7-1d6e9ecf8152",
-                    "name": "Dungeon layer 2",
+                    "parentId": "37a8b1fe-16bd-42e2-b731-07e735780b46",
+                    "name": "Dungeon layer 1",
                     "visible": true,
                     "children": [
-                        "dfc44fe8-896a-4994-b941-59499171da18",
-                        "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d",
-                        "5fb44ece-df1a-43a8-b2fc-5ba80a69bb85"
+                        "4945ffa3-50e9-4c3d-95ba-a9ba00ddcd69",
+                        "bc13098b-464d-4eb2-8b86-5fe77e08f62f",
+                        "b1858f13-7e45-4769-8299-40bb18468942"
                     ],
                     "backgroundEffect": {},
-                    "geometryId": "e6b7fa65-eb85-489a-bd9f-84373943552f"
+                    "geometryId": "e5e8d75e-474a-407e-9303-de1e60b78189"
                 },
-                "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d": {
+                "bc13098b-464d-4eb2-8b86-5fe77e08f62f": {
                     "type": "FOLDER",
-                    "id": "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d",
+                    "id": "bc13098b-464d-4eb2-8b86-5fe77e08f62f",
                     "alpha": 1,
-                    "parentId": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
+                    "parentId": "ef562cbd-cd07-4b0f-810c-de41eaf891c9",
                     "name": "Grid",
                     "visible": true,
                     "children": [
-                        "e22b9f67-54c8-48f9-88fb-d877fda9345f",
-                        "98dfc3ff-675a-4d2c-a2df-342aeb2c0bd6"
+                        "5493c40b-aed1-4b37-bc46-5b686b0f3bc4",
+                        "c640e87a-825f-4b68-b5ca-b61516cbb330"
                     ]
                 },
-                "98dfc3ff-675a-4d2c-a2df-342aeb2c0bd6": {
+                "c640e87a-825f-4b68-b5ca-b61516cbb330": {
                     "type": "GRID",
-                    "id": "98dfc3ff-675a-4d2c-a2df-342aeb2c0bd6",
+                    "id": "c640e87a-825f-4b68-b5ca-b61516cbb330",
                     "alpha": 1,
                     "name": "Grid",
-                    "parentId": "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d",
+                    "parentId": "bc13098b-464d-4eb2-8b86-5fe77e08f62f",
                     "visible": true,
                     "gridType": "square",
                     "variant": "clean",
@@ -155,12 +173,12 @@
                         }
                     }
                 },
-                "e22b9f67-54c8-48f9-88fb-d877fda9345f": {
+                "5493c40b-aed1-4b37-bc46-5b686b0f3bc4": {
                     "type": "MULTIPOLYGON",
-                    "id": "e22b9f67-54c8-48f9-88fb-d877fda9345f",
+                    "id": "5493c40b-aed1-4b37-bc46-5b686b0f3bc4",
                     "alpha": 1,
                     "name": "Mask",
-                    "parentId": "957ad64d-4a5f-4f1c-a564-e2b4a4e06c5d",
+                    "parentId": "bc13098b-464d-4eb2-8b86-5fe77e08f62f",
                     "mask": true,
                     "visible": true,
                     "blendMode": "normal",
@@ -181,12 +199,12 @@
                         }
                     }
                 },
-                "dfc44fe8-896a-4994-b941-59499171da18": {
+                "4945ffa3-50e9-4c3d-95ba-a9ba00ddcd69": {
                     "type": "MULTIPOLYGON",
-                    "id": "dfc44fe8-896a-4994-b941-59499171da18",
+                    "id": "4945ffa3-50e9-4c3d-95ba-a9ba00ddcd69",
                     "alpha": 1,
                     "name": "Floor",
-                    "parentId": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
+                    "parentId": "ef562cbd-cd07-4b0f-810c-de41eaf891c9",
                     "mask": false,
                     "visible": true,
                     "blendMode": "normal",
@@ -207,12 +225,412 @@
                         }
                     }
                 },
-                "5fb44ece-df1a-43a8-b2fc-5ba80a69bb85": {
+                "b1858f13-7e45-4769-8299-40bb18468942": {
                     "type": "MULTIPOLYGON",
-                    "id": "5fb44ece-df1a-43a8-b2fc-5ba80a69bb85",
+                    "id": "b1858f13-7e45-4769-8299-40bb18468942",
                     "alpha": 1,
                     "name": "Walls",
-                    "parentId": "3a294b6a-a81d-4834-9ef3-73b45450dea0",
+                    "parentId": "ef562cbd-cd07-4b0f-810c-de41eaf891c9",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 3,
+                        "colour": {
+                            "colour": 1513239,
+                            "alpha": 1
+                        },
+                        "roughOptions": "off"
+                    },
+                    "fill": {
+                        "visible": false,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "ea883d01-1792-4571-9c38-51cf2c384538": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "ea883d01-1792-4571-9c38-51cf2c384538",
+                    "alpha": 1,
+                    "name": "Door",
+                    "parentId": "e660a320-b61e-43fa-a676-f75c109faf85",
+                    "children": [
+                        "bc053ea5-69b3-4cec-b72b-669e6ba3355e"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "bc053ea5-69b3-4cec-b72b-669e6ba3355e": {
+                    "type": "GEOMETRY",
+                    "id": "bc053ea5-69b3-4cec-b72b-669e6ba3355e",
+                    "alpha": 1,
+                    "parentId": "ea883d01-1792-4571-9c38-51cf2c384538",
+                    "name": "Door geometry",
+                    "visible": true,
+                    "children": [
+                        "52a217bb-e738-48b8-a2da-203cabb5742c"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "a727ffb4-2d92-4c15-9932-bb3c0d6b1d84"
+                },
+                "52a217bb-e738-48b8-a2da-203cabb5742c": {
+                    "type": "MULTIPOLYGON",
+                    "id": "52a217bb-e738-48b8-a2da-203cabb5742c",
+                    "alpha": 1,
+                    "name": "Door style",
+                    "parentId": "bc053ea5-69b3-4cec-b72b-669e6ba3355e",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "3f43f48a-8b35-4726-ac38-7a4c9b5e70c0": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "3f43f48a-8b35-4726-ac38-7a4c9b5e70c0",
+                    "alpha": 1,
+                    "name": "Stairs",
+                    "parentId": "e660a320-b61e-43fa-a676-f75c109faf85",
+                    "children": [
+                        "62dfa215-c363-44fc-a00a-9d3ddba0b1ca"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "62dfa215-c363-44fc-a00a-9d3ddba0b1ca": {
+                    "type": "GEOMETRY",
+                    "id": "62dfa215-c363-44fc-a00a-9d3ddba0b1ca",
+                    "alpha": 1,
+                    "parentId": "3f43f48a-8b35-4726-ac38-7a4c9b5e70c0",
+                    "name": "Stairs geometry",
+                    "visible": true,
+                    "children": [
+                        "efa1fcaa-2f64-45ea-882e-8af4dfa6a285"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "2a094c47-2b68-4ecc-a66c-3151961ef539"
+                },
+                "efa1fcaa-2f64-45ea-882e-8af4dfa6a285": {
+                    "type": "MULTIPOLYGON",
+                    "id": "efa1fcaa-2f64-45ea-882e-8af4dfa6a285",
+                    "alpha": 1,
+                    "name": "Stairs style",
+                    "parentId": "62dfa215-c363-44fc-a00a-9d3ddba0b1ca",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": false,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "86eff580-fb30-46ac-9da3-af54ba0d690a": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "86eff580-fb30-46ac-9da3-af54ba0d690a",
+                    "alpha": 1,
+                    "name": "Stairs",
+                    "parentId": "e660a320-b61e-43fa-a676-f75c109faf85",
+                    "children": [
+                        "4c6b6a86-c348-421d-947a-5411ef6429c8"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "4c6b6a86-c348-421d-947a-5411ef6429c8": {
+                    "type": "GEOMETRY",
+                    "id": "4c6b6a86-c348-421d-947a-5411ef6429c8",
+                    "alpha": 1,
+                    "parentId": "86eff580-fb30-46ac-9da3-af54ba0d690a",
+                    "name": "Stairs geometry",
+                    "visible": true,
+                    "children": [
+                        "e8fe7b92-ea24-41eb-ace7-51f62bf47694"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "3baa589f-d179-4c1e-a6c5-996747c739b6"
+                },
+                "e8fe7b92-ea24-41eb-ace7-51f62bf47694": {
+                    "type": "MULTIPOLYGON",
+                    "id": "e8fe7b92-ea24-41eb-ace7-51f62bf47694",
+                    "alpha": 1,
+                    "name": "Stairs style",
+                    "parentId": "4c6b6a86-c348-421d-947a-5411ef6429c8",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 1934295,
+                            "alpha": 1
+                        },
+                        "roughOptions": "off"
+                    },
+                    "fill": {
+                        "visible": false,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "4b48f214-dec5-44c9-a9e0-e32200043ecf": {
+                    "type": "DUNGEON_ASSET",
+                    "id": "4b48f214-dec5-44c9-a9e0-e32200043ecf",
+                    "alpha": 1,
+                    "name": "Stairs",
+                    "parentId": "e660a320-b61e-43fa-a676-f75c109faf85",
+                    "children": [
+                        "b3e7b203-915f-4468-b036-27f27233b0ee"
+                    ],
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0
+                    ]
+                },
+                "b3e7b203-915f-4468-b036-27f27233b0ee": {
+                    "type": "GEOMETRY",
+                    "id": "b3e7b203-915f-4468-b036-27f27233b0ee",
+                    "alpha": 1,
+                    "parentId": "4b48f214-dec5-44c9-a9e0-e32200043ecf",
+                    "name": "Stairs geometry",
+                    "visible": true,
+                    "children": [
+                        "0a3b0c08-2f4f-4af2-b85f-ad6828c88911"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "482dd3ec-e0f1-40f5-9ec7-291ce5135abb"
+                },
+                "0a3b0c08-2f4f-4af2-b85f-ad6828c88911": {
+                    "type": "MULTIPOLYGON",
+                    "id": "0a3b0c08-2f4f-4af2-b85f-ad6828c88911",
+                    "alpha": 1,
+                    "name": "Stairs style",
+                    "parentId": "b3e7b203-915f-4468-b036-27f27233b0ee",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 2,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "off"
+                    },
+                    "fill": {
+                        "visible": false,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "4a38d2b4-718e-4074-8da5-f59bcad9aa20": {
+                    "type": "TEMPLATE",
+                    "id": "4a38d2b4-718e-4074-8da5-f59bcad9aa20",
+                    "alpha": 1,
+                    "parentId": "8f725113-116a-48b0-87ac-2a3d6f8d38d2",
+                    "name": "Layer1Cover",
+                    "visible": false,
+                    "children": [
+                        "77c363c3-ba5a-4bea-8862-9669305734f5"
+                    ],
+                    "template": {
+                        "type": "CLASSIC",
+                        "dungeonShape": "77c363c3-ba5a-4bea-8862-9669305734f5",
+                        "floor": "eea683f2-e75e-4bc5-aa16-e059ce5ce8ab",
+                        "grid": "d1eaea0e-935a-4b50-b4f6-b921430be407",
+                        "walls": "30542576-0ca4-4dc4-921b-eab6a536d9dc"
+                    }
+                },
+                "77c363c3-ba5a-4bea-8862-9669305734f5": {
+                    "type": "GEOMETRY",
+                    "id": "77c363c3-ba5a-4bea-8862-9669305734f5",
+                    "alpha": 1,
+                    "parentId": "4a38d2b4-718e-4074-8da5-f59bcad9aa20",
+                    "name": "Layer1Cover",
+                    "visible": true,
+                    "children": [
+                        "eea683f2-e75e-4bc5-aa16-e059ce5ce8ab",
+                        "93b77e55-b2db-40f7-9f45-c4a3b4ba39c3",
+                        "30542576-0ca4-4dc4-921b-eab6a536d9dc"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "91770d54-2ea9-45b6-aabd-e6dcf8d8cd82"
+                },
+                "93b77e55-b2db-40f7-9f45-c4a3b4ba39c3": {
+                    "type": "FOLDER",
+                    "id": "93b77e55-b2db-40f7-9f45-c4a3b4ba39c3",
+                    "alpha": 1,
+                    "parentId": "77c363c3-ba5a-4bea-8862-9669305734f5",
+                    "name": "Grid",
+                    "visible": true,
+                    "children": [
+                        "f5bca36d-c862-427d-9cf2-f39db5dab678",
+                        "d1eaea0e-935a-4b50-b4f6-b921430be407"
+                    ]
+                },
+                "d1eaea0e-935a-4b50-b4f6-b921430be407": {
+                    "type": "GRID",
+                    "id": "d1eaea0e-935a-4b50-b4f6-b921430be407",
+                    "alpha": 1,
+                    "name": "Grid",
+                    "parentId": "93b77e55-b2db-40f7-9f45-c4a3b4ba39c3",
+                    "visible": true,
+                    "gridType": "square",
+                    "variant": "clean",
+                    "cleanOptions": {
+                        "width": 1,
+                        "colour": {
+                            "colour": 12895428,
+                            "alpha": 1
+                        }
+                    },
+                    "roughOptions": {
+                        "width": 1,
+                        "colour": {
+                            "colour": 5592405,
+                            "alpha": 1
+                        },
+                        "roughness": {
+                            "segmentSizeMin": 1,
+                            "segmentSizeMax": 10,
+                            "segmentSkipRate": 0,
+                            "noDotRate": 0.2,
+                            "scribbleScale": 10,
+                            "scribbleAmplitude": 0.7,
+                            "shiftRate": 0.3,
+                            "shiftAmountMin": 1,
+                            "shiftAmountMax": 2,
+                            "majorNoiseScale": 0.1,
+                            "majorNoiseAmplitude": 15,
+                            "majorNoiseShift": 0.9
+                        }
+                    },
+                    "dotsOptions": {
+                        "radius": 1,
+                        "colour": {
+                            "colour": 5592405,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "f5bca36d-c862-427d-9cf2-f39db5dab678": {
+                    "type": "MULTIPOLYGON",
+                    "id": "f5bca36d-c862-427d-9cf2-f39db5dab678",
+                    "alpha": 1,
+                    "name": "Mask",
+                    "parentId": "93b77e55-b2db-40f7-9f45-c4a3b4ba39c3",
+                    "mask": true,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 5,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": false,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "eea683f2-e75e-4bc5-aa16-e059ce5ce8ab": {
+                    "type": "MULTIPOLYGON",
+                    "id": "eea683f2-e75e-4bc5-aa16-e059ce5ce8ab",
+                    "alpha": 1,
+                    "name": "Floor",
+                    "parentId": "77c363c3-ba5a-4bea-8862-9669305734f5",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": false,
+                        "width": 5,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "30542576-0ca4-4dc4-921b-eab6a536d9dc": {
+                    "type": "MULTIPOLYGON",
+                    "id": "30542576-0ca4-4dc4-921b-eab6a536d9dc",
+                    "alpha": 1,
+                    "name": "Walls",
+                    "parentId": "77c363c3-ba5a-4bea-8862-9669305734f5",
                     "mask": false,
                     "visible": true,
                     "blendMode": "normal",
@@ -241,85 +659,400 @@
     },
     "data": {
         "geometry": {
-            "e6b7fa65-eb85-489a-bd9f-84373943552f": {
+            "e5e8d75e-474a-407e-9303-de1e60b78189": {
                 "polygons": [
                     [
                         [
                             [
-                                288.01,
-                                36.01
+                                540.01,
+                                144.01
                             ],
                             [
-                                863.99,
-                                36.01
+                                755.99,
+                                144.01
                             ],
                             [
-                                863.99,
-                                324.01
+                                755.99,
+                                288.01
                             ],
                             [
-                                1026.01,
-                                324.01
+                                900.01,
+                                288.01
                             ],
                             [
-                                1026.01,
-                                323.99
+                                900.01,
+                                216.01
                             ],
                             [
-                                936.01,
-                                323.99
+                                935.99,
+                                216.01
                             ],
                             [
-                                936.01,
-                                36.01
+                                935.99,
+                                288.01
                             ],
                             [
-                                1223.99,
-                                36.01
+                                1367.99,
+                                288.01
                             ],
                             [
-                                1223.99,
-                                323.99
+                                1367.99,
+                                683.99
                             ],
                             [
-                                1133.99,
-                                323.99
+                                827.99,
+                                683.99
                             ],
                             [
-                                1133.99,
-                                324.01
+                                827.99,
+                                863.99
                             ],
                             [
-                                1223.99,
-                                324.01
+                                576.01,
+                                863.99
                             ],
                             [
-                                1223.99,
-                                737.99
+                                576.01,
+                                683.99
                             ],
                             [
-                                864.01,
-                                737.99
+                                540.01,
+                                683.99
                             ],
                             [
-                                864.01,
-                                467.99
+                                540.01,
+                                144.01
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": []
+            },
+            "a727ffb4-2d92-4c15-9932-bb3c0d6b1d84": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                906,
+                                284
                             ],
                             [
-                                863.99,
-                                467.99
+                                930,
+                                284
                             ],
                             [
-                                863.99,
-                                755.99
+                                930,
+                                292
                             ],
                             [
-                                288.01,
-                                755.99
+                                906,
+                                292
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": [
+                    [
+                        [
+                            900,
+                            288
+                        ],
+                        [
+                            906,
+                            288
+                        ]
+                    ],
+                    [
+                        [
+                            930,
+                            288
+                        ],
+                        [
+                            936,
+                            288
+                        ]
+                    ]
+                ]
+            },
+            "2a094c47-2b68-4ecc-a66c-3151961ef539": {
+                "polygons": [],
+                "polylines": []
+            },
+            "3baa589f-d179-4c1e-a6c5-996747c739b6": {
+                "polygons": [],
+                "polylines": [
+                    [
+                        [
+                            720,
+                            288
+                        ],
+                        [
+                            720,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            713.0769230769231,
+                            288
+                        ],
+                        [
+                            713.0769230769231,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            706.1538461538462,
+                            288
+                        ],
+                        [
+                            706.1538461538462,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            699.2307692307693,
+                            288
+                        ],
+                        [
+                            699.2307692307693,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            692.3076923076923,
+                            288
+                        ],
+                        [
+                            692.3076923076923,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            685.3846153846154,
+                            288
+                        ],
+                        [
+                            685.3846153846154,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            678.4615384615385,
+                            288
+                        ],
+                        [
+                            678.4615384615385,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            671.5384615384615,
+                            288
+                        ],
+                        [
+                            671.5384615384615,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            664.6153846153846,
+                            288
+                        ],
+                        [
+                            664.6153846153846,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            657.6923076923077,
+                            288
+                        ],
+                        [
+                            657.6923076923077,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            650.7692307692307,
+                            288
+                        ],
+                        [
+                            650.7692307692307,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            643.8461538461538,
+                            288
+                        ],
+                        [
+                            643.8461538461538,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            636.9230769230769,
+                            288
+                        ],
+                        [
+                            636.9230769230769,
+                            144
+                        ]
+                    ],
+                    [
+                        [
+                            630,
+                            288
+                        ],
+                        [
+                            630,
+                            144
+                        ]
+                    ]
+                ]
+            },
+            "482dd3ec-e0f1-40f5-9ec7-291ce5135abb": {
+                "polygons": [],
+                "polylines": [
+                    [
+                        [
+                            630,
+                            144
+                        ],
+                        [
+                            630,
+                            288
+                        ]
+                    ],
+                    [
+                        [
+                            623.25,
+                            150.75
+                        ],
+                        [
+                            623.25,
+                            281.25
+                        ]
+                    ],
+                    [
+                        [
+                            616.5,
+                            157.5
+                        ],
+                        [
+                            616.5,
+                            274.5
+                        ]
+                    ],
+                    [
+                        [
+                            609.75,
+                            164.25
+                        ],
+                        [
+                            609.75,
+                            267.75
+                        ]
+                    ],
+                    [
+                        [
+                            603,
+                            171
+                        ],
+                        [
+                            603,
+                            261
+                        ]
+                    ],
+                    [
+                        [
+                            596.25,
+                            177.75
+                        ],
+                        [
+                            596.25,
+                            254.25
+                        ]
+                    ],
+                    [
+                        [
+                            589.5,
+                            184.5
+                        ],
+                        [
+                            589.5,
+                            247.5
+                        ]
+                    ],
+                    [
+                        [
+                            582.75,
+                            191.25
+                        ],
+                        [
+                            582.75,
+                            240.75
+                        ]
+                    ],
+                    [
+                        [
+                            576,
+                            198
+                        ],
+                        [
+                            576,
+                            234
+                        ]
+                    ]
+                ]
+            },
+            "91770d54-2ea9-45b6-aabd-e6dcf8d8cd82": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                540,
+                                144
                             ],
                             [
-                                288.01,
-                                36.01
+                                1368,
+                                144
+                            ],
+                            [
+                                1368,
+                                144
+                            ],
+                            [
+                                1368,
+                                864
+                            ],
+                            [
+                                540,
+                                864
+                            ],
+                            [
+                                540,
+                                864
+                            ],
+                            [
+                                540,
+                                864
+                            ],
+                            [
+                                540,
+                                864
                             ]
                         ]
                     ]

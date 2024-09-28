@@ -40,7 +40,7 @@ export type Stage = {
 	id: string;
 	name: string;
 	entities: EntityRef[];
-	dsFilepath: string,
+	dsFilepaths: string[],
 	prevStage: string | null;
 	nextStage: string | null;
 	stageGroup: string | null;

@@ -24,6 +24,8 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { readFile } from "@tauri-apps/plugin-fs";
 import type { Dungeon, NodeType } from "@/lib/renderer/dungeonScrawl/types";
 import type { UUID } from "node:crypto";
+import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const loadGroups = () => db.groups
 	.toArray()
@@ -93,51 +95,56 @@ const getNode = (nodes: Dungeon["state"]["document"]["nodes"], rootNode: UUID): 
 	}
 }
 
-
-
 const DSNode: React.FC<{ node: LightNode }> = ({ node }) => {
 	switch (node.type) {
 		case "DOCUMENT":
 			return (
-				<div>
-					<h5>Document: {node.name}</h5>
-					{node.children.map(e => (
+				<div className="flex flex-col">
+					<h3 className="border-b pb-2 font-bold tracking-tight">{node.name}</h3>
+
+					{node.children?.map(e => (
 						<DSNode key={e.id} node={e} />
 					))}
 				</div>
 			);
 		case "PAGE":
 			return (
-				<div>
-					<h5>{node.type}</h5>
-					<div className="pl-2">
+				<details className="pl-2" open>
+					<summary className="border-b pb-2 text-sm font-semibold tracking-tight select-none">
+						{node?.name?.length ? node.name : "Page"}
+					</summary>
+					<div className="pl-2 flex flex-col">
 						{node.children?.map(e => (
 							<DSNode key={e.id} node={e} />
 						))}
 					</div>
-				</div>
+				</details>
 			);
 		case "IMAGES":
 			return (
-				<div>
-					<h5>{node.type}</h5>
-					<div className="pl-2">
+				<details className="pl-2">
+					<summary className="border-b pb-2 font-semibold tracking-tight">{node.name}: <span className="text-muted-foreground text-sm">{node.type}</span></summary>
+					<div className="pl-2 flex flex-col">
 						{node.children?.map(e => (
 							<DSNode key={e.id} node={e} />
 						))}
 					</div>
-				</div>
+				</details>
 			);
 		case "TEMPLATE":
 			return (
-				<div>
-					<h5>{node.type}: {node?.name}</h5>
-					<div className="pl-2">
+				<details className="pl-2">
+					<summary className="border-b pb-2 font-semibold tracking-tight">{node?.name}: <span className="text-muted-foreground text-sm">{node.type}</span></summary>
+					<div className="flex gap-2 items-center p-1 pl-2">
+						<Checkbox />
+						<Label>Visable</Label>
+					</div>
+					<div className="pl-2 flex flex-col">
 						{node.children?.map(e => (
 							<DSNode key={e.id} node={e} />
 						))}
 					</div>
-				</div>
+				</details>
 			);
 		case "GRID":
 			return (<div>{node.type}</div>)
@@ -145,7 +152,7 @@ const DSNode: React.FC<{ node: LightNode }> = ({ node }) => {
 			return (
 				<div>
 					<h5>{node.type}</h5>
-					<div className="pl-2">
+					<div className="pl-2 flex flex-col">
 						{node.children?.map(e => (
 							<DSNode key={e.id} node={e} />
 						))}
@@ -154,13 +161,11 @@ const DSNode: React.FC<{ node: LightNode }> = ({ node }) => {
 			);
 		case "DUNGEON_ASSET":
 			return (
-				<div>
-					<h5>{node.type}: {node?.name}</h5>
-					<input type="checkbox" />
-					<div className="pl-2">
-						{node.children?.map(e => (
-							<DSNode key={e.id} node={e} />
-						))}
+				<div className="flex flex-col">
+					<h5 className="border-b pb-1 mb-1 font-semibold tracking-tight">{node?.name}</h5>
+					<div className="flex gap-2 items-center p-1">
+						<Checkbox />
+						<Label>Visable</Label>
 					</div>
 				</div>
 			);
@@ -187,8 +192,12 @@ function StageEditorEditPage() {
 		control: form.control,
 		name: "entities",
 	});
+	const filesPaths = useFieldArray({
+		control: form.control,
+		name: "dsFilepaths"
+	});
 
-	const dsFile = form.watch("dsFilepath");
+	const dsFile = form.watch("dsFilepaths");
 	const loadDsfile = useLiveQuery(async () => {
 		try {
 			const file = await readFile(dsFile);
@@ -209,7 +218,7 @@ function StageEditorEditPage() {
 	const onSubmit = (state: ResolvedStage) => { }
 
 	return (
-		<div className="h-full w-full flex flex-col">
+		<div className="h-full w-full flex flex-col overflow-hidden">
 			<StageGroupDialog ref={sgdRef} />
 			<AdditionEntityDialog
 				onAdd={(e) =>
@@ -244,7 +253,7 @@ function StageEditorEditPage() {
 				</div>
 			</header>
 			<Separator />
-			<section className="flex h-full">
+			<section className="flex h-full overflow-hidden">
 				<main className="w-8/12 h-full flex">
 					<Form {...form}>
 						<form onSubmit={form.handleSubmit(onSubmit)} className="overflow-y-scroll p-2 gap-2 flex flex-col">
@@ -425,7 +434,7 @@ function StageEditorEditPage() {
 					) : loadDsfile === null ? (
 						<div>No File</div>
 					) : (
-						<div className="flex flex-col gap-2 overflow-y-scroll">
+						<div className="flex flex-col gap-2 overflow-y-scroll h-full">
 							<DSNode node={loadDsfile} />
 						</div>
 					)}

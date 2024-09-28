@@ -39,7 +39,7 @@ export default class DSRenderer {
         canvas.addEventListener('mousemove', this.onPointerMove);
         canvas.addEventListener('mouseup', this.onPointerUp);
 
-        readFile("C:\\Users\\Collin\\Downloads\\dungeon(2).ds").then(content => {
+        readFile("C:\\Users\\Collin\\Downloads\\dungeon(4).ds").then(content => {
 
             const reader = new TextDecoder(undefined);
             const value = reader.decode(content);
