@@ -1,6 +1,8 @@
 import type { UUID } from "node:crypto";
 import { readFile } from '@tauri-apps/plugin-fs';
+import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 import type { Shape, Color, Dungeon, Transform } from "./dungeonScrawl/types";
+import { EVENTS_MAP_EDITOR } from "../consts";
 
 const toHex = (value: Color) => {
     const alpha = value.alpha === 1 ? "ff" : value.alpha.toString(16).slice(2, 4);
@@ -22,6 +24,9 @@ export default class DSRenderer {
     private cameraZoom = 1;
     private lastZoom = 1;
 
+    private loadEvent: Promise<UnlistenFn> | undefined;
+    private setVisEvent: Promise<UnlistenFn> | undefined;
+
     //https://codepen.io/chengarda/pen/wRxoyB?editors=0010
     private init(canvas: HTMLCanvasElement) {
         this.abort = new AbortController();
@@ -39,20 +44,16 @@ export default class DSRenderer {
         canvas.addEventListener('mousemove', this.onPointerMove);
         canvas.addEventListener('mouseup', this.onPointerUp);
 
-        readFile("C:\\Users\\Collin\\Downloads\\dungeon(4).ds").then(content => {
-
-            const reader = new TextDecoder(undefined);
-            const value = reader.decode(content);
-
-            const start = value.slice(value.indexOf("map") + 3);
-            const config = start.slice(0, start.lastIndexOf("}") + 1);
-
-            if (!this.abort.signal.aborted) {
-                this.map = JSON.parse(config);
+        this.loadEvent = listen<Dungeon>("load", async (ev) => {
+            this.map = ev.payload;
+        });
+        this.setVisEvent = listen<{ target: UUID, value: boolean }>(EVENTS_MAP_EDITOR.SetVisable, (ev) => {
+            if (!this.map) return;
+            const node = this.map.state.document.nodes[ev.payload.target];
+            if ("visible" in node) {
+                node.visible = ev.payload.value;
             }
-        }).catch(e => {
-            console.error(e)
-        })
+        });
 
         this.draw();
     }
@@ -61,14 +62,18 @@ export default class DSRenderer {
         this.abort.abort("DSRenderer::destory");
         this.map = null;
         this.ctx = null;
+        if (this.loadEvent) this.loadEvent.then(e => e());
+        if (this.setVisEvent) this.setVisEvent.then(e => e());
         if (this.frame) cancelAnimationFrame(this.frame);
     }
 
     private drawGrid(ctx: CanvasRenderingContext2D, gridCellDiameter: number, lineWidth: number, color = "lightgrey") {
+        ctx.save();
 
-        ctx.beginPath();
         ctx.strokeStyle = color;
         ctx.lineWidth = lineWidth;
+
+        ctx.beginPath();
 
         const gridXCount = Math.round(ctx.canvas.width / gridCellDiameter);
         const gridYCount = Math.round(ctx.canvas.height / gridCellDiameter);
@@ -93,9 +98,21 @@ export default class DSRenderer {
         }
 
         ctx.stroke();
+
+        ctx.restore();
     }
 
-    private drawPolygonFill(points: Shape, ctx: CanvasRenderingContext2D, color: string) {
+    private drawPolygonFill(points: Shape, ctx: CanvasRenderingContext2D, color: string, transform?: Transform | null) {
+        ctx.save();
+
+        if (transform) {
+            const current = ctx.getTransform();
+            const a = new DOMMatrix(transform);
+            a.e = current.e;
+            a.f = current.f;
+            ctx.setTransform(a);
+        }
+
         ctx.beginPath();
         ctx.fillStyle = color;
         ctx.moveTo(points[0][0], points[0][1]);
@@ -104,8 +121,19 @@ export default class DSRenderer {
         }
         ctx.lineTo(points[0][0], points[0][1]);
         ctx.fill();
+        ctx.restore();
+
     }
-    private drawPolygonStroke(points: Shape, ctx: CanvasRenderingContext2D, color: string, width: number) {
+    private drawPolygonStroke(points: Shape, ctx: CanvasRenderingContext2D, color: string, width: number, transform?: Transform | null) {
+        ctx.save();
+
+        if (transform) {
+            const current = ctx.getTransform();
+            const a = new DOMMatrix(transform);
+            a.e = current.e;
+            a.f = current.f;
+            ctx.setTransform(a);
+        }
 
         ctx.beginPath();
         ctx.strokeStyle = color;
@@ -116,20 +144,26 @@ export default class DSRenderer {
         }
         ctx.lineTo(points[0][0], points[0][1]);
         ctx.stroke();
-        ctx.lineWidth = 1;
+        //ctx.lineWidth = 1;
+        ctx.restore();
     }
 
     private drawLine(points: Shape, ctx: CanvasRenderingContext2D, color: string, width: number) {
         if (points.length < 2) return;
+        ctx.save();
 
         const start = points[0];
         const end = points[1];
+
         ctx.lineCap = "round";
         ctx.lineWidth = width;
         ctx.strokeStyle = color;
+
         ctx.moveTo(start[0], start[1]);
         ctx.lineTo(end[0], end[1]);
         ctx.stroke();
+
+        ctx.restore();
     }
 
     private drawMap(pageId: UUID) {
@@ -205,10 +239,9 @@ export default class DSRenderer {
                 }
                 case "GEOMETRY": {
                     if (!node.visible) break;
-                    // debugger;
+
                     geomertyId = node.geometryId;
                     children.unshift(...node.children);
-                    //children.unshift(...node.children);
 
                     break;
                 }
@@ -236,15 +269,13 @@ export default class DSRenderer {
 
                     const geomerty = this.map.data.geometry[geomertyId];
 
-                    this.ctx.save();
-
                     if (node.fill.visible) {
                         // main geomerty
-                        this.drawPolygonFill(geomerty.polygons[0][0], this.ctx, toHex(node.fill.colour));
+                        this.drawPolygonFill(geomerty.polygons[0][0], this.ctx, toHex(node.fill.colour), transform);
                         // remove hollow points
                         if (geomerty.polygons[0].length > 1) {
                             for (let i = 1; i < geomerty.polygons[0].length; i++) {
-                                this.drawPolygonFill(geomerty.polygons[0][i], this.ctx, backgroundColor);
+                                this.drawPolygonFill(geomerty.polygons[0][i], this.ctx, backgroundColor, transform);
                             }
                         }
                     }
@@ -252,7 +283,7 @@ export default class DSRenderer {
                     if (node.stroke.visible) {
                         for (const item of geomerty.polygons) {
                             for (const g of item) {
-                                this.drawPolygonStroke(g, this.ctx, toHex(node.stroke.colour), node.stroke.width);
+                                this.drawPolygonStroke(g, this.ctx, toHex(node.stroke.colour), node.stroke.width, transform);
                             }
                         }
                         for (const item of geomerty.polylines) {
@@ -260,26 +291,15 @@ export default class DSRenderer {
                         }
                     }
 
-
-                    if (transform) {
-                        const current = this.ctx.getTransform();
-                        const a = new DOMMatrix(transform);
-                        a.e = current.e;
-                        a.f = current.f;
-                        this.ctx.setTransform(a);
-
-                        if (clearTransformOn === nodeId) {
-                            transform = null;
-                        }
-                    }
-
-                    this.ctx.restore();
-
                     break;
                 }
                 default:
                     console.info("Unknown node");
                     break;
+            }
+
+            if (transform && clearTransformOn === nodeId) {
+                transform = null;
             }
         }
     }
@@ -299,6 +319,8 @@ export default class DSRenderer {
             const document = this.map.state.document;
             const selectedPage = this.selectedPage ?? document.nodes[document.documentNodeId].selectedPage;
             this.drawMap(selectedPage);
+        } else {
+            this.drawGrid(this.ctx, 36, 1);
         }
 
         this.frame = requestAnimationFrame(this.draw);

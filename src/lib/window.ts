@@ -2,12 +2,12 @@ import { emitTo } from "@tauri-apps/api/event";
 import { Window } from "@tauri-apps/api/window";
 import {
 	DISPLAY_MAP_EVENTS,
-	EDITOR_MAP_WINDOW_LABEL,
+	WINDOW_MAP_EDITOR,
 	MAP_WINDOW_LABEL,
 } from "./consts";
 import type { DisplayEventMap } from "./consts";
 
-export const editorWindow = new Window(EDITOR_MAP_WINDOW_LABEL);
+export const editorWindow = new Window(WINDOW_MAP_EDITOR);
 editorWindow.listen("tauri://close-requested", () => editorWindow.hide());
 export const toggleEditorWindow = () =>
 	editorWindow

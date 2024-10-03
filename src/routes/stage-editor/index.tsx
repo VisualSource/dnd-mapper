@@ -33,7 +33,7 @@ export const Route = createFileRoute("/stage-editor/")({
 							id,
 							name: "Unnamed",
 							entities: [],
-							dsFilepaths: [],
+							dsFilepath: "",
 							nextStage: null,
 							prevStage: null,
 							stageGroup: null

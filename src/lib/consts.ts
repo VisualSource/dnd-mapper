@@ -1,11 +1,18 @@
 import type { PuckSize } from "./display/utils";
 
-export const EDITOR_MAP_WINDOW_LABEL = "display-editor";
-export const MAP_WINDOW_LABEL = "display";
+export const WINDOW_MAIN = "main";
+export const WINDOW_MAP_EDITOR = "display-editor";
 
-export const EDITOR_MAP_EVENTS = {
-	Update: "update",
+export const EVENTS_MAP_EDITOR = {
+	Load: "load",
+	SetVisable: "setVisable"
 } as const;
+
+
+
+
+//export const EDITOR_MAP_WINDOW_LABEL = "display-editor";
+export const MAP_WINDOW_LABEL = "display";
 
 export const DISPLAY_MAP_EVENTS = {
 	Init: "init",

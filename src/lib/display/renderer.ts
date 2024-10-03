@@ -2,10 +2,10 @@ import { type UnlistenFn, listen } from "@tauri-apps/api/event";
 import {
 	DISPLAY_MAP_EVENTS,
 	type DisplayEvent,
-	EDITOR_MAP_EVENTS,
+
 } from "../consts";
 import type { BackgroundFull, ReslovedEntity, ResolvedStage } from "../types";
-import { Entity } from "./entity";
+import type { Entity } from "./entity";
 import { loadExternalImage } from "./utils";
 
 export class Renderer {
@@ -17,7 +17,7 @@ export class Renderer {
 	private background: BackgroundFull | null = null;
 	private events: UnlistenFn[] = [];
 
-	constructor(private editorMode: boolean) {}
+	constructor(private editorMode: boolean) { }
 
 	public setGridSize(size: number) {
 		this.gridSize = size;
@@ -36,65 +36,131 @@ export class Renderer {
 	}
 
 	private async registerEvents() {
-		if (this.editorMode) {
-			const updateEvent = await listen<ResolvedStage>(
-				EDITOR_MAP_EVENTS.Update,
+		/*	if (this.editorMode) {
+				const updateEvent = await listen<ResolvedStage>(
+					EDITOR_MAP_EVENTS.Update,
+					async (ev) => {
+						console.log(ev);
+						const { background, gridScale, entities } = ev.payload;
+						this.entityList.clear();
+						if (background !== null) {
+							const i = await loadExternalImage(background.image);
+							this.background = {
+								...background,
+								image: i,
+							};
+						}
+						this.gridSize = gridScale;
+						for (const { nameOverride, entity, instanceId, x, y } of entities) {
+							try {
+								const i = await loadExternalImage(entity.image);
+	
+								const en = new Entity({
+									id: instanceId,
+									gridSize: this.gridSize,
+									image: i,
+									name: nameOverride ?? entity.name,
+									isPlayerControlled: entity.isPlayerControlled,
+									size: entity.puckSize,
+									display: entity.displayOnMap,
+									x,
+									y,
+								});
+	
+								this.entityList.set(instanceId, en);
+							} catch (error) {
+								console.error(error);
+							}
+						}
+	
+						this.render();
+					},
+				);
+				this.events.push(updateEvent);
+				return;
+			}
+	
+			const initEvent = await listen<ResolvedStage>(
+				DISPLAY_MAP_EVENTS.Init,
 				async (ev) => {
-					console.log(ev);
-					const { background, gridScale, entities } = ev.payload;
 					this.entityList.clear();
-					if (background !== null) {
-						const i = await loadExternalImage(background.image);
-						this.background = {
-							...background,
-							image: i,
-						};
-					}
+					const { background, gridScale, entities } = ev.payload;
 					this.gridSize = gridScale;
+	
+					const i = await loadExternalImage(background.image);
+					this.background = { ...background, image: i };
+	
 					for (const { nameOverride, entity, instanceId, x, y } of entities) {
 						try {
 							const i = await loadExternalImage(entity.image);
-
+	
 							const en = new Entity({
 								id: instanceId,
+								display: entity.displayOnMap,
 								gridSize: this.gridSize,
 								image: i,
 								name: nameOverride ?? entity.name,
 								isPlayerControlled: entity.isPlayerControlled,
 								size: entity.puckSize,
-								display: entity.displayOnMap,
 								x,
 								y,
 							});
-
+	
 							this.entityList.set(instanceId, en);
 						} catch (error) {
 							console.error(error);
 						}
 					}
-
+	
 					this.render();
 				},
 			);
-			this.events.push(updateEvent);
-			return;
-		}
-
-		const initEvent = await listen<ResolvedStage>(
-			DISPLAY_MAP_EVENTS.Init,
-			async (ev) => {
-				this.entityList.clear();
-				const { background, gridScale, entities } = ev.payload;
-				this.gridSize = gridScale;
-
-				const i = await loadExternalImage(background.image);
-				this.background = { ...background, image: i };
-
-				for (const { nameOverride, entity, instanceId, x, y } of entities) {
-					try {
-						const i = await loadExternalImage(entity.image);
-
-						const en = new Entity({
+			const updateEvent = await listen<DisplayEvent>(
+				DISPLAY_MAP_EVENTS.Update,
+				async (ev) => {
+					switch (ev.payload.type) {
+						case "move": {
+							const { target, x, y } = ev.payload.data;
+							const entity = this.getEntity(target);
+							if (!entity) break;
+							entity.move(x, y);
+							break;
+						}
+						case "display": {
+							const { target, displayOnMap } = ev.payload.data;
+							const entity = this.getEntity(target);
+							if (!entity) break;
+							entity.setDisplay(displayOnMap);
+							break;
+						}
+						case "set-z": {
+							const { target, z } = ev.payload.data;
+							const entity = this.getEntity(target);
+							if (!entity) break;
+							entity.z = z;
+							break;
+						}
+						case "set-puck": {
+							const { target, size } = ev.payload.data;
+							const entity = this.getEntity(target);
+							if (!entity) break;
+							entity.setSize(size);
+							break;
+						}
+						default:
+							break;
+					}
+					this.render();
+				},
+			);
+			const addEvent = await listen<ReslovedEntity>(
+				DISPLAY_MAP_EVENTS.Add,
+				async (ev) => {
+					const { entity, instanceId, nameOverride, x, y } = ev.payload;
+					const i = await loadExternalImage(entity.image);
+	
+					this.addEntity(
+						new Entity({
 							id: instanceId,
 							display: entity.displayOnMap,
 							gridSize: this.gridSize,
@@ -104,88 +170,22 @@ export class Renderer {
 							size: entity.puckSize,
 							x,
 							y,
-						});
-
-						this.entityList.set(instanceId, en);
-					} catch (error) {
-						console.error(error);
-					}
-				}
-
-				this.render();
-			},
-		);
-		const updateEvent = await listen<DisplayEvent>(
-			DISPLAY_MAP_EVENTS.Update,
-			async (ev) => {
-				switch (ev.payload.type) {
-					case "move": {
-						const { target, x, y } = ev.payload.data;
-						const entity = this.getEntity(target);
-						if (!entity) break;
-						entity.move(x, y);
-						break;
-					}
-					case "display": {
-						const { target, displayOnMap } = ev.payload.data;
-						const entity = this.getEntity(target);
-						if (!entity) break;
-						entity.setDisplay(displayOnMap);
-						break;
-					}
-					case "set-z": {
-						const { target, z } = ev.payload.data;
-						const entity = this.getEntity(target);
-						if (!entity) break;
-						entity.z = z;
-						break;
-					}
-					case "set-puck": {
-						const { target, size } = ev.payload.data;
-						const entity = this.getEntity(target);
-						if (!entity) break;
-						entity.setSize(size);
-						break;
-					}
-					default:
-						break;
-				}
-				this.render();
-			},
-		);
-		const addEvent = await listen<ReslovedEntity>(
-			DISPLAY_MAP_EVENTS.Add,
-			async (ev) => {
-				const { entity, instanceId, nameOverride, x, y } = ev.payload;
-				const i = await loadExternalImage(entity.image);
-
-				this.addEntity(
-					new Entity({
-						id: instanceId,
-						display: entity.displayOnMap,
-						gridSize: this.gridSize,
-						image: i,
-						name: nameOverride ?? entity.name,
-						isPlayerControlled: entity.isPlayerControlled,
-						size: entity.puckSize,
-						x,
-						y,
-					}),
-				);
-
-				this.render();
-			},
-		);
-		const deleteEvent = await listen<{ target: string }>(
-			DISPLAY_MAP_EVENTS.Delete,
-			async (ev) => {
-				const { target } = ev.payload;
-				this.removeEntity(target);
-				this.render();
-			},
-		);
-
-		this.events.push(initEvent, updateEvent, addEvent, deleteEvent);
+						}),
+					);
+	
+					this.render();
+				},
+			);
+			const deleteEvent = await listen<{ target: string }>(
+				DISPLAY_MAP_EVENTS.Delete,
+				async (ev) => {
+					const { target } = ev.payload;
+					this.removeEntity(target);
+					this.render();
+				},
+			);
+	
+			this.events.push(initEvent, updateEvent, addEvent, deleteEvent);*/
 	}
 
 	private async removeEvents() {
@@ -202,11 +202,11 @@ export class Renderer {
 		if (this.background.autoCenter) {
 			const winX = Math.round(
 				(window.innerWidth / 2 - this.background.image.width / 2) /
-					this.gridSize,
+				this.gridSize,
 			);
 			const winY = Math.round(
 				(window.innerHeight / 2 - this.background.image.height / 2) /
-					this.gridSize,
+				this.gridSize,
 			);
 
 			x = winX * this.gridSize + this.background.offset.x;

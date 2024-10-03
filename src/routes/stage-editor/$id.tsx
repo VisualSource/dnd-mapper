@@ -1,31 +1,29 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useFieldArray, useForm } from "react-hook-form";
 import { FileQuestion, Trash2 } from "lucide-react";
+import { readFile } from "@tauri-apps/plugin-fs";
+import { useLiveQuery } from "dexie-react-hooks";
 import { emitTo } from "@tauri-apps/api/event";
+import type { UUID } from "node:crypto";
 import { useRef } from "react";
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { AdditionEntityDialog, type AdditionEntityDialogHandle } from "@/components/dialog/AdditionEntityDialog";
 import { StageGroupDialog, type StageGroupDialogHandle } from "@/components/dialog/StageGroupDialog";
-import { EDITOR_MAP_EVENTS, EDITOR_MAP_WINDOW_LABEL } from "../../lib/consts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { editorWindow, toggleEditorWindow } from "../../lib/window";
+import { EVENTS_MAP_EDITOR, WINDOW_MAP_EDITOR } from "@/lib/consts";
+import type { Dungeon } from "@/lib/renderer/dungeonScrawl/types";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { editorWindow, toggleEditorWindow } from "@/lib/window";
 import { DSFileSelector } from "@/components/DSFileSelector";
+import { DSNode, type LightNode } from "@/components/DSNode";
 import { Separator } from "@/components/ui/separator";
 import { ComboBox } from "@/components/ui/combobox";
 import type { ResolvedStage } from "@/lib/types";
-import { resloveStage } from "../../lib/loader";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import { db } from "../../lib/db";
-import { useLiveQuery } from "dexie-react-hooks";
-import { readFile } from "@tauri-apps/plugin-fs";
-import type { Dungeon, NodeType } from "@/lib/renderer/dungeonScrawl/types";
-import type { UUID } from "node:crypto";
-import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
+import { resloveStage } from "@/lib/loader";
+import { db } from "@/lib/db";
 
 const loadGroups = () => db.groups
 	.toArray()
@@ -58,14 +56,9 @@ export const Route = createFileRoute("/stage-editor/$id")({
 	async onEnter(ctx) {
 		const visible = await editorWindow.isVisible();
 		if (!visible) await editorWindow.show();
-		await emitTo(
-			EDITOR_MAP_WINDOW_LABEL,
-			EDITOR_MAP_EVENTS.Update,
-			ctx.loaderData,
-		);
 	},
 });
-type LightNode = { name?: string, visible?: boolean, type: NodeType | "DOCUMENT", id: UUID, children?: LightNode[] }
+
 const getNode = (nodes: Dungeon["state"]["document"]["nodes"], rootNode: UUID): LightNode => {
 
 	const node = nodes[rootNode];
@@ -95,91 +88,6 @@ const getNode = (nodes: Dungeon["state"]["document"]["nodes"], rootNode: UUID): 
 	}
 }
 
-const DSNode: React.FC<{ node: LightNode }> = ({ node }) => {
-	switch (node.type) {
-		case "DOCUMENT":
-			return (
-				<div className="flex flex-col">
-					<h3 className="border-b pb-2 font-bold tracking-tight">{node.name}</h3>
-
-					{node.children?.map(e => (
-						<DSNode key={e.id} node={e} />
-					))}
-				</div>
-			);
-		case "PAGE":
-			return (
-				<details className="pl-2" open>
-					<summary className="border-b pb-2 text-sm font-semibold tracking-tight select-none">
-						{node?.name?.length ? node.name : "Page"}
-					</summary>
-					<div className="pl-2 flex flex-col">
-						{node.children?.map(e => (
-							<DSNode key={e.id} node={e} />
-						))}
-					</div>
-				</details>
-			);
-		case "IMAGES":
-			return (
-				<details className="pl-2">
-					<summary className="border-b pb-2 font-semibold tracking-tight">{node.name}: <span className="text-muted-foreground text-sm">{node.type}</span></summary>
-					<div className="pl-2 flex flex-col">
-						{node.children?.map(e => (
-							<DSNode key={e.id} node={e} />
-						))}
-					</div>
-				</details>
-			);
-		case "TEMPLATE":
-			return (
-				<details className="pl-2">
-					<summary className="border-b pb-2 font-semibold tracking-tight">{node?.name}: <span className="text-muted-foreground text-sm">{node.type}</span></summary>
-					<div className="flex gap-2 items-center p-1 pl-2">
-						<Checkbox />
-						<Label>Visable</Label>
-					</div>
-					<div className="pl-2 flex flex-col">
-						{node.children?.map(e => (
-							<DSNode key={e.id} node={e} />
-						))}
-					</div>
-				</details>
-			);
-		case "GRID":
-			return (<div>{node.type}</div>)
-		case "FOLDER":
-			return (
-				<div>
-					<h5>{node.type}</h5>
-					<div className="pl-2 flex flex-col">
-						{node.children?.map(e => (
-							<DSNode key={e.id} node={e} />
-						))}
-					</div>
-				</div>
-			);
-		case "DUNGEON_ASSET":
-			return (
-				<div className="flex flex-col">
-					<h5 className="border-b pb-1 mb-1 font-semibold tracking-tight">{node?.name}</h5>
-					<div className="flex gap-2 items-center p-1">
-						<Checkbox />
-						<Label>Visable</Label>
-					</div>
-				</div>
-			);
-		case "SHADOW":
-			return (<div>{node.type}</div>)
-		case "HATCHING":
-			return (<div>{node.type}</div>)
-		case "BUFFER_SHADING":
-			return (<div>{node.type}</div>)
-		default:
-			return null;
-	}
-}
-
 function StageEditorEditPage() {
 	const data = Route.useLoaderData();
 	const aedRef = useRef<AdditionEntityDialogHandle>(null);
@@ -192,12 +100,8 @@ function StageEditorEditPage() {
 		control: form.control,
 		name: "entities",
 	});
-	const filesPaths = useFieldArray({
-		control: form.control,
-		name: "dsFilepaths"
-	});
 
-	const dsFile = form.watch("dsFilepaths");
+	const dsFile = form.watch("dsFilepath");
 	const loadDsfile = useLiveQuery(async () => {
 		try {
 			const file = await readFile(dsFile);
@@ -208,6 +112,8 @@ function StageEditorEditPage() {
 			const config = start.slice(0, start.lastIndexOf("}") + 1);
 
 			const content = JSON.parse(config) as Dungeon;
+
+			await emitTo(WINDOW_MAP_EDITOR, EVENTS_MAP_EDITOR.Load, content);
 
 			return getNode(content.state.document.nodes, "document" as UUID);
 		} catch (error) {
@@ -325,7 +231,7 @@ function StageEditorEditPage() {
 												/>
 											</div>
 											<div className="flex gap-2 w-full">
-												<div className="flex flex-col gap-2">
+												<div className="flex flex-col gap-2 w-full">
 													<Label>X</Label>
 													<Input
 														{...form.register(`entities.${index}.x`, {
@@ -336,7 +242,7 @@ function StageEditorEditPage() {
 													/>
 												</div>
 
-												<div className="flex flex-col gap-2">
+												<div className="flex flex-col gap-2 w-full">
 													<Label>Y</Label>
 													<Input
 														{...form.register(`entities.${index}.y`, {
@@ -435,7 +341,7 @@ function StageEditorEditPage() {
 						<div>No File</div>
 					) : (
 						<div className="flex flex-col gap-2 overflow-y-scroll h-full">
-							<DSNode node={loadDsfile} />
+							<DSNode node={loadDsfile} targetWindow={WINDOW_MAP_EDITOR} />
 						</div>
 					)}
 				</aside>
