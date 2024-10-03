@@ -306,6 +306,8 @@ export default class DSRenderer {
 
     private draw = () => {
         if (!this.ctx) return;
+        // Magic if we don't set the width and height of the canvas 
+        // the scroll feature does not work.
         this.ctx.canvas.height = window.innerHeight;
         this.ctx.canvas.width = window.innerWidth;
 
