@@ -37,7 +37,7 @@ function DisplayEditorPage() {
 						Forward
 						<ContextMenuShortcut>⌘]</ContextMenuShortcut>
 					</ContextMenuItem>
-					<ContextMenuItem inset>
+					<ContextMenuItem inset onClick={() => window.location.reload()}>
 						Reload
 						<ContextMenuShortcut>⌘R</ContextMenuShortcut>
 					</ContextMenuItem>

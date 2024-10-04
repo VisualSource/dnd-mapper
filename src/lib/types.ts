@@ -1,3 +1,4 @@
+import type { UUID } from "node:crypto";
 import type { PuckSize } from "./display/utils";
 
 export type EntityRef = {
@@ -5,6 +6,7 @@ export type EntityRef = {
 	instanceId: string;
 	x: number;
 	y: number;
+	layer?: UUID
 	nameOverride?: string;
 };
 export type Background = {

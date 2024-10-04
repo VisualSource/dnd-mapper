@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useFieldArray, useForm } from "react-hook-form";
-import { FileQuestion, Trash2 } from "lucide-react";
+import { FileQuestion, MoreHorizontal, Trash2 } from "lucide-react";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { useLiveQuery } from "dexie-react-hooks";
 import { emitTo } from "@tauri-apps/api/event";
 import type { UUID } from "node:crypto";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { AdditionEntityDialog, type AdditionEntityDialogHandle } from "@/components/dialog/AdditionEntityDialog";
@@ -24,6 +24,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { resloveStage } from "@/lib/loader";
 import { db } from "@/lib/db";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { InstanceEditorDialog, type InstanceEditorDialogHandle } from "@/components/dialog/instanceEditorDialog";
 
 const loadGroups = () => db.groups
 	.toArray()
@@ -90,6 +92,7 @@ const getNode = (nodes: Dungeon["state"]["document"]["nodes"], rootNode: UUID): 
 
 function StageEditorEditPage() {
 	const data = Route.useLoaderData();
+	const ied = useRef<InstanceEditorDialogHandle>(null);
 	const aedRef = useRef<AdditionEntityDialogHandle>(null);
 	const sgdRef = useRef<StageGroupDialogHandle>(null);
 
@@ -115,7 +118,12 @@ function StageEditorEditPage() {
 
 			await emitTo(WINDOW_MAP_EDITOR, EVENTS_MAP_EDITOR.Load, content);
 
-			return getNode(content.state.document.nodes, "document" as UUID);
+			const layers = Object.values(content.state.document.nodes).filter(e => e.type === "IMAGES" || e.type === "TEMPLATE").map(e => ({ id: e.id, value: e.name }));
+
+			return {
+				layers,
+				tree: getNode(content.state.document.nodes, "document" as UUID)
+			};
 		} catch (error) {
 			return null;
 		}
@@ -125,6 +133,7 @@ function StageEditorEditPage() {
 
 	return (
 		<div className="h-full w-full flex flex-col overflow-hidden">
+			<InstanceEditorDialog entity={entityField} ref={ied} layers={loadDsfile?.layers} />
 			<StageGroupDialog ref={sgdRef} />
 			<AdditionEntityDialog
 				onAdd={(e) =>
@@ -162,7 +171,7 @@ function StageEditorEditPage() {
 			<section className="flex h-full overflow-hidden">
 				<main className="w-8/12 h-full flex">
 					<Form {...form}>
-						<form onSubmit={form.handleSubmit(onSubmit)} className="overflow-y-scroll p-2 gap-2 flex flex-col">
+						<form onSubmit={form.handleSubmit(onSubmit)} className="overflow-y-scroll p-2 gap-2 flex flex-col w-full">
 							<FormField
 								control={form.control}
 								rules={{ required: { message: "A name is required", value: true } }}
@@ -200,59 +209,51 @@ function StageEditorEditPage() {
 								<p className="text-sm text-muted-foreground">
 									All the enemy's and players that will be on the map
 								</p>
+
 								<Separator />
 								<ul className="max-h-52 my-2 overflow-y-scroll px-2 space-y-2">
 									{entityField.fields.map((e, index) => (
-										<li key={e.instanceId} className="border rounded-sm p-2">
-											<div className="flex gap-2 items-center">
-												<Avatar>
-													<AvatarFallback>
-														<FileQuestion />
-													</AvatarFallback>
-													<AvatarImage src={e.entity.image} alt={e.entity.name} />
-												</Avatar>
-												<div className="flex justify-between w-full">
-													<h1>{e.entity.name}</h1>
+										<li key={e.instanceId} className="border rounded-sm p-2 inline-flex w-full items-center gap-2">
+											<Avatar>
+												<AvatarFallback>
+													<FileQuestion />
+												</AvatarFallback>
+												<AvatarImage src={e.entity.image} alt={e.entity.name} />
+											</Avatar>
 
+											<h1 className="max-w-28 text-ellipsis whitespace-nowrap overflow-hidden">{(e?.nameOverride?.length ?? 0) > 1 ? e.nameOverride : e.entity.name}</h1>
+
+											<div>
+												<div>Layer</div>
+												<span className="text-muted-foreground text-sm overflow-hidden max-w-14 text-ellipsis whitespace-nowrap">{loadDsfile?.layers.find(l => l.id === e.layer)?.value ?? "Default"}</span>
+											</div>
+
+											<div>
+												<h3>Start Position</h3>
+												<div className="flex gap-2">
+													<span>X: <span className="text-muted-foreground">{e.x}</span></span>
+													<span>Y: <span className="text-muted-foreground">{e.y}</span></span>
+													<span>Z: <span className="text-muted-foreground">{e?.z ?? 0}</span></span>
+												</div>
+											</div>
+											<DropdownMenu>
+												<DropdownMenuTrigger asChild>
 													<Button
-														variant="destructive"
+														aria-haspopup="true"
 														size="icon"
-														type="button"
-														onClick={() => entityField.remove(index)}
+														variant="ghost"
+														className="ml-auto"
 													>
-														<Trash2 />
+														<MoreHorizontal className="h-4 w-4" />
+														<span className="sr-only">Toggle menu</span>
 													</Button>
-												</div>
-											</div>
-											<div className="flex flex-col gap-2 my-2">
-												<Label>Name Override</Label>
-												<Input
-													{...form.register(`entities.${index}.nameOverride`)}
-												/>
-											</div>
-											<div className="flex gap-2 w-full">
-												<div className="flex flex-col gap-2 w-full">
-													<Label>X</Label>
-													<Input
-														{...form.register(`entities.${index}.x`, {
-															valueAsNumber: true,
-														})}
-														type="number"
-														placeholder="x"
-													/>
-												</div>
-
-												<div className="flex flex-col gap-2 w-full">
-													<Label>Y</Label>
-													<Input
-														{...form.register(`entities.${index}.y`, {
-															valueAsNumber: true,
-														})}
-														type="number"
-														placeholder="y"
-													/>
-												</div>
-											</div>
+												</DropdownMenuTrigger>
+												<DropdownMenuContent align="end">
+													<DropdownMenuLabel>Actions</DropdownMenuLabel>
+													<DropdownMenuItem onClick={() => ied.current?.show(index)}>Edit</DropdownMenuItem>
+													<DropdownMenuItem onClick={() => entityField.remove(index)}>Delete</DropdownMenuItem>
+												</DropdownMenuContent>
+											</DropdownMenu>
 										</li>
 									))}
 								</ul>
@@ -334,14 +335,16 @@ function StageEditorEditPage() {
 						</form>
 					</Form>
 				</main>
-				<aside className="w-4/12 h-full flex flex-col">
+				<aside className="w-4/12 h-full flex flex-col bg-zinc-900">
 					{loadDsfile === undefined ? (
 						<div>Loading...</div>
 					) : loadDsfile === null ? (
-						<div>No File</div>
+						<div className="flex flex-col justify-center items-center h-full">
+							<h3>No File selected</h3>
+						</div>
 					) : (
 						<div className="flex flex-col gap-2 overflow-y-scroll h-full">
-							<DSNode node={loadDsfile} targetWindow={WINDOW_MAP_EDITOR} />
+							<DSNode node={loadDsfile.tree} targetWindow={WINDOW_MAP_EDITOR} />
 						</div>
 					)}
 				</aside>

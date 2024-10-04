@@ -26,6 +26,7 @@ export default class DSRenderer {
 
     private loadEvent: Promise<UnlistenFn> | undefined;
     private setVisEvent: Promise<UnlistenFn> | undefined;
+    private moveCameraEvent: Promise<UnlistenFn> | undefined;
 
     //https://codepen.io/chengarda/pen/wRxoyB?editors=0010
     private init(canvas: HTMLCanvasElement) {
@@ -44,7 +45,7 @@ export default class DSRenderer {
         canvas.addEventListener('mousemove', this.onPointerMove);
         canvas.addEventListener('mouseup', this.onPointerUp);
 
-        this.loadEvent = listen<Dungeon>("load", async (ev) => {
+        this.loadEvent = listen<Dungeon>(EVENTS_MAP_EDITOR.Load, async (ev) => {
             this.map = ev.payload;
         });
         this.setVisEvent = listen<{ target: UUID, value: boolean }>(EVENTS_MAP_EDITOR.SetVisable, (ev) => {
@@ -55,6 +56,11 @@ export default class DSRenderer {
             }
         });
 
+        this.moveCameraEvent = listen<{ x: number, y: number, autoCenter: boolean }>(EVENTS_MAP_EDITOR.MoveCamera, (ev) => {
+            this.cameraOffset.x = ev.payload.x;
+            this.cameraOffset.y = ev.payload.y;
+        });
+
         this.draw();
     }
 
@@ -62,18 +68,19 @@ export default class DSRenderer {
         this.abort.abort("DSRenderer::destory");
         this.map = null;
         this.ctx = null;
-        if (this.loadEvent) this.loadEvent.then(e => e());
-        if (this.setVisEvent) this.setVisEvent.then(e => e());
+        this.loadEvent?.then(e => e());
+        this.setVisEvent?.then(e => e());
+        this.moveCameraEvent?.then(e => e());
         if (this.frame) cancelAnimationFrame(this.frame);
     }
 
     private drawGrid(ctx: CanvasRenderingContext2D, gridCellDiameter: number, lineWidth: number, color = "lightgrey") {
         ctx.save();
 
+        ctx.beginPath();
+
         ctx.strokeStyle = color;
         ctx.lineWidth = lineWidth;
-
-        ctx.beginPath();
 
         const gridXCount = Math.round(ctx.canvas.width / gridCellDiameter);
         const gridYCount = Math.round(ctx.canvas.height / gridCellDiameter);
@@ -102,15 +109,14 @@ export default class DSRenderer {
         ctx.restore();
     }
 
-    private drawPolygonFill(points: Shape, ctx: CanvasRenderingContext2D, color: string, transform?: Transform | null) {
-        ctx.save();
+    private drawPolygonFill(points: Shape, ctx: CanvasRenderingContext2D, color: string, transform?: DOMMatrix | null) {
+        ctx.save(); // save and restore calls required for allowing transforms not affecting other components.
 
         if (transform) {
             const current = ctx.getTransform();
-            const a = new DOMMatrix(transform);
-            a.e = current.e;
-            a.f = current.f;
-            ctx.setTransform(a);
+            transform.e = current.e;
+            transform.f = current.f;
+            ctx.setTransform(transform);
         }
 
         ctx.beginPath();
@@ -121,18 +127,17 @@ export default class DSRenderer {
         }
         ctx.lineTo(points[0][0], points[0][1]);
         ctx.fill();
-        ctx.restore();
 
+        ctx.restore();
     }
-    private drawPolygonStroke(points: Shape, ctx: CanvasRenderingContext2D, color: string, width: number, transform?: Transform | null) {
+    private drawPolygonStroke(points: Shape, ctx: CanvasRenderingContext2D, color: string, width: number, transform?: DOMMatrix | null) {
         ctx.save();
 
         if (transform) {
             const current = ctx.getTransform();
-            const a = new DOMMatrix(transform);
-            a.e = current.e;
-            a.f = current.f;
-            ctx.setTransform(a);
+            transform.e = current.e;
+            transform.f = current.f;
+            ctx.setTransform(transform);
         }
 
         ctx.beginPath();
@@ -150,10 +155,11 @@ export default class DSRenderer {
 
     private drawLine(points: Shape, ctx: CanvasRenderingContext2D, color: string, width: number) {
         if (points.length < 2) return;
-        ctx.save();
 
         const start = points[0];
         const end = points[1];
+
+        ctx.beginPath(); // stop lineWidth,lineCap,strokeStyle, etc from bleeding into other components. save/restore not required
 
         ctx.lineCap = "round";
         ctx.lineWidth = width;
@@ -162,15 +168,13 @@ export default class DSRenderer {
         ctx.moveTo(start[0], start[1]);
         ctx.lineTo(end[0], end[1]);
         ctx.stroke();
-
-        ctx.restore();
     }
 
     private drawMap(pageId: UUID) {
 
         if (!this.map || !this.ctx) return;
         let geomertyId: UUID | null = null;
-        let transform: Transform | null = null;
+        let transform: DOMMatrix | null = null;
         let clearTransformOn: UUID | null = null;
         const children: UUID[] = [];
         const page = this.map.state.document.nodes[pageId];
@@ -182,8 +186,6 @@ export default class DSRenderer {
         this.ctx.canvas.style.backgroundColor = backgroundColor;
 
         children.push(...page.children);
-
-
 
         while (children.length > 0) {
             const nodeId = children.shift();
@@ -228,7 +230,7 @@ export default class DSRenderer {
 
                     children.unshift(...node.children);
 
-                    transform = node.transform;
+                    transform = new DOMMatrix(node.transform);
 
                     const lastNode = node.children.at(-1);
                     if (lastNode) {

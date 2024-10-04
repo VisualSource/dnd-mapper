@@ -38,7 +38,15 @@ export const DSNode: React.FC<{ node: LightNode, targetWindow: string }> = ({ no
         case "IMAGES":
             return (
                 <details className="pl-2">
-                    <summary className="border-b pb-2 font-semibold tracking-tight">{node.name}: <span className="text-muted-foreground text-sm">{node.type}</span></summary>
+                    <summary className="border-b pb-2 font-semibold tracking-tight">
+                        {node.name}: <span className="text-muted-foreground text-sm">{node.type}</span>
+                    </summary>
+                    <div className="flex gap-2 items-center p-1 pl-2">
+                        <Checkbox defaultChecked={node.visible} onCheckedChange={e => {
+                            emitTo(targetWindow, EVENTS_MAP_EDITOR.SetVisable, { target: node.id, value: e });
+                        }} />
+                        <Label>Visable</Label>
+                    </div>
                     <div className="pl-2 flex flex-col">
                         {node.children?.map(e => (
                             <DSNode targetWindow={targetWindow} key={e.id} node={e} />
@@ -78,14 +86,20 @@ export const DSNode: React.FC<{ node: LightNode, targetWindow: string }> = ({ no
             );
         case "DUNGEON_ASSET":
             return (
-                <div className="flex flex-col">
-                    <button className="border-b pb-1 mb-1 font-semibold tracking-tight underline text-left" type="button">{node?.name}</button>
-                    <div className="flex gap-2 items-center p-1">
-                        <Checkbox defaultChecked={node.visible} onCheckedChange={e => {
-                            emitTo(targetWindow, EVENTS_MAP_EDITOR.SetVisable, { target: node.id, value: e });
-                        }} />
-                        <Label>Visable</Label>
-                    </div>
+                <details className="w-full group">
+                    <summary className="flex w-full before:content-['+'] group-open:before:content-['-'] before:w-5">
+                        <div className="flex justify-between border-b mb-1 w-full">
+                            <button onClick={() => {
+                                emitTo(targetWindow, EVENTS_MAP_EDITOR.MoveCamera, { x: Math.floor((Math.random() % 10) * 100), y: Math.floor((Math.random() % 10) * 100) });
+                            }} className="pb-1 font-semibold tracking-tight underline text-left" type="button">{node?.name}</button>
+                            <div className="flex gap-2 items-center p-1">
+                                <Checkbox defaultChecked={node.visible} onCheckedChange={e => {
+                                    emitTo(targetWindow, EVENTS_MAP_EDITOR.SetVisable, { target: node.id, value: e });
+                                }} />
+                                <Label>Visable</Label>
+                            </div>
+                        </div>
+                    </summary>
                     <div className="flex justify-end">
 
                         <Button size="sm">
@@ -93,7 +107,7 @@ export const DSNode: React.FC<{ node: LightNode, targetWindow: string }> = ({ no
                             Add Trigger
                         </Button>
                     </div>
-                </div>
+                </details>
             );
         case "SHADOW":
             return (<div>{node.type}</div>)
