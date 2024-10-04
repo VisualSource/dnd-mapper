@@ -8,7 +8,11 @@ import {
 import type { DisplayEventMap } from "./consts";
 
 export const editorWindow = new Window(WINDOW_MAP_EDITOR);
-editorWindow.listen("tauri://close-requested", () => editorWindow.hide());
+editorWindow.onCloseRequested(e => {
+	e.preventDefault();
+	editorWindow.hide();
+});
+
 export const toggleEditorWindow = () =>
 	editorWindow
 		.isVisible()

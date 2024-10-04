@@ -55,6 +55,10 @@ export const Route = createFileRoute("/stage-editor/$id")({
 		if (!stage.value) throw new Error("No stage found");
 		return { stages: stages.value, groups: groups.value, stage: stage.value }
 	},
+	async onLeave() {
+		const visible = await editorWindow.isVisible();
+		if (visible) await editorWindow.hide();
+	},
 	async onEnter(ctx) {
 		const visible = await editorWindow.isVisible();
 		if (!visible) await editorWindow.show();
