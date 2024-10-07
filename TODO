@@ -3,11 +3,21 @@ DND Mapper:
   Stage/Incounter Editor:
     ✔ Set easy lookup name @done(24-10-03 13:28)
     ✔ import file from dungeon scroll @done(24-10-03 13:28)
+
+    Interaction System:
+      ✔ Add Click handler @done(24-10-07 16:32)
+      ☐ Normilze coords
+      ☐ figure out whats under it
+
+      ☐ emit interaction event
+      
+      ☐ add goto function for dungeon assets
+      ☐ add interaction event for non editor
+
     ☐ Add entities instances to map with postions and layers
     ☐ Link objects like Doors to hide/show layers and or transition to other maps
     ☐ Toggle layer visiblity
-    Map Tree:
-      ☐ Click on object (EX. Door) to goto 
+ 
     On Map Context Menu: 
       ☐ Click to add entity on map
       ☐ Click to select entity

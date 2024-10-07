@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useFieldArray, useForm } from "react-hook-form";
-import { FileQuestion, MoreHorizontal, Trash2 } from "lucide-react";
+import { FileQuestion, MoreHorizontal } from "lucide-react";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { useLiveQuery } from "dexie-react-hooks";
 import { emitTo } from "@tauri-apps/api/event";
@@ -12,7 +12,7 @@ import { AdditionEntityDialog, type AdditionEntityDialogHandle } from "@/compone
 import { StageGroupDialog, type StageGroupDialogHandle } from "@/components/dialog/StageGroupDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { EVENTS_MAP_EDITOR, WINDOW_MAP_EDITOR } from "@/lib/consts";
-import type { Dungeon } from "@/lib/renderer/dungeonScrawl/types";
+import type { Dungeon, PageNode } from "@/lib/renderer/dungeonScrawl/types";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { editorWindow, toggleEditorWindow } from "@/lib/window";
 import { DSFileSelector } from "@/components/DSFileSelector";
@@ -21,7 +21,6 @@ import { Separator } from "@/components/ui/separator";
 import { ComboBox } from "@/components/ui/combobox";
 import type { ResolvedStage } from "@/lib/types";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { resloveStage } from "@/lib/loader";
 import { db } from "@/lib/db";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -124,7 +123,10 @@ function StageEditorEditPage() {
 
 			const layers = Object.values(content.state.document.nodes).filter(e => e.type === "IMAGES" || e.type === "TEMPLATE").map(e => ({ id: e.id, value: e.name }));
 
+			const defaultLayer = (content.state.document.nodes[content.state.document.nodes.document.selectedPage] as PageNode).children.at(0);
+
 			return {
+				defaultLayer,
 				layers,
 				tree: getNode(content.state.document.nodes, "document" as UUID)
 			};
@@ -137,7 +139,7 @@ function StageEditorEditPage() {
 
 	return (
 		<div className="h-full w-full flex flex-col overflow-hidden">
-			<InstanceEditorDialog entity={entityField} ref={ied} layers={loadDsfile?.layers} />
+			<InstanceEditorDialog entity={entityField} ref={ied} defaultLayer={loadDsfile?.defaultLayer} layers={loadDsfile?.layers} />
 			<StageGroupDialog ref={sgdRef} />
 			<AdditionEntityDialog
 				onAdd={(e) =>

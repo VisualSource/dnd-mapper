@@ -21,6 +21,7 @@ export default class DSRenderer {
     private dragStart = { x: 0, y: 0 };
     private frame: number | undefined;
     private isDragging = false;
+    private didMove = false;
     private cameraZoom = 1;
     private lastZoom = 1;
 
@@ -328,17 +329,22 @@ export default class DSRenderer {
         }
 
         this.frame = requestAnimationFrame(this.draw);
+
     }
+
     private onPointerDown = (ev: MouseEvent) => {
         this.isDragging = true;
+        this.didMove = false;
         this.dragStart.x = this.getEventLocation(ev).x / this.cameraZoom - this.cameraOffset.x
         this.dragStart.y = this.getEventLocation(ev).y / this.cameraZoom - this.cameraOffset.y
     }
-    private onPointerUp = () => {
+    private onPointerUp = (ev: MouseEvent) => {
+        if (!this.didMove) this.onClick(ev, this.dragStart);
         this.isDragging = false
         this.lastZoom = this.cameraZoom
     }
     private onPointerMove = (e: MouseEvent) => {
+        this.didMove = true;
         if (this.isDragging) {
             this.cameraOffset.x = this.getEventLocation(e).x / this.cameraZoom - this.dragStart.x
             this.cameraOffset.y = this.getEventLocation(e).y / this.cameraZoom - this.dragStart.y
@@ -351,6 +357,10 @@ export default class DSRenderer {
         }
 
         return { x: (e as MouseEvent).clientX, y: (e as MouseEvent).clientY }
+    }
+
+    private onClick(ev: MouseEvent, loc: { x: number, y: number }) {
+        console.log("Click event", ev, this.dragStart);
     }
 
     public mount(canvas: HTMLCanvasElement) {

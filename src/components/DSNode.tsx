@@ -1,5 +1,5 @@
 import type { UUID } from "node:crypto";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 import type { NodeType } from "@/lib/renderer/dungeonScrawl/types";
 import { Checkbox } from "./ui/checkbox";
@@ -8,6 +8,49 @@ import { Label } from "./ui/label";
 import { emitTo } from "@tauri-apps/api/event";
 import { EVENTS_MAP_EDITOR } from "@/lib/consts";
 
+/**
+ * TRIGGERS
+ * 
+ * ON_DOOR_OPEN     -> action
+ * ON_DOOR_CLOSE    -> action
+ * ON_STAIRS_CLIMB  -> action
+ * ON_STARIS_DESEND -> action  
+ * ON_INTERACTION   -> target, type, action
+ * 
+*/
+
+
+
+/*
+ACTIONS
+
+{
+ TYPE: string
+ ARGS: []
+
+}
+
+SERIES -> action[]
+- a list of actions that are executed in order
+
+SET_ASSET_VISIBILITY    -> target, state
+- set a dungeon asset's visibiltiy. Options are on,off, target is UUID
+
+SET_ENTITY_VISIBILITY   -> target, state
+-  set a entity's visibility. options are on,off, target is UUID
+
+SET_ENTITY_POSITION     -> target, x, y, z
+- move a entity to a new position, target is a UUID, x,y,z are number
+
+MOVE_CAMERA_TO_POSITION -> x, y
+- moves the camera to a set x and y position
+
+MOVE_CAMERA_TO_ENTITY   -> target
+- move the camera to center on a entity
+
+MOVE_CAMERA_TO_ASSET   -> target
+
+*/
 export type LightNode = { name?: string, visible?: boolean, type: NodeType | "DOCUMENT", id: UUID, children?: LightNode[] }
 
 export const DSNode: React.FC<{ node: LightNode, targetWindow: string }> = ({ node, targetWindow }) => {
@@ -101,7 +144,18 @@ export const DSNode: React.FC<{ node: LightNode, targetWindow: string }> = ({ no
                         </div>
                     </summary>
                     <div className="flex justify-end">
+                        <ul>
 
+                            <li>
+                                <h5>Trigger: ON_DOOR_OPEN</h5>
+
+
+                                <button type="button">
+                                    <Trash2 />
+                                </button>
+                            </li>
+
+                        </ul>
                         <Button size="sm">
                             <Plus className="h-4 2-4" />
                             Add Trigger

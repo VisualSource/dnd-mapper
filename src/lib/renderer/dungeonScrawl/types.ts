@@ -25,7 +25,7 @@ type DungeonAssetNode = {
     transform: Transform;
 }
 
-type PageNode = {
+export type PageNode = {
     type: "PAGE",
     id: string;
     parentId: string;

@@ -15,8 +15,9 @@ export type InstanceEditorDialogHandle = {
 
 export const InstanceEditorDialog = forwardRef<InstanceEditorDialogHandle, {
     entity: UseFieldArrayReturn<ResolvedStage, "entities", "id">,
+    defaultLayer?: string
     layers: { id: string, value: string }[] | null | undefined
-}>(({ entity, layers }, ref) => {
+}>(({ entity, layers, defaultLayer }, ref) => {
     const [show, setShow] = useState<number>(0);
     const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -73,7 +74,7 @@ export const InstanceEditorDialog = forwardRef<InstanceEditorDialogHandle, {
                         <div>Loading Layers</div>
                     ) : layers === null ? (<div>No Layers avaiable</div>
                     ) : (
-                        <ComboBox container={dialogRef.current} options={layers} name="layer" defaultValue={entity.fields[show].layer} onSelect={e => entity.update(show, { ...entity.fields[show], layer: e as UUID })} />
+                        <ComboBox container={dialogRef.current} options={layers} name="layer" defaultValue={defaultLayer} onSelect={e => entity.update(show, { ...entity.fields[show], layer: (!e.length ? defaultLayer : e) as UUID })} />
                     )
                 }
             </div>
