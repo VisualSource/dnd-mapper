@@ -1,7 +1,9 @@
 import { ContextMenu, ContextMenuCheckboxItem, ContextMenuItem, ContextMenuLabel, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger } from "@/components/ui/context-menu";
+import { WINDOW_MAIN } from "@/lib/consts";
 import DSRenderer from "@/lib/renderer/DSRenderer";
 import { ContextMenuContent } from "@radix-ui/react-context-menu";
 import { createFileRoute } from "@tanstack/react-router";
+import { emitTo } from "@tauri-apps/api/event";
 import { useEffect, useRef } from "react";
 
 export const Route = createFileRoute("/display-editor")({
@@ -48,8 +50,10 @@ function DisplayEditorPage() {
 								Save Page As...
 								<ContextMenuShortcut>⇧⌘S</ContextMenuShortcut>
 							</ContextMenuItem>
-							<ContextMenuItem>Create Shortcut...</ContextMenuItem>
-							<ContextMenuItem>Name Window...</ContextMenuItem>
+							<ContextMenuItem onClick={() => {
+								emitTo(WINDOW_MAIN, "editor-reload-map", {})
+							}}>Request Load</ContextMenuItem>
+							<ContextMenuItem>Add Entity</ContextMenuItem>
 							<ContextMenuSeparator />
 							<ContextMenuItem>Developer Tools</ContextMenuItem>
 						</ContextMenuSubContent>

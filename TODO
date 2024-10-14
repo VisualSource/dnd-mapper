@@ -6,10 +6,10 @@ DND Mapper:
 
     Interaction System:
       ✔ Add Click handler @done(24-10-07 16:32)
-      ☐ Normilze coords
-      ☐ figure out whats under it
+      ✔ Normilze coords @done(24-10-14 17:03)
+      ✔ figure out whats under it @done(24-10-14 17:03)
 
-      ☐ emit interaction event
+      ✔ emit interaction event @done(24-10-14 17:03)
       
       ☐ add goto function for dungeon assets
       ☐ add interaction event for non editor

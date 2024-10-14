@@ -3,9 +3,9 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { FileQuestion, MoreHorizontal } from "lucide-react";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { useLiveQuery } from "dexie-react-hooks";
-import { emitTo } from "@tauri-apps/api/event";
+import { emitTo, listen } from "@tauri-apps/api/event";
 import type { UUID } from "node:crypto";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { AdditionEntityDialog, type AdditionEntityDialogHandle } from "@/components/dialog/AdditionEntityDialog";
@@ -93,8 +93,21 @@ const getNode = (nodes: Dungeon["state"]["document"]["nodes"], rootNode: UUID): 
 	}
 }
 
+const loadDungeonFile = async (filepath: string) => {
+	const file = await readFile(filepath);
+	const reader = new TextDecoder();
+	const value = reader.decode(file);
+
+	const start = value.slice(value.indexOf("map") + 3);
+	const config = start.slice(0, start.lastIndexOf("}") + 1);
+
+	const content = JSON.parse(config) as Dungeon;
+	return content;
+}
+
 function StageEditorEditPage() {
 	const data = Route.useLoaderData();
+	const [selectedNode, setSelectedNode] = useState<string | null>(null);
 	const ied = useRef<InstanceEditorDialogHandle>(null);
 	const aedRef = useRef<AdditionEntityDialogHandle>(null);
 	const sgdRef = useRef<StageGroupDialogHandle>(null);
@@ -110,14 +123,7 @@ function StageEditorEditPage() {
 	const dsFile = form.watch("dsFilepath");
 	const loadDsfile = useLiveQuery(async () => {
 		try {
-			const file = await readFile(dsFile);
-			const reader = new TextDecoder();
-			const value = reader.decode(file);
-
-			const start = value.slice(value.indexOf("map") + 3);
-			const config = start.slice(0, start.lastIndexOf("}") + 1);
-
-			const content = JSON.parse(config) as Dungeon;
+			const content = await loadDungeonFile(dsFile);
 
 			await emitTo(WINDOW_MAP_EDITOR, EVENTS_MAP_EDITOR.Load, content);
 
@@ -134,6 +140,25 @@ function StageEditorEditPage() {
 			return null;
 		}
 	}, [dsFile], null);
+
+
+	useEffect(() => {
+		const unsub = listen("editor-reload-map", async () => {
+			const content = await loadDungeonFile(dsFile);
+			await emitTo(WINDOW_MAP_EDITOR, EVENTS_MAP_EDITOR.Load, content);
+		});
+
+		return () => {
+			unsub.then(e => e());
+		}
+	}, [dsFile]);
+
+	useEffect(() => {
+		const unsub = listen<string>("editor-select", async (ev) => { setSelectedNode(ev.payload) });
+		return () => {
+			unsub.then(e => e());
+		}
+	}, []);
 
 	const onSubmit = (state: ResolvedStage) => { }
 
@@ -350,7 +375,7 @@ function StageEditorEditPage() {
 						</div>
 					) : (
 						<div className="flex flex-col gap-2 overflow-y-scroll h-full">
-							<DSNode node={loadDsfile.tree} targetWindow={WINDOW_MAP_EDITOR} />
+							<DSNode selectedNode={selectedNode} node={loadDsfile.tree} targetWindow={WINDOW_MAP_EDITOR} />
 						</div>
 					)}
 				</aside>

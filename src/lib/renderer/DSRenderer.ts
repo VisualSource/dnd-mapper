@@ -1,15 +1,15 @@
 import type { UUID } from "node:crypto";
-import { readFile } from '@tauri-apps/plugin-fs';
-import { listen, type UnlistenFn } from "@tauri-apps/api/event";
-import type { Shape, Color, Dungeon, Transform } from "./dungeonScrawl/types";
-import { EVENTS_MAP_EDITOR } from "../consts";
+import { emitTo, listen, type UnlistenFn } from "@tauri-apps/api/event";
+import type { Shape, Color, Dungeon } from "./dungeonScrawl/types";
+import { EVENTS_MAP_EDITOR, WINDOW_MAIN } from "../consts";
+import { PolygonObject } from "./dungeonScrawl/shape";
 
 const toHex = (value: Color) => {
     const alpha = value.alpha === 1 ? "ff" : value.alpha.toString(16).slice(2, 4);
     return `#${value.colour.toString(16).padStart(6, "0")}${alpha}`;
 };
 
-export default class DSRenderer {
+export default class DSRenderer extends EventTarget {
     private abort: AbortController = new AbortController();
     private mountCount = 0;
 
@@ -24,6 +24,9 @@ export default class DSRenderer {
     private didMove = false;
     private cameraZoom = 1;
     private lastZoom = 1;
+
+
+    private objects: { box: PolygonObject; id: UUID }[] = [];
 
     private loadEvent: Promise<UnlistenFn> | undefined;
     private setVisEvent: Promise<UnlistenFn> | undefined;
@@ -40,14 +43,31 @@ export default class DSRenderer {
             this.ctx.canvas.width = window.innerWidth;
         }
 
+        this.objects = [];
         this.cameraOffset = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 
         canvas.addEventListener('mousedown', this.onPointerDown);
         canvas.addEventListener('mousemove', this.onPointerMove);
         canvas.addEventListener('mouseup', this.onPointerUp);
 
+        this.addEventListener("click", this.onClick);
+
         this.loadEvent = listen<Dungeon>(EVENTS_MAP_EDITOR.Load, async (ev) => {
             this.map = ev.payload;
+
+            const assets = Object.values(this.map.state.document.nodes).filter(e => e.type === "DUNGEON_ASSET");
+
+            for (const asset of assets) {
+                for (const item of asset.children) {
+                    const n = this.map.state.document.nodes[item];
+                    if (n.type === "GEOMETRY") {
+                        const box = new PolygonObject(this.map.data.geometry[n.geometryId]);
+                        if (!box.isEmpty)
+                            this.objects.push({ box, id: asset.id });
+                        break;
+                    }
+                }
+            }
         });
         this.setVisEvent = listen<{ target: UUID, value: boolean }>(EVENTS_MAP_EDITOR.SetVisable, (ev) => {
             if (!this.map) return;
@@ -72,6 +92,7 @@ export default class DSRenderer {
         this.loadEvent?.then(e => e());
         this.setVisEvent?.then(e => e());
         this.moveCameraEvent?.then(e => e());
+        this.removeEventListener("click", this.onClick);
         if (this.frame) cancelAnimationFrame(this.frame);
     }
 
@@ -153,7 +174,6 @@ export default class DSRenderer {
         //ctx.lineWidth = 1;
         ctx.restore();
     }
-
     private drawLine(points: Shape, ctx: CanvasRenderingContext2D, color: string, width: number) {
         if (points.length < 2) return;
 
@@ -170,7 +190,6 @@ export default class DSRenderer {
         ctx.lineTo(end[0], end[1]);
         ctx.stroke();
     }
-
     private drawMap(pageId: UUID) {
 
         if (!this.map || !this.ctx) return;
@@ -306,7 +325,6 @@ export default class DSRenderer {
             }
         }
     }
-
     private draw = () => {
         if (!this.ctx) return;
         // Magic if we don't set the width and height of the canvas 
@@ -328,6 +346,17 @@ export default class DSRenderer {
             this.drawGrid(this.ctx, 36, 1);
         }
 
+        for (const object of this.objects) {
+            const item = object.box.getBoundingBox();
+
+            this.drawPolygonStroke([
+                [item.minX - 2, item.minY - 2],
+                [item.maxX + 2, item.minY - 2],
+                [item.maxX + 2, item.maxY + 2],
+                [item.minX - 2, item.maxY + 2]
+            ], this.ctx, "yellow", 4);
+        }
+
         this.frame = requestAnimationFrame(this.draw);
 
     }
@@ -338,8 +367,15 @@ export default class DSRenderer {
         this.dragStart.x = this.getEventLocation(ev).x / this.cameraZoom - this.cameraOffset.x
         this.dragStart.y = this.getEventLocation(ev).y / this.cameraZoom - this.cameraOffset.y
     }
-    private onPointerUp = (ev: MouseEvent) => {
-        if (!this.didMove) this.onClick(ev, this.dragStart);
+    private onPointerUp = (_ev: MouseEvent) => {
+        if (!this.didMove) {
+            for (const object of this.objects) {
+                if (object.box.contains(this.dragStart)) {
+                    this.dispatchEvent(new CustomEvent("click", { detail: { target: object.id } }));
+                    break;
+                }
+            }
+        }
         this.isDragging = false
         this.lastZoom = this.cameraZoom
     }
@@ -350,7 +386,6 @@ export default class DSRenderer {
             this.cameraOffset.y = this.getEventLocation(e).y / this.cameraZoom - this.dragStart.y
         }
     }
-
     private getEventLocation(e: TouchEvent | MouseEvent) {
         if ((e as TouchEvent).touches && (e as TouchEvent).touches.length === 1) {
             return { x: (e as TouchEvent).touches[0].clientX, y: (e as TouchEvent).touches[0].clientY }
@@ -358,11 +393,16 @@ export default class DSRenderer {
 
         return { x: (e as MouseEvent).clientX, y: (e as MouseEvent).clientY }
     }
+    private onClick = async (ev: Event) => {
+        const target = (ev as CustomEvent<{ target: UUID }>).detail.target;
 
-    private onClick(ev: MouseEvent, loc: { x: number, y: number }) {
-        console.log("Click event", ev, this.dragStart);
+        //const node = this.map?.state.document.nodes[target]
+
+        await emitTo(WINDOW_MAIN, "editor-select", target);
+
+        //console.log(node);
+
     }
-
     public mount(canvas: HTMLCanvasElement) {
         this.mountCount++;
         if (this.mountCount !== 1) return;

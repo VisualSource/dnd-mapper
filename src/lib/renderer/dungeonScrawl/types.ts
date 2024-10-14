@@ -255,6 +255,11 @@ export type Point = [number, number];
 export type Shape = Point[];
 export type Polygon = Shape[];
 
+export type Geometry = {
+    polygons: Polygon[],
+    polylines: Shape[]
+}
+
 export type Dungeon = {
     version: number;
     state: {
@@ -271,10 +276,7 @@ export type Dungeon = {
     }
     data: {
         geometry: {
-            [value: UUID]: {
-                polygons: Polygon[],
-                polylines: Shape[]
-            }
+            [value: UUID]: Geometry
         }
         assets: unknown
     }

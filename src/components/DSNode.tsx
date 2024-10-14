@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 import { emitTo } from "@tauri-apps/api/event";
 import { EVENTS_MAP_EDITOR } from "@/lib/consts";
+import { cn } from "@/lib/utils";
 
 /**
  * TRIGGERS
@@ -53,7 +54,7 @@ MOVE_CAMERA_TO_ASSET   -> target
 */
 export type LightNode = { name?: string, visible?: boolean, type: NodeType | "DOCUMENT", id: UUID, children?: LightNode[] }
 
-export const DSNode: React.FC<{ node: LightNode, targetWindow: string }> = ({ node, targetWindow }) => {
+export const DSNode: React.FC<{ selectedNode: string | null, node: LightNode, targetWindow: string }> = ({ selectedNode, node, targetWindow }) => {
     switch (node.type) {
         case "DOCUMENT":
             return (
@@ -61,7 +62,7 @@ export const DSNode: React.FC<{ node: LightNode, targetWindow: string }> = ({ no
                     <h3 className="border-b pb-2 font-bold tracking-tight">{node.name}</h3>
 
                     {node.children?.map(e => (
-                        <DSNode targetWindow={targetWindow} key={e.id} node={e} />
+                        <DSNode selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
                     ))}
                 </div>
             );
@@ -73,7 +74,7 @@ export const DSNode: React.FC<{ node: LightNode, targetWindow: string }> = ({ no
                     </summary>
                     <div className="pl-2 flex flex-col">
                         {node.children?.map(e => (
-                            <DSNode targetWindow={targetWindow} key={e.id} node={e} />
+                            <DSNode selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
                         ))}
                     </div>
                 </details>
@@ -92,7 +93,7 @@ export const DSNode: React.FC<{ node: LightNode, targetWindow: string }> = ({ no
                     </div>
                     <div className="pl-2 flex flex-col">
                         {node.children?.map(e => (
-                            <DSNode targetWindow={targetWindow} key={e.id} node={e} />
+                            <DSNode selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
                         ))}
                     </div>
                 </details>
@@ -109,7 +110,7 @@ export const DSNode: React.FC<{ node: LightNode, targetWindow: string }> = ({ no
                     </div>
                     <div className="pl-2 flex flex-col">
                         {node.children?.map(e => (
-                            <DSNode targetWindow={targetWindow} key={e.id} node={e} />
+                            <DSNode selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
                         ))}
                     </div>
                 </details>
@@ -122,14 +123,14 @@ export const DSNode: React.FC<{ node: LightNode, targetWindow: string }> = ({ no
                     <h5>{node.type}</h5>
                     <div className="pl-2 flex flex-col">
                         {node.children?.map(e => (
-                            <DSNode targetWindow={targetWindow} key={e.id} node={e} />
+                            <DSNode selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
                         ))}
                     </div>
                 </div>
             );
         case "DUNGEON_ASSET":
             return (
-                <details className="w-full group">
+                <details className={cn("w-full group", { "border border-yellow-500": node.id === selectedNode })} open={node.id === selectedNode}>
                     <summary className="flex w-full before:content-['+'] group-open:before:content-['-'] before:w-5">
                         <div className="flex justify-between border-b mb-1 w-full">
                             <button onClick={() => {
