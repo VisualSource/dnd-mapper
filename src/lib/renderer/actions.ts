@@ -38,21 +38,21 @@ export type Action = ActionSeries | ActionSetAssetVisibility | ActionSetEntityVi
 
 
 export type TriggerOnDoorOpen = {
-    type: "TRIGGER_ON_DOOR_OPEN";
+    type: "ON_DOOR_OPEN";
     target: UUID;
     action: Action;
 }
 export type TriggerOnDoorClose = {
-    type: "TRIGGER_ON_DOOR_CLOSE";
+    type: "ON_DOOR_CLOSE";
     target: UUID;
     action: Action;
 }
 export type TriggerOnInteraction = {
-    type: "TRIGGER_ON_INTERACTION",
+    type: "ON_INTERACTION",
     action: Action,
     target: UUID;
     eventType: "click"
 }
 
 
-export type Trigger = TriggerOnDoorOpen | TriggerOnDoorClose;
+export type Trigger = TriggerOnDoorOpen | TriggerOnDoorClose | TriggerOnInteraction;

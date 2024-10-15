@@ -6,7 +6,8 @@ export const WINDOW_MAP_EDITOR = "display-editor";
 export const EVENTS_MAP_EDITOR = {
 	Load: "load",
 	SetVisable: "setVisable",
-	MoveCamera: "moveCamera"
+	MoveCamera: "moveCamera",
+	CenterCameraOn: "centerCameraOn"
 } as const;
 
 

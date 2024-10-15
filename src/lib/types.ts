@@ -1,5 +1,6 @@
 import type { UUID } from "node:crypto";
 import type { PuckSize } from "./display/utils";
+import type { Trigger } from "./renderer/actions";
 
 export type EntityRef = {
 	id: string;
@@ -38,9 +39,32 @@ export type Entity = {
 	puckSize: PuckSize;
 };
 
+type StageObject = {
+	type: "object",
+	objectId: UUID,
+	events: Trigger[],
+	overrides: Record<string, unknown>
+};
+
+type StageEntity = {
+	type: "entity",
+	entityId: UUID,
+	instanceId: UUID,
+	x: number,
+	y: number,
+	z: number,
+	layer: UUID,
+	nameOverride?: string
+}
+
+
 export type Stage = {
 	id: string;
 	name: string;
+	data: (StageEntity | StageObject)[];
+	/**
+	 * @deprecated
+	 */
 	entities: EntityRef[];
 	dsFilepath: string,
 	prevStage: string | null;
@@ -53,5 +77,8 @@ export type ReslovedEntity = Omit<EntityRef, "id"> & {
 	z?: number;
 };
 export type ResolvedStage = Omit<Stage, "entities"> & {
+	/**
+	 * @deprecated
+	 */
 	entities: ReslovedEntity[];
 };

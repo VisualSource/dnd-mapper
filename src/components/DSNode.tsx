@@ -8,6 +8,7 @@ import { Label } from "./ui/label";
 import { emitTo } from "@tauri-apps/api/event";
 import { EVENTS_MAP_EDITOR } from "@/lib/consts";
 import { cn } from "@/lib/utils";
+import { DungeonAssetNodeDisplay } from "./editor/DungeonAssetNodeDisplay";
 
 /**
  * TRIGGERS
@@ -79,9 +80,10 @@ export const DSNode: React.FC<{ selectedNode: string | null, node: LightNode, ta
                     </div>
                 </details>
             );
-        case "IMAGES":
+        case "IMAGES": {
+            const isOpen = node.children?.some(e => e.id === selectedNode);
             return (
-                <details className="pl-2">
+                <details className="pl-2" open={isOpen} data-type={node.type} data-id={node.id}>
                     <summary className="border-b pb-2 font-semibold tracking-tight">
                         {node.name}: <span className="text-muted-foreground text-sm">{node.type}</span>
                     </summary>
@@ -98,6 +100,7 @@ export const DSNode: React.FC<{ selectedNode: string | null, node: LightNode, ta
                     </div>
                 </details>
             );
+        }
         case "TEMPLATE":
             return (
                 <details className="pl-2">
@@ -128,42 +131,11 @@ export const DSNode: React.FC<{ selectedNode: string | null, node: LightNode, ta
                     </div>
                 </div>
             );
-        case "DUNGEON_ASSET":
+        case "DUNGEON_ASSET": {
             return (
-                <details className={cn("w-full group", { "border border-yellow-500": node.id === selectedNode })} open={node.id === selectedNode}>
-                    <summary className="flex w-full before:content-['+'] group-open:before:content-['-'] before:w-5">
-                        <div className="flex justify-between border-b mb-1 w-full">
-                            <button onClick={() => {
-                                emitTo(targetWindow, EVENTS_MAP_EDITOR.MoveCamera, { x: Math.floor((Math.random() % 10) * 100), y: Math.floor((Math.random() % 10) * 100) });
-                            }} className="pb-1 font-semibold tracking-tight underline text-left" type="button">{node?.name}</button>
-                            <div className="flex gap-2 items-center p-1">
-                                <Checkbox defaultChecked={node.visible} onCheckedChange={e => {
-                                    emitTo(targetWindow, EVENTS_MAP_EDITOR.SetVisable, { target: node.id, value: e });
-                                }} />
-                                <Label>Visable</Label>
-                            </div>
-                        </div>
-                    </summary>
-                    <div className="flex justify-end">
-                        <ul>
-
-                            <li>
-                                <h5>Trigger: ON_DOOR_OPEN</h5>
-
-
-                                <button type="button">
-                                    <Trash2 />
-                                </button>
-                            </li>
-
-                        </ul>
-                        <Button size="sm">
-                            <Plus className="h-4 2-4" />
-                            Add Trigger
-                        </Button>
-                    </div>
-                </details>
+                <DungeonAssetNodeDisplay node={node} targetWindow={targetWindow} selectedNode={selectedNode} />
             );
+        }
         case "SHADOW":
             return (<div>{node.type}</div>)
         case "HATCHING":

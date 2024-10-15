@@ -23,8 +23,8 @@ import type { ResolvedStage } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { resloveStage } from "@/lib/loader";
 import { db } from "@/lib/db";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { InstanceEditorDialog, type InstanceEditorDialogHandle } from "@/components/dialog/instanceEditorDialog";
+//import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+//import { InstanceEditorDialog, type InstanceEditorDialogHandle } from "@/components/dialog/instanceEditorDialog";
 
 const loadGroups = () => db.groups
 	.toArray()
@@ -58,7 +58,7 @@ export const Route = createFileRoute("/stage-editor/$id")({
 		const visible = await editorWindow.isVisible();
 		if (visible) await editorWindow.hide();
 	},
-	async onEnter(ctx) {
+	async onEnter() {
 		const visible = await editorWindow.isVisible();
 		if (!visible) await editorWindow.show();
 	},
@@ -108,16 +108,12 @@ const loadDungeonFile = async (filepath: string) => {
 function StageEditorEditPage() {
 	const data = Route.useLoaderData();
 	const [selectedNode, setSelectedNode] = useState<string | null>(null);
-	const ied = useRef<InstanceEditorDialogHandle>(null);
-	const aedRef = useRef<AdditionEntityDialogHandle>(null);
+	//const ied = useRef<InstanceEditorDialogHandle>(null);
+	//const aedRef = useRef<AdditionEntityDialogHandle>(null);
 	const sgdRef = useRef<StageGroupDialogHandle>(null);
 
 	const form = useForm<ResolvedStage>({
 		defaultValues: data.stage
-	});
-	const entityField = useFieldArray({
-		control: form.control,
-		name: "entities",
 	});
 
 	const dsFile = form.watch("dsFilepath");
@@ -154,54 +150,48 @@ function StageEditorEditPage() {
 	}, [dsFile]);
 
 	useEffect(() => {
-		const unsub = listen<string>("editor-select", async (ev) => { setSelectedNode(ev.payload) });
+		const unsub = listen<string>("editor-select", async (ev) => {
+			setSelectedNode(ev.payload);
+		});
 		return () => {
 			unsub.then(e => e());
 		}
 	}, []);
 
-	const onSubmit = (state: ResolvedStage) => { }
+	const onSubmit = (_state: ResolvedStage) => { }
 
 	return (
+
 		<div className="h-full w-full flex flex-col overflow-hidden">
-			<InstanceEditorDialog entity={entityField} ref={ied} defaultLayer={loadDsfile?.defaultLayer} layers={loadDsfile?.layers} />
+
 			<StageGroupDialog ref={sgdRef} />
-			<AdditionEntityDialog
-				onAdd={(e) =>
-					entityField.prepend({
-						entity: e,
-						instanceId: crypto.randomUUID(),
-						x: 0,
-						y: 0,
-					})
-				}
-				ref={aedRef}
-			/>
-			<header className="flex gap-2 w-full p-2 justify-between">
-				<Link to="/stage-editor" className={buttonVariants({ variant: "ghost", size: "sm" })}>Back</Link>
-				<div className="flex gap-2">
-					<Button
-						type="button"
-						size="sm"
-						variant="outline"
-						onClick={() => sgdRef.current?.show()}
-					>
-						Add Stage Group
-					</Button>
-					<Button
-						type="button"
-						size="sm"
-						variant="secondary"
-						onClick={toggleEditorWindow}
-					>
-						Show Board
-					</Button>
-				</div>
-			</header>
-			<Separator />
-			<section className="flex h-full overflow-hidden">
-				<main className="w-8/12 h-full flex">
-					<Form {...form}>
+
+			<Form {...form}>
+				<header className="flex gap-2 w-full p-2 justify-between">
+					<Link to="/stage-editor" className={buttonVariants({ variant: "ghost", size: "sm" })}>Back</Link>
+					<div className="flex gap-2">
+						<Button
+							type="button"
+							size="sm"
+							variant="outline"
+							onClick={() => sgdRef.current?.show()}
+						>
+							Add Stage Group
+						</Button>
+						<Button
+							type="button"
+							size="sm"
+							variant="secondary"
+							onClick={toggleEditorWindow}
+						>
+							Show Board
+						</Button>
+					</div>
+				</header>
+				<Separator />
+				<section className="flex h-full overflow-hidden">
+					<main className="w-8/12 h-full flex">
+
 						<form onSubmit={form.handleSubmit(onSubmit)} className="overflow-y-scroll p-2 gap-2 flex flex-col w-full">
 							<FormField
 								control={form.control}
@@ -235,71 +225,6 @@ function StageEditorEditPage() {
 									</FormDescription>
 								</FormItem>
 							)} />
-							<div className="flex flex-col border p-2">
-								<h1 className="font-medium">Entities</h1>
-								<p className="text-sm text-muted-foreground">
-									All the enemy's and players that will be on the map
-								</p>
-
-								<Separator />
-								<ul className="max-h-52 my-2 overflow-y-scroll px-2 space-y-2">
-									{entityField.fields.map((e, index) => (
-										<li key={e.instanceId} className="border rounded-sm p-2 inline-flex w-full items-center gap-2">
-											<Avatar>
-												<AvatarFallback>
-													<FileQuestion />
-												</AvatarFallback>
-												<AvatarImage src={e.entity.image} alt={e.entity.name} />
-											</Avatar>
-
-											<h1 className="max-w-28 text-ellipsis whitespace-nowrap overflow-hidden">{(e?.nameOverride?.length ?? 0) > 1 ? e.nameOverride : e.entity.name}</h1>
-
-											<div>
-												<div>Layer</div>
-												<span className="text-muted-foreground text-sm overflow-hidden max-w-14 text-ellipsis whitespace-nowrap">{loadDsfile?.layers.find(l => l.id === e.layer)?.value ?? "Default"}</span>
-											</div>
-
-											<div>
-												<h3>Start Position</h3>
-												<div className="flex gap-2">
-													<span>X: <span className="text-muted-foreground">{e.x}</span></span>
-													<span>Y: <span className="text-muted-foreground">{e.y}</span></span>
-													<span>Z: <span className="text-muted-foreground">{e?.z ?? 0}</span></span>
-												</div>
-											</div>
-											<DropdownMenu>
-												<DropdownMenuTrigger asChild>
-													<Button
-														aria-haspopup="true"
-														size="icon"
-														variant="ghost"
-														className="ml-auto"
-													>
-														<MoreHorizontal className="h-4 w-4" />
-														<span className="sr-only">Toggle menu</span>
-													</Button>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end">
-													<DropdownMenuLabel>Actions</DropdownMenuLabel>
-													<DropdownMenuItem onClick={() => ied.current?.show(index)}>Edit</DropdownMenuItem>
-													<DropdownMenuItem onClick={() => entityField.remove(index)}>Delete</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
-										</li>
-									))}
-								</ul>
-
-								<div className="flex justify-end">
-									<Button
-										type="button"
-										onClick={() => aedRef.current?.show()}
-										variant="secondary"
-										size="sm"
-									>
-										Add Entity
-									</Button>
-								</div>
-							</div>
 
 							<div className="flex w-full gap-2">
 								<FormField
@@ -364,22 +289,104 @@ function StageEditorEditPage() {
 							</div>
 
 						</form>
-					</Form>
-				</main>
-				<aside className="w-4/12 h-full flex flex-col bg-zinc-900">
-					{loadDsfile === undefined ? (
-						<div>Loading...</div>
-					) : loadDsfile === null ? (
-						<div className="flex flex-col justify-center items-center h-full">
-							<h3>No File selected</h3>
-						</div>
-					) : (
-						<div className="flex flex-col gap-2 overflow-y-scroll h-full">
-							<DSNode selectedNode={selectedNode} node={loadDsfile.tree} targetWindow={WINDOW_MAP_EDITOR} />
-						</div>
-					)}
-				</aside>
-			</section>
+					</main>
+					<aside className="w-4/12 h-full flex flex-col bg-zinc-900">
+						{loadDsfile === undefined ? (
+							<div>Loading...</div>
+						) : loadDsfile === null ? (
+							<div className="flex flex-col justify-center items-center h-full">
+								<h3>No File selected</h3>
+							</div>
+						) : (
+							<div className="flex flex-col gap-2 overflow-y-scroll h-full">
+								<DSNode selectedNode={selectedNode} node={loadDsfile.tree} targetWindow={WINDOW_MAP_EDITOR} />
+							</div>
+						)}
+					</aside>
+				</section>
+			</Form>
 		</div >
 	);
 }
+
+/*
+<AdditionEntityDialog
+				onAdd={(e) =>
+					entityField.prepend({
+						entity: e,
+						instanceId: crypto.randomUUID(),
+						x: 0,
+						y: 0,
+					})
+				}
+				ref={aedRef}
+			/>
+<InstanceEditorDialog entity={entityField} ref={ied} defaultLayer={loadDsfile?.defaultLayer} layers={loadDsfile?.layers} />
+
+
+<div className="flex flex-col border p-2">
+								<h1 className="font-medium">Entities</h1>
+								<p className="text-sm text-muted-foreground">
+									All the enemy's and players that will be on the map
+								</p>
+
+								<Separator />
+								<ul className="max-h-52 my-2 overflow-y-scroll px-2 space-y-2">
+									{entityField.fields.map((e, index) => (
+										<li key={e.instanceId} className="border rounded-sm p-2 inline-flex w-full items-center gap-2">
+											<Avatar>
+												<AvatarFallback>
+													<FileQuestion />
+												</AvatarFallback>
+												<AvatarImage src={e.entity.image} alt={e.entity.name} />
+											</Avatar>
+
+											<h1 className="max-w-28 text-ellipsis whitespace-nowrap overflow-hidden">{(e?.nameOverride?.length ?? 0) > 1 ? e.nameOverride : e.entity.name}</h1>
+
+											<div>
+												<div>Layer</div>
+												<span className="text-muted-foreground text-sm overflow-hidden max-w-14 text-ellipsis whitespace-nowrap">{loadDsfile?.layers.find(l => l.id === e.layer)?.value ?? "Default"}</span>
+											</div>
+
+											<div>
+												<h3>Start Position</h3>
+												<div className="flex gap-2">
+													<span>X: <span className="text-muted-foreground">{e.x}</span></span>
+													<span>Y: <span className="text-muted-foreground">{e.y}</span></span>
+													<span>Z: <span className="text-muted-foreground">{e?.z ?? 0}</span></span>
+												</div>
+											</div>
+											<DropdownMenu>
+												<DropdownMenuTrigger asChild>
+													<Button
+														aria-haspopup="true"
+														size="icon"
+														variant="ghost"
+														className="ml-auto"
+													>
+														<MoreHorizontal className="h-4 w-4" />
+														<span className="sr-only">Toggle menu</span>
+													</Button>
+												</DropdownMenuTrigger>
+												<DropdownMenuContent align="end">
+													<DropdownMenuLabel>Actions</DropdownMenuLabel>
+													<DropdownMenuItem onClick={() => ied.current?.show(index)}>Edit</DropdownMenuItem>
+													<DropdownMenuItem onClick={() => entityField.remove(index)}>Delete</DropdownMenuItem>
+												</DropdownMenuContent>
+											</DropdownMenu>
+										</li>
+									))}
+								</ul>
+
+								<div className="flex justify-end">
+									<Button
+										type="button"
+										onClick={() => aedRef.current?.show()}
+										variant="secondary"
+										size="sm"
+									>
+										Add Entity
+									</Button>
+								</div>
+							</div>
+*/

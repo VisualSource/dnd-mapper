@@ -31,6 +31,7 @@ export default class DSRenderer extends EventTarget {
     private loadEvent: Promise<UnlistenFn> | undefined;
     private setVisEvent: Promise<UnlistenFn> | undefined;
     private moveCameraEvent: Promise<UnlistenFn> | undefined;
+    private centerCameraOn: Promise<UnlistenFn> | undefined;
 
     //https://codepen.io/chengarda/pen/wRxoyB?editors=0010
     private init(canvas: HTMLCanvasElement) {
@@ -51,6 +52,25 @@ export default class DSRenderer extends EventTarget {
         canvas.addEventListener('mouseup', this.onPointerUp);
 
         this.addEventListener("click", this.onClick);
+
+        this.centerCameraOn = listen<{ type: string, target: UUID }>(EVENTS_MAP_EDITOR.CenterCameraOn, async (ev) => {
+            if (ev.payload.type === "object") {
+                const obj = this.objects.find(e => e.id === ev.payload.target)
+                // get center of box
+                const bb = obj?.box.getBoundingBox();
+                if (!bb) return;
+
+                const offsetX = (Math.abs(bb.maxX) - Math.abs(bb.minX)) / 2;
+                const offsetY = (Math.abs(bb.maxY) - Math.abs(bb.minY)) / 2;
+
+                const x = Math.floor((window.innerWidth / 2)) - (bb.minX + offsetX);
+                const y = Math.floor((window.innerHeight / 2)) - (bb.minY + offsetY);
+
+                this.cameraOffset.x = x;
+                this.cameraOffset.y = y;
+            }
+
+        });
 
         this.loadEvent = listen<Dungeon>(EVENTS_MAP_EDITOR.Load, async (ev) => {
             this.map = ev.payload;
@@ -92,6 +112,7 @@ export default class DSRenderer extends EventTarget {
         this.loadEvent?.then(e => e());
         this.setVisEvent?.then(e => e());
         this.moveCameraEvent?.then(e => e());
+        this.centerCameraOn?.then(e => e());
         this.removeEventListener("click", this.onClick);
         if (this.frame) cancelAnimationFrame(this.frame);
     }
@@ -396,12 +417,12 @@ export default class DSRenderer extends EventTarget {
     private onClick = async (ev: Event) => {
         const target = (ev as CustomEvent<{ target: UUID }>).detail.target;
 
-        //const node = this.map?.state.document.nodes[target]
+        const node = this.map?.state.document.nodes[target]
+        if (!node) return;
 
-        await emitTo(WINDOW_MAIN, "editor-select", target);
-
-        //console.log(node);
-
+        if ("visible" in node && node.visible) {
+            await emitTo(WINDOW_MAIN, "editor-select", target);
+        }
     }
     public mount(canvas: HTMLCanvasElement) {
         this.mountCount++;

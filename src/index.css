@@ -77,6 +77,12 @@ body,
 	}
 }
 
+@property --border-angle {
+    inherits: false;
+    initial-value: 0deg;
+    syntax: '<angle>';
+}
+
 @supports (scrollbar-width: auto) {
 	* {
 		scrollbar-color: hsl(var(--muted-foreground)) hsl(var(--background));

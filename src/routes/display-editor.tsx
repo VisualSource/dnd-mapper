@@ -60,18 +60,18 @@ function DisplayEditorPage() {
 					</ContextMenuSub>
 					<ContextMenuSeparator />
 					<ContextMenuCheckboxItem checked>
-						Show Bookmarks Bar
+						Show Object Outlines
 						<ContextMenuShortcut>⌘⇧B</ContextMenuShortcut>
 					</ContextMenuCheckboxItem>
-					<ContextMenuCheckboxItem>Show Full URLs</ContextMenuCheckboxItem>
+					<ContextMenuCheckboxItem>Ohter</ContextMenuCheckboxItem>
 					<ContextMenuSeparator />
 					<ContextMenuRadioGroup value="pedro">
 						<ContextMenuLabel inset>People</ContextMenuLabel>
 						<ContextMenuSeparator />
 						<ContextMenuRadioItem value="pedro">
-							Pedro Duarte
+							Radio
 						</ContextMenuRadioItem>
-						<ContextMenuRadioItem value="colm">Colm Tuite</ContextMenuRadioItem>
+						<ContextMenuRadioItem value="colm">Radio</ContextMenuRadioItem>
 					</ContextMenuRadioGroup>
 				</ContextMenuContent>
 			</ContextMenu>

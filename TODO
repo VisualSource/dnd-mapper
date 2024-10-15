@@ -11,12 +11,12 @@ DND Mapper:
 
       ✔ emit interaction event @done(24-10-14 17:03)
       
-      ☐ add goto function for dungeon assets
+      ✔ add goto function for dungeon assets @done(24-10-15 14:06)
       ☐ add interaction event for non editor
 
     ☐ Add entities instances to map with postions and layers
     ☐ Link objects like Doors to hide/show layers and or transition to other maps
-    ☐ Toggle layer visiblity
+    ✔ Toggle layer visiblity @done(24-10-15 14:07)
  
     On Map Context Menu: 
       ☐ Click to add entity on map
