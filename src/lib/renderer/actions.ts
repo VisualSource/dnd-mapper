@@ -13,40 +13,26 @@ export type ActionSetEntityPosition = {
     args: [UUID, number, number, number]
 }
 export type ActionMoveCameraToPosition = {
-    type: "ACTION_MOVE_CAMERA_TO_POSITION",
+    type: "MOVE_CAMERA_TO_POSITION",
     args: [number, number]
 }
-export type ActionMoveCameraToEntity = {
-    type: "ACTION_MOVE_CAMERA_TO_ENTITY",
-    args: [UUID]
+export type ActionMoveCameraTo = {
+    type: "MOVE_CAMERA_TO",
+    args: [UUID, string]
 }
-export type ActionMoveCameraToAsset = {
-    type: "ACTION_MOVE_CAMERA_TO_ASSET",
-    args: [UUID]
-}
+
 export type ActionSeries = {
     type: "ACTION_SERIES",
     args: Array<ActionSetAssetVisibility |
         ActionSetEntityVisibility |
         ActionSetEntityPosition |
         ActionMoveCameraToPosition |
-        ActionMoveCameraToAsset |
-        ActionMoveCameraToEntity>
+        ActionMoveCameraTo>
 }
 
-export type Action = ActionSeries | ActionSetAssetVisibility | ActionSetEntityVisibility | ActionSetEntityPosition | ActionMoveCameraToPosition | ActionMoveCameraToAsset | ActionMoveCameraToEntity
+export type Action = ActionSeries | ActionSetAssetVisibility | ActionSetEntityVisibility | ActionSetEntityPosition | ActionMoveCameraToPosition | ActionMoveCameraTo
 
 
-export type TriggerOnDoorOpen = {
-    type: "ON_DOOR_OPEN";
-    target: UUID;
-    action: Action;
-}
-export type TriggerOnDoorClose = {
-    type: "ON_DOOR_CLOSE";
-    target: UUID;
-    action: Action;
-}
 export type TriggerOnInteraction = {
     type: "ON_INTERACTION",
     action: Action,
@@ -55,4 +41,14 @@ export type TriggerOnInteraction = {
 }
 
 
-export type Trigger = TriggerOnDoorOpen | TriggerOnDoorClose | TriggerOnInteraction;
+export type Trigger = TriggerOnInteraction;
+
+export const TRIGGERS = [
+    {
+        value: {
+            name: "ON_INTERACTION",
+            type: "click"
+        },
+        description: "Triggers when a click interaction happens"
+    }
+]

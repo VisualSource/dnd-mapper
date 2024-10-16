@@ -55,7 +55,7 @@ MOVE_CAMERA_TO_ASSET   -> target
 */
 export type LightNode = { name?: string, visible?: boolean, type: NodeType | "DOCUMENT", id: UUID, children?: LightNode[] }
 
-export const DSNode: React.FC<{ selectedNode: string | null, node: LightNode, targetWindow: string }> = ({ selectedNode, node, targetWindow }) => {
+export const DSNode: React.FC<{ openDialog: (target: string) => void, selectedNode: string | null, node: LightNode, targetWindow: string }> = ({ openDialog, selectedNode, node, targetWindow }) => {
     switch (node.type) {
         case "DOCUMENT":
             return (
@@ -63,7 +63,7 @@ export const DSNode: React.FC<{ selectedNode: string | null, node: LightNode, ta
                     <h3 className="border-b pb-2 font-bold tracking-tight">{node.name}</h3>
 
                     {node.children?.map(e => (
-                        <DSNode selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
+                        <DSNode openDialog={openDialog} selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
                     ))}
                 </div>
             );
@@ -75,7 +75,7 @@ export const DSNode: React.FC<{ selectedNode: string | null, node: LightNode, ta
                     </summary>
                     <div className="pl-2 flex flex-col">
                         {node.children?.map(e => (
-                            <DSNode selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
+                            <DSNode openDialog={openDialog} selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
                         ))}
                     </div>
                 </details>
@@ -95,7 +95,7 @@ export const DSNode: React.FC<{ selectedNode: string | null, node: LightNode, ta
                     </div>
                     <div className="pl-2 flex flex-col">
                         {node.children?.map(e => (
-                            <DSNode selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
+                            <DSNode openDialog={openDialog} selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
                         ))}
                     </div>
                 </details>
@@ -113,7 +113,7 @@ export const DSNode: React.FC<{ selectedNode: string | null, node: LightNode, ta
                     </div>
                     <div className="pl-2 flex flex-col">
                         {node.children?.map(e => (
-                            <DSNode selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
+                            <DSNode openDialog={openDialog} selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
                         ))}
                     </div>
                 </details>
@@ -126,14 +126,14 @@ export const DSNode: React.FC<{ selectedNode: string | null, node: LightNode, ta
                     <h5>{node.type}</h5>
                     <div className="pl-2 flex flex-col">
                         {node.children?.map(e => (
-                            <DSNode selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
+                            <DSNode openDialog={openDialog} selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
                         ))}
                     </div>
                 </div>
             );
         case "DUNGEON_ASSET": {
             return (
-                <DungeonAssetNodeDisplay node={node} targetWindow={targetWindow} selectedNode={selectedNode} />
+                <DungeonAssetNodeDisplay openDialog={openDialog} node={node} targetWindow={targetWindow} selectedNode={selectedNode} />
             );
         }
         case "SHADOW":

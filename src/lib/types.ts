@@ -39,17 +39,17 @@ export type Entity = {
 	puckSize: PuckSize;
 };
 
-type StageObject = {
+export type StageObject = {
 	type: "object",
-	objectId: UUID,
+	id: UUID,
 	events: Trigger[],
 	overrides: Record<string, unknown>
 };
 
-type StageEntity = {
+export type StageEntity = {
 	type: "entity",
 	entityId: UUID,
-	instanceId: UUID,
+	id: UUID,
 	x: number,
 	y: number,
 	z: number,

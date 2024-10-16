@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 import { Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useFieldArray, useFormContext } from "react-hook-form";
+import type { StageObject } from "@/lib/types";
 
 
 const TriggerItem: React.FC<{ id: string, triggerName: string, args: { name: string, value: string | number }[] }> = ({ triggerName, args }) => {
@@ -39,7 +40,11 @@ const TriggerItem: React.FC<{ id: string, triggerName: string, args: { name: str
     );
 }
 
-export const DungeonAssetNodeDisplay: React.FC<{ node: LightNode, targetWindow: string, selectedNode: string | null }> = ({ node, targetWindow, selectedNode }) => {
+export const DungeonAssetNodeDisplay: React.FC<{ openDialog: (target: string) => void, node: LightNode, targetWindow: string, selectedNode: string | null }> = ({ node, targetWindow, selectedNode, openDialog }) => {
+    const { getValues, setValue } = useFormContext();
+
+    const value = getValues("data") ?? {};
+
     const isSelectedNode = node.id === selectedNode;
 
     return (
@@ -51,17 +56,34 @@ export const DungeonAssetNodeDisplay: React.FC<{ node: LightNode, targetWindow: 
                     <div className="flex gap-2 items-center p-1" >
                         <Checkbox defaultChecked={node.visible} onCheckedChange={e => {
                             emitTo(targetWindow, EVENTS_MAP_EDITOR.SetVisable, { target: node.id, value: e });
+                            setValue("data", { ...value, [node.id]: { ...value[node.id], overrides: { ...value[node.id].overrides, visiable: e } } })
                         }} />
                         <Label>Visable</Label>
                     </div>
                 </div>
             </summary>
-            < div className="flex flex-col mb-2" >
-                <ul className="mb-4 divide-y-2" >
-                    <TriggerItem triggerName="Target" args={[{ name: "Target", value: "258c6233-adbe-430a-83c1-c033ea86cc5d" }]} id="" />
+            < div className="flex flex-col mb-2 pl-4" >
+                <h1>Triggers</h1>
+                <ul className="mb-4 divide-y-2">
+                    {(value[node.id]?.events as unknown[])?.map((_, i) => (
+                        <li key={`_${i + 1}`}>
+                            <h5>ON_INTERACTION: click</h5>
+                            <span>Target: <span className="text-muted-foreground text-xs">TARGET</span></span>
+                            <ul>
+                                <TriggerItem id="" args={[{ name: "Target", value: "" }, { name: "Type", value: "object" }]} triggerName="MOVE_CAMERA_TO" />
+                            </ul>
+                        </li>
+                    ))}
                 </ul>
                 < div className="flex justify-end" >
-                    <Button size="icon" variant="outline" title="Add trigger" >
+                    <Button size="icon" variant="outline" title="Add trigger" onClick={async () => {
+                        openDialog("tld");
+                        window.addEventListener("dialog::trigger-list", (ev) => {
+                            const data = (ev as CustomEvent<{ name: string; type?: string } | null>).detail;
+                            if (!data) return;
+                            setValue("data", { ...value, [node.id]: { events: [{ type: data.name }] } })
+                        }, { once: true });
+                    }}>
                         <Plus className="h-4 w-4" />
                     </Button>
                 </div>
