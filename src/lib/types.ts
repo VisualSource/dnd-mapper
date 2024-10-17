@@ -40,7 +40,6 @@ export type Entity = {
 };
 
 export type StageObject = {
-	type: "object",
 	id: UUID,
 	events: Trigger[],
 	overrides: Record<string, unknown>
@@ -61,10 +60,7 @@ export type StageEntity = {
 export type Stage = {
 	id: string;
 	name: string;
-	data: (StageEntity | StageObject)[];
-	/**
-	 * @deprecated
-	 */
+	data: Record<UUID, StageObject>
 	entities: EntityRef[];
 	dsFilepath: string,
 	prevStage: string | null;
@@ -77,8 +73,5 @@ export type ReslovedEntity = Omit<EntityRef, "id"> & {
 	z?: number;
 };
 export type ResolvedStage = Omit<Stage, "entities"> & {
-	/**
-	 * @deprecated
-	 */
 	entities: ReslovedEntity[];
 };

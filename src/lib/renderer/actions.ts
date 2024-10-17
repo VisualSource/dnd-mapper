@@ -1,54 +1,191 @@
 import type { UUID } from "node:crypto"
 
-export type ActionSetAssetVisibility = {
-    type: "ACTION_SET_ASSET_VISIBILITY",
-    args: [UUID, boolean]
+export type ActionSetVisibility = {
+    type: "SET_VISIBILITY",
+    args: {
+        target: UUID;
+        state: boolean;
+        type: "object" | "entity"
+    }
 }
-export type ActionSetEntityVisibility = {
-    type: "ACTION_SET_ENTITY_VISIBILITY",
-    args: [UUID, boolean]
-}
+
 export type ActionSetEntityPosition = {
-    type: "ACTION_SET_ENTITY_POSITION",
-    args: [UUID, number, number, number]
+    type: "SET_ENTITY_POSITION",
+    args: {
+        lerp: boolean;
+        target: UUID,
+        x: number;
+        y: number;
+        z: number;
+    };
 }
 export type ActionMoveCameraToPosition = {
     type: "MOVE_CAMERA_TO_POSITION",
-    args: [number, number]
+    args: {
+        lerp: boolean
+        x: number;
+        y: number;
+    }
 }
 export type ActionMoveCameraTo = {
     type: "MOVE_CAMERA_TO",
-    args: [UUID, string]
+    args: {
+        lerp: boolean
+        target: UUID;
+        type: "object" | "entity";
+    }
+}
+
+export type ActionSetTransform = {
+    type: "SET_TRANSFORM",
+    args: {
+        lerp: boolean;
+        target: UUID,
+        type: "object" | "entity",
+        a: number;
+        b: number;
+        c: number;
+        d: number
+    }
 }
 
 export type ActionSeries = {
-    type: "ACTION_SERIES",
-    args: Array<ActionSetAssetVisibility |
-        ActionSetEntityVisibility |
+    type: "SERIES",
+    args: Array<ActionSetVisibility |
         ActionSetEntityPosition |
         ActionMoveCameraToPosition |
-        ActionMoveCameraTo>
+        ActionMoveCameraTo | ActionSetTransform>
 }
 
-export type Action = ActionSeries | ActionSetAssetVisibility | ActionSetEntityVisibility | ActionSetEntityPosition | ActionMoveCameraToPosition | ActionMoveCameraTo
-
+export type Action = ActionSeries | ActionSetVisibility | ActionSetEntityPosition | ActionMoveCameraToPosition | ActionMoveCameraTo | ActionSetTransform;
 
 export type TriggerOnInteraction = {
     type: "ON_INTERACTION",
-    action: Action,
+    action: Action | null,
     target: UUID;
+    targetType: "object" | "entity"
     eventType: "click"
 }
 
 
 export type Trigger = TriggerOnInteraction;
 
-export const TRIGGERS = [
+export const TRIGGERS: { name: string; id: Trigger["type"], variant: string | null, description: string; }[] = [
     {
-        value: {
-            name: "ON_INTERACTION",
-            type: "click"
-        },
+        name: "On Interaction",
+        id: "ON_INTERACTION",
+        variant: "click",
         description: "Triggers when a click interaction happens"
     }
-]
+];
+
+export const ACTIONS: { name: string; id: Action["type"], description: string; }[] = [
+    {
+        name: "Set Asset Visibility",
+        id: "SET_VISIBILITY",
+        description: "Set a object or entity's visibility property"
+    },
+    {
+        name: "Set Entity Position",
+        id: "SET_ENTITY_POSITION",
+        description: "Move a entity to a new position"
+    },
+    {
+        name: "Move Camera to Position",
+        id: "MOVE_CAMERA_TO_POSITION",
+        description: "Move the camera to a specific locaiton"
+    },
+    {
+        name: "Move Camera To",
+        id: "MOVE_CAMERA_TO",
+        description: "Camera move to center on a specific object or entity."
+    },
+    {
+        name: "Series",
+        id: "SERIES",
+        description: "Execute a series of actions one after another"
+    },
+    {
+        name: "Set Transform",
+        id: "SET_TRANSFORM",
+        description: "Change the transform of a entity or object"
+    }
+];
+
+export function getDefaultTrigger(id: Trigger["type"] | null): Trigger | null {
+    switch (id) {
+        case "ON_INTERACTION":
+            return {
+                type: "ON_INTERACTION",
+                action: null,
+                target: "" as UUID,
+                targetType: "object",
+                eventType: "click"
+            } as TriggerOnInteraction;
+        default:
+            return null;
+    }
+}
+
+export function getDefaultAction(id: Action["type"] | null): Action | null {
+    switch (id) {
+        case "SERIES":
+            return {
+                type: "SERIES",
+                args: []
+            } as ActionSeries;
+        case "SET_VISIBILITY":
+            return {
+                type: "SET_VISIBILITY",
+                args: {
+                    state: true,
+                    target: "" as UUID,
+                    type: "object"
+                }
+            } as ActionSetVisibility
+        case "SET_ENTITY_POSITION":
+            return {
+                type: "SET_ENTITY_POSITION",
+                args: {
+                    lerp: false,
+                    target: "" as UUID,
+                    x: 0,
+                    y: 0,
+                    z: 0
+                }
+            } as ActionSetEntityPosition
+        case "MOVE_CAMERA_TO_POSITION":
+            return {
+                type: "MOVE_CAMERA_TO_POSITION",
+                args: {
+                    lerp: false,
+                    x: 0,
+                    y: 0
+                }
+            } as ActionMoveCameraToPosition
+        case "MOVE_CAMERA_TO":
+            return {
+                type: "MOVE_CAMERA_TO",
+                args: {
+                    lerp: false,
+                    target: "" as UUID,
+                    type: "object"
+                }
+            } as ActionMoveCameraTo;
+        case "SET_TRANSFORM":
+            return {
+                type: "SET_TRANSFORM",
+                args: {
+                    lerp: false,
+                    target: "" as UUID,
+                    type: "object",
+                    a: 1,
+                    b: 0,
+                    c: 0,
+                    d: 1
+                }
+            } as ActionSetTransform;
+        default:
+            return null;
+    }
+}

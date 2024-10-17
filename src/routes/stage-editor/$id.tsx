@@ -26,6 +26,7 @@ import { db } from "@/lib/db";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { TriggerListDialog } from "@/components/editor/TriggersListDialog";
 import type { DialogHandle } from "@/components/Dialog";
+import { ActionListDialog } from "@/components/dialog/ActionListDialog";
 //import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 //import { InstanceEditorDialog, type InstanceEditorDialogHandle } from "@/components/dialog/instanceEditorDialog";
 
@@ -114,6 +115,7 @@ function StageEditorEditPage() {
 	//const ied = useRef<InstanceEditorDialogHandle>(null);
 	//const aedRef = useRef<AdditionEntityDialogHandle>(null);
 	const tld = useRef<DialogHandle>(null);
+	const ald = useRef<DialogHandle>(null);
 	const sgdRef = useRef<StageGroupDialogHandle>(null);
 
 	const form = useForm<ResolvedStage>({
@@ -166,7 +168,7 @@ function StageEditorEditPage() {
 	return (
 
 		<div className="h-full w-full flex flex-col">
-
+			<ActionListDialog ref={ald} />
 			<StageGroupDialog ref={sgdRef} />
 			<TriggerListDialog ref={tld} />
 			<Form {...form}>
@@ -304,7 +306,18 @@ function StageEditorEditPage() {
 							</div>
 						) : (
 							<div className="flex flex-col gap-2 overflow-y-scroll h-full">
-								<DSNode openDialog={(target: string) => tld.current?.show()} selectedNode={selectedNode} node={loadDsfile.tree} targetWindow={WINDOW_MAP_EDITOR} />
+								<DSNode openDialog={(target: string) => {
+									switch (target) {
+										case "tld":
+											tld.current?.show();
+											break;
+										case "ald":
+											ald.current?.show();
+											break;
+										default:
+											break;
+									}
+								}} selectedNode={selectedNode} node={loadDsfile.tree} targetWindow={WINDOW_MAP_EDITOR} />
 							</div>
 						)}
 
