@@ -1,8 +1,10 @@
 import type { UUID } from "node:crypto";
 import { emitTo, listen, type UnlistenFn } from "@tauri-apps/api/event";
-import type { Shape, Color, Dungeon } from "./dungeonScrawl/types";
+import type { Shape, Color, Dungeon, PageNode } from "./dungeonScrawl/types";
 import { EVENTS_MAP_EDITOR, WINDOW_MAIN } from "../consts";
 import { PolygonObject } from "./dungeonScrawl/shape";
+import type { ReslovedEntityInstance } from "../types";
+import { getPuckSize, type PuckSize } from "../display/utils";
 
 const toHex = (value: Color) => {
     const alpha = value.alpha === 1 ? "ff" : value.alpha.toString(16).slice(2, 4);
@@ -25,8 +27,10 @@ export default class DSRenderer extends EventTarget {
     private cameraZoom = 1;
     private lastZoom = 1;
 
+    private imageCache = new Map<string, HTMLImageElement>();
 
     private objects: { box: PolygonObject; id: UUID }[] = [];
+    private entities: Record<UUID, ReslovedEntityInstance[]> = {};
 
     private loadEvent: Promise<UnlistenFn> | undefined;
     private setVisEvent: Promise<UnlistenFn> | undefined;
@@ -89,11 +93,14 @@ export default class DSRenderer extends EventTarget {
                 }
             }
         });
-        this.setVisEvent = listen<{ target: UUID, value: boolean }>(EVENTS_MAP_EDITOR.SetVisable, (ev) => {
-            if (!this.map) return;
-            const node = this.map.state.document.nodes[ev.payload.target];
-            if ("visible" in node) {
-                node.visible = ev.payload.value;
+        this.setVisEvent = listen<{ target: UUID, value: boolean, type: "entity" | "object" }>(EVENTS_MAP_EDITOR.SetVisable, (ev) => {
+            if (ev.payload.type === "object") {
+                if (!this.map) return;
+                const node = this.map.state.document.nodes[ev.payload.target];
+                if ("visible" in node) {
+                    node.visible = ev.payload.value;
+                }
+                return;
             }
         });
 
@@ -346,6 +353,20 @@ export default class DSRenderer extends EventTarget {
             }
         }
     }
+    private drawEntity(image: string, x: number, y: number, puck: PuckSize, page: UUID) {
+        if (!this.ctx) return;
+
+        const gridSize = (this.map?.state.document.nodes[page] as PageNode).grid.cellDiameter
+        const wh = gridSize * getPuckSize(puck);
+
+        // do transform
+
+        const loadedImage = this.imageCache.get(image);
+        if (!loadedImage) return;
+
+        this.ctx.drawImage(loadedImage, x * gridSize, y * gridSize, wh, wh);
+
+    }
     private draw = () => {
         if (!this.ctx) return;
         // Magic if we don't set the width and height of the canvas 
@@ -363,9 +384,19 @@ export default class DSRenderer extends EventTarget {
             const document = this.map.state.document;
             const selectedPage = this.selectedPage ?? document.nodes[document.documentNodeId].selectedPage;
             this.drawMap(selectedPage);
+
+            for (const [layer, units] of Object.entries(this.entities)) {
+                if (!(this.map?.state.document.nodes[layer as UUID] as { visible?: boolean })?.visible) continue;
+                for (const unit of units) {
+                    if (!(unit.overrides?.visible ?? unit.entity.displayOnMap)) continue;
+                    this.drawEntity(unit.entity.image, unit.x, unit.y, unit.entity.puckSize, selectedPage);
+                }
+            }
         } else {
             this.drawGrid(this.ctx, 36, 1);
         }
+
+
 
         for (const object of this.objects) {
             const item = object.box.getBoundingBox();

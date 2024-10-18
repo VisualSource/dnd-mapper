@@ -9,6 +9,7 @@ import { emitTo } from "@tauri-apps/api/event";
 import { EVENTS_MAP_EDITOR } from "@/lib/consts";
 import { cn } from "@/lib/utils";
 import { DungeonAssetNodeDisplay } from "./editor/DungeonAssetNodeDisplay";
+import { EntitiesNode } from "./editor/EntityNode";
 
 /**
  * TRIGGERS
@@ -112,14 +113,10 @@ export const DSNode: React.FC<{ openDialog: (target: string) => void, selectedNo
                         <Label>Visable</Label>
                     </div>
                     <div className="pl-2 flex flex-col">
-                        {node.children?.map(e => (
-                            <DSNode openDialog={openDialog} selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
-                        ))}
+                        <EntitiesNode layerId={node.id} targetWindow={targetWindow} openDialog={openDialog} />
                     </div>
                 </details>
             );
-        case "GRID":
-            return (<div>{node.type}</div>)
         case "FOLDER":
             return (
                 <div>
@@ -136,13 +133,7 @@ export const DSNode: React.FC<{ openDialog: (target: string) => void, selectedNo
                 <DungeonAssetNodeDisplay openDialog={openDialog} node={node} targetWindow={targetWindow} selectedNode={selectedNode} />
             );
         }
-        case "SHADOW":
-            return (<div>{node.type}</div>)
-        case "HATCHING":
-            return (<div>{node.type}</div>)
-        case "BUFFER_SHADING":
-            return (<div>{node.type}</div>)
         default:
-            return null;
+            return (<div>{node.type}</div>)
     }
 }

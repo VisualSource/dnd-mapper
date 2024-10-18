@@ -113,7 +113,7 @@ function StageEditorEditPage() {
 	const data = Route.useLoaderData();
 	const [selectedNode, setSelectedNode] = useState<string | null>(null);
 	//const ied = useRef<InstanceEditorDialogHandle>(null);
-	//const aedRef = useRef<AdditionEntityDialogHandle>(null);
+	const aedRef = useRef<AdditionEntityDialogHandle>(null);
 	const tld = useRef<DialogHandle>(null);
 	const ald = useRef<DialogHandle>(null);
 	const sgdRef = useRef<StageGroupDialogHandle>(null);
@@ -171,6 +171,11 @@ function StageEditorEditPage() {
 			<ActionListDialog ref={ald} />
 			<StageGroupDialog ref={sgdRef} />
 			<TriggerListDialog ref={tld} />
+			<AdditionEntityDialog ref={aedRef} onAdd={(entity) => {
+				window.dispatchEvent(new CustomEvent("dialog::additionEntityDialog", { detail: entity }));
+			}} onClose={() => {
+				window.dispatchEvent(new CustomEvent("dialog::additionEntityDialog", { detail: null }));
+			}} />
 			<Form {...form}>
 				<header className="flex gap-2 w-full p-2 justify-between">
 					<Link to="/stage-editor" className={buttonVariants({ variant: "ghost", size: "sm" })}>Back</Link>
@@ -313,6 +318,9 @@ function StageEditorEditPage() {
 											break;
 										case "ald":
 											ald.current?.show();
+											break;
+										case "aed":
+											aedRef.current?.show();
 											break;
 										default:
 											break;

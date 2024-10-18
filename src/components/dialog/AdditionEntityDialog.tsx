@@ -14,8 +14,8 @@ export type AdditionEntityDialogHandle = {
 
 export const AdditionEntityDialog = forwardRef<
 	unknown,
-	{ onAdd: (entity: Entity) => void }
->(({ onAdd }, ref) => {
+	{ onClose?: () => void, onAdd: (entity: Entity) => void }
+>(({ onAdd, onClose }, ref) => {
 	const dialogRef = useRef<HTMLDialogElement>(null);
 	const [view, setView] = useState<"ADD_NEW" | "ADD_EXISTING" | "SELECT">(
 		"SELECT",
@@ -61,7 +61,10 @@ export const AdditionEntityDialog = forwardRef<
 							variant="destructive"
 							size="icon"
 							type="button"
-							onClick={() => dialogRef.current?.close()}
+							onClick={() => {
+								dialogRef.current?.close();
+								onClose?.call(this);
+							}}
 						>
 							<X className="h-5 w-5" />
 						</Button>

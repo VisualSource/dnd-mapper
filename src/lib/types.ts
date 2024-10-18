@@ -2,13 +2,16 @@ import type { UUID } from "node:crypto";
 import type { PuckSize } from "./display/utils";
 import type { Trigger } from "./renderer/actions";
 
-export type EntityRef = {
+export type EntityInstance = {
+	entityId: string;
 	id: string;
-	instanceId: string;
 	x: number;
 	y: number;
-	layer?: UUID
-	nameOverride?: string;
+	z: number;
+	overrides: {
+		name?: string;
+		visible?: boolean;
+	}
 };
 export type Background = {
 	image: string;
@@ -61,17 +64,16 @@ export type Stage = {
 	id: string;
 	name: string;
 	data: Record<UUID, StageObject>
-	entities: EntityRef[];
+	entities: Record<UUID, EntityInstance[]>;
 	dsFilepath: string,
 	prevStage: string | null;
 	nextStage: string | null;
 	stageGroup: string | null;
 };
 
-export type ReslovedEntity = Omit<EntityRef, "id"> & {
+export type ReslovedEntityInstance = Omit<EntityInstance, "entityId"> & {
 	entity: Entity;
-	z?: number;
 };
 export type ResolvedStage = Omit<Stage, "entities"> & {
-	entities: ReslovedEntity[];
+	entities: Record<UUID, ReslovedEntityInstance[]>;
 };

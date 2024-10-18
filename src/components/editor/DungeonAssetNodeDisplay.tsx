@@ -71,9 +71,9 @@ export const DungeonAssetNodeDisplay: React.FC<{ openDialog: (target: string) =>
             <summary className="flex w-full before:content-['+'] group-open:before:content-['-'] before:w-5" >
                 <div className="flex justify-between border-b mb-1 w-full" >
                     <button onClick={() => emitTo(targetWindow, EVENTS_MAP_EDITOR.CenterCameraOn, { type: "object", target: node.id })} className="pb-1 font-semibold tracking-tight underline text-left" type="button" > {node?.name} </button>
-                    <div className="flex gap-2 items-center p-1" >
+                    <div className="flex gap-2 items-center p-1 mr-2" >
                         <Checkbox defaultChecked={node.visible} onCheckedChange={e => {
-                            emitTo(targetWindow, EVENTS_MAP_EDITOR.SetVisable, { target: node.id, value: e });
+                            emitTo(targetWindow, EVENTS_MAP_EDITOR.SetVisable, { type: "object", target: node.id, value: e });
                             if (!value[node.id]) {
                                 setValue("data", update(value, {
                                     [node.id]: {
