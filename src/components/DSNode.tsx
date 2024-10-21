@@ -1,13 +1,8 @@
 import type { UUID } from "node:crypto";
-import { Plus, Trash2 } from "lucide-react";
-
 import type { NodeType } from "@/lib/renderer/dungeonScrawl/types";
 import { Checkbox } from "./ui/checkbox";
-import { Button } from "./ui/button";
 import { Label } from "./ui/label";
-import { emitTo } from "@tauri-apps/api/event";
-import { EVENTS_MAP_EDITOR } from "@/lib/consts";
-import { cn } from "@/lib/utils";
+import { emitEvent } from "@/lib/consts";
 import { DungeonAssetNodeDisplay } from "./editor/DungeonAssetNodeDisplay";
 import { EntitiesNode } from "./editor/EntityNode";
 
@@ -90,7 +85,7 @@ export const DSNode: React.FC<{ openDialog: (target: string) => void, selectedNo
                     </summary>
                     <div className="flex gap-2 items-center p-1 pl-2">
                         <Checkbox defaultChecked={node.visible} onCheckedChange={e => {
-                            emitTo(targetWindow, EVENTS_MAP_EDITOR.SetVisable, { target: node.id, value: e });
+                            emitEvent("setVisable", { target: node.id, type: "object", value: e === "indeterminate" ? false : e }, targetWindow);
                         }} />
                         <Label>Visable</Label>
                     </div>
@@ -108,7 +103,7 @@ export const DSNode: React.FC<{ openDialog: (target: string) => void, selectedNo
                     <summary className="border-b pb-2 font-semibold tracking-tight">{node?.name}: <span className="text-muted-foreground text-sm">{node.type}</span></summary>
                     <div className="flex gap-2 items-center p-1 pl-2">
                         <Checkbox defaultChecked={node.visible} onCheckedChange={e => {
-                            emitTo(targetWindow, EVENTS_MAP_EDITOR.SetVisable, { target: node.id, value: e });
+                            emitEvent("setVisable", { target: node.id, type: "object", value: e === "indeterminate" ? false : e }, targetWindow);
                         }} />
                         <Label>Visable</Label>
                     </div>

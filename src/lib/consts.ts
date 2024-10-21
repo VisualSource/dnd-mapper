@@ -1,4 +1,7 @@
+import type { UUID } from "node:crypto";
 import type { PuckSize } from "./display/utils";
+import type { ReslovedEntityInstance } from "./types";
+import { emitTo } from "@tauri-apps/api/event";
 
 export const WINDOW_MAIN = "main";
 export const WINDOW_MAP_EDITOR = "display-editor";
@@ -7,11 +10,19 @@ export const EVENTS_MAP_EDITOR = {
 	Load: "load",
 	SetVisable: "setVisable",
 	MoveCamera: "moveCamera",
-	CenterCameraOn: "centerCameraOn"
+	CenterCameraOn: "centerCameraOn",
+	AddEntity: "addEntity"
 } as const;
 
+export type EventMap = {
+	load: unknown,
+	addEntity: { layer: UUID, entity: ReslovedEntityInstance },
+	setVisable: { type: "object" | "entity", target: UUID, value: boolean },
+	moveCamera: { x: number, y: number },
+	centerCameraOn: { type: "object" | "entity", target: UUID },
+}
 
-
+export const emitEvent = <T extends keyof EventMap>(event: T, args: EventMap[T], window: string) => emitTo(window, event, args);
 
 //export const EDITOR_MAP_WINDOW_LABEL = "display-editor";
 export const MAP_WINDOW_LABEL = "display";

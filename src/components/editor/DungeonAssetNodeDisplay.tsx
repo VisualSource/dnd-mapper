@@ -1,8 +1,7 @@
-import { emitTo } from "@tauri-apps/api/event";
 import type { LightNode } from "../DSNode"
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
-import { EVENTS_MAP_EDITOR } from "@/lib/consts";
+import { emitEvent, EVENTS_MAP_EDITOR } from "@/lib/consts";
 import { Button } from "../ui/button";
 import { Activity, Clapperboard, Layers3, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -70,33 +69,26 @@ export const DungeonAssetNodeDisplay: React.FC<{ openDialog: (target: string) =>
         } open={isSelectedNode} >
             <summary className="flex w-full before:content-['+'] group-open:before:content-['-'] before:w-5" >
                 <div className="flex justify-between border-b mb-1 w-full" >
-                    <button onClick={() => emitTo(targetWindow, EVENTS_MAP_EDITOR.CenterCameraOn, { type: "object", target: node.id })} className="pb-1 font-semibold tracking-tight underline text-left" type="button" > {node?.name} </button>
+                    <button onClick={() => emitEvent(EVENTS_MAP_EDITOR.CenterCameraOn, { type: "object", target: node.id }, targetWindow)} className="pb-1 font-semibold tracking-tight underline text-left" type="button" > {node?.name} </button>
                     <div className="flex gap-2 items-center p-1 mr-2" >
                         <Checkbox defaultChecked={node.visible} onCheckedChange={e => {
-                            emitTo(targetWindow, EVENTS_MAP_EDITOR.SetVisable, { type: "object", target: node.id, value: e });
-                            if (!value[node.id]) {
-                                setValue("data", update(value, {
-                                    [node.id]: {
-                                        $set: {
-                                            events: [],
-                                            id: node.id,
-                                            overrides: {
-                                                visible: e
-                                            }
-                                        }
-                                    }
-                                }));
-                                return;
-                            }
+                            emitEvent("setVisable", { target: node.id, type: "object", value: e === "indeterminate" ? false : e }, targetWindow);
+
                             setValue("data", update(value, {
-                                [node.id]: {
-                                    overrides: {
-                                        visible: {
-                                            $set: e
+                                [node.id]: (item) => {
+                                    if (!item) return {
+                                        events: [],
+                                        id: node.id,
+                                        overrides: {
+                                            visible: e
                                         }
                                     }
+
+                                    item.overrides.visible = e;
+
+                                    return item;
                                 }
-                            }));
+                            }))
                         }} />
                         <Label>Visable</Label>
                     </div>

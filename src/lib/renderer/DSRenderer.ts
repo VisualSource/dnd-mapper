@@ -4,12 +4,82 @@ import type { Shape, Color, Dungeon, PageNode } from "./dungeonScrawl/types";
 import { EVENTS_MAP_EDITOR, WINDOW_MAIN } from "../consts";
 import { PolygonObject } from "./dungeonScrawl/shape";
 import type { ReslovedEntityInstance } from "../types";
-import { getPuckSize, type PuckSize } from "../display/utils";
+import { getPuckSize, loadExternalImage, type PuckSize } from "../display/utils";
 
 const toHex = (value: Color) => {
     const alpha = value.alpha === 1 ? "ff" : value.alpha.toString(16).slice(2, 4);
     return `#${value.colour.toString(16).padStart(6, "0")}${alpha}`;
 };
+
+/*
+    Render Queue 
+        Object
+        { 
+            type: "object", 
+            visible: boolean
+            id: UUID, 
+            layerIndex: 0 // Layer priority, 
+            z: 0 //in layer propity, 
+            instructions: [
+                {
+                    type: 0 // polygon-fill,
+                    transform: Matrix
+                    color: string,
+                    geoId
+                }
+            ] 
+        }
+        Entity
+        {
+            type: "entity",
+            id: UUID,
+            layerIndex: 0, // layer order
+            z: 0, // in layer order
+            icon: ICONREF,
+            x: number,
+            y: number
+        }
+*/
+
+enum RenderType {
+    PolygonFill = 0,
+    PolygonStroke = 1,
+    Line = 2,
+    Grid = 3
+}
+
+type RenderObject = {
+    type: "object",
+    visible: boolean;
+    id: UUID,
+    layerIndex: number;
+    z: number;
+    instructions: (
+        { type: 0, color: string, transform?: DOMMatrix | null, geomertyId: UUID } |
+        { type: 1, color: string, width: number, transform?: DOMMatrix | null, geomertyId: UUID } |
+        { type: 2, color: string, width: number, transform?: DOMMatrix | null, geomertyId: UUID } |
+        { type: 3, gridCellDiameter: number, lineWidth: number, color?: string }
+    )[],
+    debug: boolean;
+}
+
+type RenderEntity = {
+    type: "entity",
+    visible: boolean,
+    id: UUID,
+    layerIndex: number;
+    z: number,
+    y: number;
+    x: number;
+    icon: string;
+    name: string
+    puckSize: number;
+    transform?: DOMMatrix | null,
+    debug: boolean;
+}
+
+type RenderQueue = (RenderObject | RenderEntity)[]
+
 
 export default class DSRenderer extends EventTarget {
     private abort: AbortController = new AbortController();
@@ -36,6 +106,7 @@ export default class DSRenderer extends EventTarget {
     private setVisEvent: Promise<UnlistenFn> | undefined;
     private moveCameraEvent: Promise<UnlistenFn> | undefined;
     private centerCameraOn: Promise<UnlistenFn> | undefined;
+    private addEntityEvent: Promise<UnlistenFn> | undefined;
 
     //https://codepen.io/chengarda/pen/wRxoyB?editors=0010
     private init(canvas: HTMLCanvasElement) {
@@ -109,6 +180,17 @@ export default class DSRenderer extends EventTarget {
             this.cameraOffset.y = ev.payload.y;
         });
 
+        this.addEntityEvent = listen<{ entity: ReslovedEntityInstance, layer: UUID }>(EVENTS_MAP_EDITOR.AddEntity, async (ev) => {
+            if (!this.entities[ev.payload.layer]) {
+                this.entities[ev.payload.layer] = [];
+            }
+
+            const data = await loadExternalImage(ev.payload.entity.entity.image);
+            this.imageCache.set(ev.payload.entity.entity.image, data);
+
+            this.entities[ev.payload.layer].push(ev.payload.entity);
+        });
+
         this.draw();
     }
 
@@ -120,6 +202,7 @@ export default class DSRenderer extends EventTarget {
         this.setVisEvent?.then(e => e());
         this.moveCameraEvent?.then(e => e());
         this.centerCameraOn?.then(e => e());
+        this.addEntityEvent?.then(e => e());
         this.removeEventListener("click", this.onClick);
         if (this.frame) cancelAnimationFrame(this.frame);
     }
@@ -132,8 +215,8 @@ export default class DSRenderer extends EventTarget {
         ctx.strokeStyle = color;
         ctx.lineWidth = lineWidth;
 
-        const gridXCount = Math.round(ctx.canvas.width / gridCellDiameter);
-        const gridYCount = Math.round(ctx.canvas.height / gridCellDiameter);
+        const gridXCount = Math.round(ctx.canvas.width / gridCellDiameter) + 100;
+        const gridYCount = Math.round(ctx.canvas.height / gridCellDiameter) + 100;
 
         const xStart = -Math.floor(gridXCount / 2);
         const yStart = -Math.floor(gridYCount / 2);
@@ -353,19 +436,24 @@ export default class DSRenderer extends EventTarget {
             }
         }
     }
-    private drawEntity(image: string, x: number, y: number, puck: PuckSize, page: UUID) {
-        if (!this.ctx) return;
+    private drawEntity(ctx: CanvasRenderingContext2D, imageId: string, x: number, y: number, puckSize: number, gridCellDiameter: number, transform?: DOMMatrix | null) {
+        const wh = gridCellDiameter * puckSize;
 
-        const gridSize = (this.map?.state.document.nodes[page] as PageNode).grid.cellDiameter
-        const wh = gridSize * getPuckSize(puck);
+        const cachedImage = this.imageCache.get(imageId);
+        if (!cachedImage) return;
 
-        // do transform
+        ctx.save();
 
-        const loadedImage = this.imageCache.get(image);
-        if (!loadedImage) return;
+        if (transform) {
+            const current = ctx.getTransform();
+            transform.e = current.e;
+            transform.f = current.f;
+            ctx.setTransform(transform);
+        }
 
-        this.ctx.drawImage(loadedImage, x * gridSize, y * gridSize, wh, wh);
+        ctx.drawImage(cachedImage, x * gridCellDiameter, y * gridCellDiameter, wh, wh);
 
+        ctx.restore();
     }
     private draw = () => {
         if (!this.ctx) return;
@@ -380,6 +468,83 @@ export default class DSRenderer extends EventTarget {
         this.ctx.translate(-window.innerWidth / 2 + this.cameraOffset.x, -window.innerHeight / 2 + this.cameraOffset.y);
         this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
+        /* const gridSize = 36;
+            const backgroundColor = ""
+            for (const item of this.renderQueue) {
+                if (item.type === "object") {
+                    for (const i of item.instructions) {
+                        switch (i.type) {
+                            case RenderType.PolygonFill: {
+                                const geomerty = this.map?.data.geometry[i.geomertyId];
+                                if (!geomerty) continue;
+                                this.drawPolygonFill(geomerty.polygons[0][0], this.ctx, i.color, i.transform);
+                                // remove hollow points
+                                if (geomerty.polygons[0].length > 1) {
+                                    for (let j = 1; j < geomerty.polygons[0].length; j++) {
+                                        this.drawPolygonFill(geomerty.polygons[0][j], this.ctx, backgroundColor, i.transform);
+                                    }
+                                }
+                                break;
+                            }
+                            case RenderType.PolygonStroke: {
+                                const geo = this.map?.data.geometry[i.geomertyId];
+                                if (!geo) continue;
+    
+                                for (const item of geo.polygons) {
+                                    for (const g of item) {
+                                        this.drawPolygonStroke(g, this.ctx, i.color, i.width, i.transform);
+                                    }
+                                }
+    
+                                break;
+                            }
+                            case RenderType.Line: {
+                                const geo = this.map?.data.geometry[i.geomertyId];
+                                if (!geo) continue;
+                                for (const m of geo.polylines) {
+                                    this.drawLine(m, this.ctx, i.color, i.width);
+                                }
+                                break;
+                            }
+                            case RenderType.Grid: {
+                                this.drawGrid(this.ctx, i.gridCellDiameter, i.lineWidth, i.color);
+                                break;
+                            }
+                        }
+                    }
+    
+                    if (item.debug) {
+                        const obj = this.objects.find(e => e.id === item.id);
+                        const bb = obj?.box.getBoundingBox();
+                        if (!bb) continue;
+    
+                        this.drawPolygonStroke([
+                            [bb.minX - 2, bb.minY - 2],
+                            [bb.maxX + 2, bb.minY - 2],
+                            [bb.maxX + 2, bb.maxY + 2],
+                            [bb.minX - 2, bb.maxY + 2]
+                        ], this.ctx, "yellow", 4);
+    
+                    }
+    
+                    continue;
+                }
+    
+                this.drawEntity(this.ctx, item.icon, item.x, item.y, item.puckSize, gridSize, item.transform);
+    
+                if (item.debug) {
+                    const obj = this.objects.find(e => e.id === item.id);
+                    const bb = obj?.box.getBoundingBox();
+                    if (!bb) continue;
+                    this.drawPolygonStroke([
+                        [bb.minX - 2, bb.minY - 2],
+                        [bb.maxX + 2, bb.minY - 2],
+                        [bb.maxX + 2, bb.maxY + 2],
+                        [bb.minX - 2, bb.maxY + 2]
+                    ], this.ctx, "yellow", 4);
+                }
+            }*/
+
         if (this.map) {
             const document = this.map.state.document;
             const selectedPage = this.selectedPage ?? document.nodes[document.documentNodeId].selectedPage;
@@ -389,14 +554,12 @@ export default class DSRenderer extends EventTarget {
                 if (!(this.map?.state.document.nodes[layer as UUID] as { visible?: boolean })?.visible) continue;
                 for (const unit of units) {
                     if (!(unit.overrides?.visible ?? unit.entity.displayOnMap)) continue;
-                    this.drawEntity(unit.entity.image, unit.x, unit.y, unit.entity.puckSize, selectedPage);
+                    this.drawEntity(this.ctx, unit.entity.image, unit.x, unit.y, getPuckSize(unit.entity.puckSize), (document.nodes[selectedPage] as PageNode).grid.cellDiameter);
                 }
             }
         } else {
             this.drawGrid(this.ctx, 36, 1);
         }
-
-
 
         for (const object of this.objects) {
             const item = object.box.getBoundingBox();
@@ -412,7 +575,6 @@ export default class DSRenderer extends EventTarget {
         this.frame = requestAnimationFrame(this.draw);
 
     }
-
     private onPointerDown = (ev: MouseEvent) => {
         this.isDragging = true;
         this.didMove = false;

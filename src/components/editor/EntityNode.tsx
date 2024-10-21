@@ -1,8 +1,8 @@
 import { useFormContext } from "react-hook-form";
 import { Button } from "../ui/button";
 import update from "immutability-helper";
-import { EVENTS_MAP_EDITOR } from "@/lib/consts";
-import { emitTo } from "@tauri-apps/api/event";
+import { emitEvent, EVENTS_MAP_EDITOR } from "@/lib/consts";
+
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import type { UUID } from "node:crypto";
@@ -14,10 +14,10 @@ const EntityNode: React.FC<{ targetWindow: string, entity: ReslovedEntityInstanc
         <details className="bg-gray-950 group mb-2">
             <summary className="flex w-full before:content-['+'] group-open:before:content-['-'] before:w-5 bg-zinc-900">
                 <div className="flex justify-between border-b mb-1 w-full" >
-                    <button onClick={() => emitTo(targetWindow, EVENTS_MAP_EDITOR.CenterCameraOn, { type: "entity", target: entity.id })} className="pb-1 font-semibold tracking-tight underline text-left" type="button" > {entity.overrides.name ?? entity.entity.name} </button>
+                    <button onClick={() => emitEvent(EVENTS_MAP_EDITOR.CenterCameraOn, { type: "entity", target: entity.id as UUID }, targetWindow)} className="pb-1 font-semibold tracking-tight underline text-left" type="button" > {entity.overrides.name ?? entity.entity.name} </button>
                     <div className="flex gap-2 items-center p-1 mr-2" >
                         <Checkbox defaultChecked={entity.overrides.visible ?? true} onCheckedChange={e => {
-                            emitTo(targetWindow, EVENTS_MAP_EDITOR.SetVisable, { type: "entity", target: entity.id, value: e });
+                            emitEvent(EVENTS_MAP_EDITOR.SetVisable, { type: "entity", target: entity.id as UUID, value: e === "indeterminate" ? false : e }, targetWindow);
                             setProp("visible", e);
                         }} />
                         <Label>Visable</Label>
@@ -76,15 +76,20 @@ export const EntitiesNode: React.FC<{ layerId: UUID, targetWindow: string, openD
                 </ul>
                 <Button size="sm" variant="secondary" className="w-full" onClick={() => {
                     openDialog("aed");
-                    window.addEventListener("dialog::additionEntityDialog", (ev) => {
+                    window.addEventListener("dialog::additionEntityDialog", async (ev) => {
                         const data = (ev as CustomEvent<Entity | null>).detail;
                         if (!data) return;
+
+                        const el = { entity: data, id: crypto.randomUUID(), x: 0, y: 0, z: 0, overrides: {} };
+
                         setValue("entities", update(entitiesList, {
                             [layerId]: (ev) => {
-                                if (!ev?.length) return [{ entity: data, id: crypto.randomUUID(), x: 0, y: 0, z: 0, overrides: {} }];
-                                return [...ev, { entity: data, id: crypto.randomUUID(), x: 0, y: 0, z: 0, overrides: {} }];
+                                if (!ev?.length) return [el];
+                                return [...ev, el];
                             }
                         }));
+
+                        await emitEvent("addEntity", { layer: layerId, entity: el }, targetWindow);
                     }, { once: true });
                 }}><User2 className="mr-2 h-4 w-4" /> Add Entity</Button>
             </div>

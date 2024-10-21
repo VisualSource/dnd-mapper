@@ -1,18 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import { HideableHeader } from "../components/game/HideableHeader";
-import { Renderer } from "../lib/display/renderer";
+//import { Renderer } from "../lib/display/renderer";
 
 const Display: React.FC = () => {
 	const ref = useRef<HTMLCanvasElement>(null);
-	const renderer = useRef(new Renderer(false));
+	//const renderer = useRef(new Renderer(false));
 
 	useEffect(() => {
 		if (ref.current) {
-			renderer.current.mount(ref.current);
+			//renderer.current.mount(ref.current);
 		}
 		return () => {
-			renderer.current.unmount();
+			//renderer.current.unmount();
 		};
 	}, []);
 
