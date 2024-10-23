@@ -14,6 +14,19 @@ type DocumentNode = {
 
 export type Transform = [number, number, number, number, number, number];
 
+
+type AssetNode = {
+    type: "ASSET",
+    id: UUID,
+    alpha: number;
+    name: string;
+    blendMode: "normal",
+    parentId: UUID;
+    assetId: UUID;
+    visible: boolean;
+    transform: Transform
+}
+
 type DungeonAssetNode = {
     type: "DUNGEON_ASSET",
     id: UUID,
@@ -248,7 +261,7 @@ type BufferShadingNode = {
     }
 }
 
-type Node = PageNode | ImagesNode | TemplateNode | GeometryNode | GridNode | MultiPolygonNode | FolderNode | DungeonAssetNode | ShadowNode | HatchingNode | BufferShadingNode;
+type Node = PageNode | ImagesNode | TemplateNode | GeometryNode | GridNode | MultiPolygonNode | FolderNode | DungeonAssetNode | ShadowNode | HatchingNode | BufferShadingNode | AssetNode;
 export type NodeType = Pick<Node, "type">["type"]
 
 export type Point = [number, number];
@@ -275,9 +288,17 @@ export type Dungeon = {
         }
     }
     data: {
-        geometry: {
-            [value: UUID]: Geometry
-        }
-        assets: unknown
+        geometry: Record<UUID, Geometry>;
+        assets: Record<UUID, {
+            asset: {
+                id: UUID,
+                name: string;
+                originalName: string;
+                scale: [number, number];
+                dimensions: [number, number];
+                tags: { type: string; value: string; }[]
+            }
+            data: string
+        }>
     }
 }

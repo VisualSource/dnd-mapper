@@ -132,37 +132,51 @@ export default class DSRenderer extends EventTarget {
             if (ev.payload.type === "object") {
                 const obj = this.objects.find(e => e.id === ev.payload.target)
                 // get center of box
-                const bb = obj?.box.getBoundingBox();
+                const bb = obj?.box.getCenter();
                 if (!bb) return;
 
-                const offsetX = (Math.abs(bb.maxX) - Math.abs(bb.minX)) / 2;
-                const offsetY = (Math.abs(bb.maxY) - Math.abs(bb.minY)) / 2;
-
-                const x = Math.floor((window.innerWidth / 2)) - (bb.minX + offsetX);
-                const y = Math.floor((window.innerHeight / 2)) - (bb.minY + offsetY);
-
-                this.cameraOffset.x = x;
-                this.cameraOffset.y = y;
+                this.cameraOffset.x = bb.x;
+                this.cameraOffset.y = bb.y;
             }
-
         });
 
         this.loadEvent = listen<Dungeon>(EVENTS_MAP_EDITOR.Load, async (ev) => {
             this.map = ev.payload;
 
-            const assets = Object.values(this.map.state.document.nodes).filter(e => e.type === "DUNGEON_ASSET");
+            this.entities = {};
+            this.imageCache.clear();
+            this.objects = [];
+
+            const assets = Object.values(this.map.state.document.nodes).filter(e => e.type === "DUNGEON_ASSET" || e.type === "ASSET");
 
             for (const asset of assets) {
-                for (const item of asset.children) {
-                    const n = this.map.state.document.nodes[item];
-                    if (n.type === "GEOMETRY") {
-                        const box = new PolygonObject(this.map.data.geometry[n.geometryId]);
-                        if (!box.isEmpty)
-                            this.objects.push({ box, id: asset.id });
-                        break;
+                if (asset.type === "DUNGEON_ASSET") {
+                    for (const item of asset.children) {
+                        const n = this.map.state.document.nodes[item];
+                        if (n.type === "GEOMETRY") {
+                            const box = new PolygonObject(this.map.data.geometry[n.geometryId]);
+                            if (!box.isEmpty)
+                                this.objects.push({ box, id: asset.id });
+                            break;
+                        }
                     }
+                    continue;
                 }
+
+                const dim = this.map.data.assets[asset.assetId].asset.dimensions;
+                const scale = this.map.data.assets[asset.assetId].asset.scale;
+
+                const posX = asset.transform[4];
+                const poxY = asset.transform[5];
+
+                const box = new PolygonObject({ width: dim[0] * scale[0], height: dim[1] * scale[1], x: posX, y: poxY });
+
+                this.objects.push({ box, id: asset.id });
+
+                const content = await loadExternalImage(this.map.data.assets[asset.assetId].data);
+                this.imageCache.set(this.map.data.assets[asset.assetId].asset.id, content);
             }
+
         });
         this.setVisEvent = listen<{ target: UUID, value: boolean, type: "entity" | "object" }>(EVENTS_MAP_EDITOR.SetVisable, (ev) => {
             if (ev.payload.type === "object") {
@@ -173,6 +187,10 @@ export default class DSRenderer extends EventTarget {
                 }
                 return;
             }
+
+            const entity = this.entities["" as UUID].find(e => e.id === ev.payload.target);
+            if (!entity) return;
+            entity.overrides.visible = ev.payload.value;
         });
 
         this.moveCameraEvent = listen<{ x: number, y: number, autoCenter: boolean }>(EVENTS_MAP_EDITOR.MoveCamera, (ev) => {
@@ -356,6 +374,23 @@ export default class DSRenderer extends EventTarget {
 
                     break;
                 }
+                case "ASSET": {
+                    if (!node.visible) break;
+
+                    const asset = this.map.data.assets[node.assetId];
+
+                    const image = this.imageCache.get(asset.asset.id);
+                    if (!image) break;
+
+                    const [w, h] = asset.asset.dimensions;
+                    const s = asset.asset.scale;
+
+                    this.ctx.save();
+
+                    this.ctx.drawImage(image, node.transform[4], node.transform[5], w * s[0], h * s[1]);
+                    this.ctx.restore();
+                    break;
+                }
                 case "DUNGEON_ASSET": {
                     if (!node.visible) break;
 
@@ -403,14 +438,19 @@ export default class DSRenderer extends EventTarget {
                     const geomerty = this.map.data.geometry[geomertyId];
 
                     if (node.fill.visible) {
-                        // main geomerty
-                        this.drawPolygonFill(geomerty.polygons[0][0], this.ctx, toHex(node.fill.colour), transform);
-                        // remove hollow points
-                        if (geomerty.polygons[0].length > 1) {
-                            for (let i = 1; i < geomerty.polygons[0].length; i++) {
-                                this.drawPolygonFill(geomerty.polygons[0][i], this.ctx, backgroundColor, transform);
+
+                        for (const poly of geomerty.polygons) {
+                            // main geomerty
+                            this.drawPolygonFill(poly[0], this.ctx, toHex(node.fill.colour), transform);
+
+                            // remove hollow points
+                            if (poly.length > 1) {
+                                for (let i = 1; i < poly.length; i++) {
+                                    this.drawPolygonFill(poly[i], this.ctx, backgroundColor, transform);
+                                }
                             }
                         }
+
                     }
 
                     if (node.stroke.visible) {
@@ -575,11 +615,19 @@ export default class DSRenderer extends EventTarget {
         this.frame = requestAnimationFrame(this.draw);
 
     }
+
+    public getOffset(ev: MouseEvent) {
+        return {
+            x: this.getEventLocation(ev).x / this.cameraZoom - this.cameraOffset.x,
+            y: this.getEventLocation(ev).y / this.cameraZoom - this.cameraOffset.y
+        }
+    }
+
     private onPointerDown = (ev: MouseEvent) => {
         this.isDragging = true;
         this.didMove = false;
-        this.dragStart.x = this.getEventLocation(ev).x / this.cameraZoom - this.cameraOffset.x
-        this.dragStart.y = this.getEventLocation(ev).y / this.cameraZoom - this.cameraOffset.y
+        this.dragStart = this.getOffset(ev);
+
     }
     private onPointerUp = (_ev: MouseEvent) => {
         if (!this.didMove) {

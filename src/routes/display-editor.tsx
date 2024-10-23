@@ -52,8 +52,10 @@ function DisplayEditorPage() {
 							</ContextMenuItem>
 							<ContextMenuItem onClick={() => {
 								emitTo(WINDOW_MAIN, "editor-reload-map", {})
-							}}>Request Load</ContextMenuItem>
-							<ContextMenuItem>Add Entity</ContextMenuItem>
+							}}>Reload Map File</ContextMenuItem>
+							<ContextMenuItem onClick={(ev) => {
+								emitTo(WINDOW_MAIN, "editor-add-entity", renderer.current.getOffset(ev as never as MouseEvent));
+							}}>Add Entity</ContextMenuItem>
 							<ContextMenuSeparator />
 							<ContextMenuItem>Developer Tools</ContextMenuItem>
 						</ContextMenuSubContent>

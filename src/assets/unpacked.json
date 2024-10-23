@@ -1,0 +1,398 @@
+{
+    "version": 1,
+    "state": {
+        "document": {
+            "documentNodeId": "document",
+            "nodes": {
+                "document": {
+                    "type": "DOCUMENT",
+                    "id": "document",
+                    "name": "My campaign",
+                    "selectedPage": "8beb5589-576b-4d9c-9c22-30119dc9c1f5",
+                    "children": [
+                        "8beb5589-576b-4d9c-9c22-30119dc9c1f5"
+                    ]
+                },
+                "8beb5589-576b-4d9c-9c22-30119dc9c1f5": {
+                    "type": "PAGE",
+                    "id": "8beb5589-576b-4d9c-9c22-30119dc9c1f5",
+                    "parentId": "document",
+                    "name": "",
+                    "children": [
+                        "ecf5104a-7a46-4938-baf1-2563a6581df7",
+                        "b865c163-5776-4cc6-a2fd-ad2ad4551a20"
+                    ],
+                    "selection": [
+                        "ecf5104a-7a46-4938-baf1-2563a6581df7"
+                    ],
+                    "alpha": 1,
+                    "objectSelection": [],
+                    "pageTransform": "default",
+                    "grid": {
+                        "type": "square",
+                        "cellDiameter": 36,
+                        "variant": "lines",
+                        "visible": true,
+                        "dotsOptions": {
+                            "radius": 1.5
+                        },
+                        "linesOptions": {
+                            "width": 1
+                        },
+                        "sharedOptions": {
+                            "colour": {
+                                "colour": 3355443,
+                                "alpha": 1
+                            }
+                        }
+                    },
+                    "background": {
+                        "colour": {
+                            "colour": 1513239,
+                            "alpha": 1
+                        }
+                    },
+                    "lighting": {
+                        "enabled": false,
+                        "ambientLight": {
+                            "colour": 3359846,
+                            "alpha": 1
+                        },
+                        "blur": 3
+                    },
+                    "texture": {
+                        "enabled": false,
+                        "scale": 1,
+                        "alpha": 1
+                    }
+                },
+                "ad537454-b4af-4edb-b373-3cdb9dd60b57": {
+                    "type": "IMAGES",
+                    "id": "ad537454-b4af-4edb-b373-3cdb9dd60b57",
+                    "alpha": 1,
+                    "parentId": "ecf5104a-7a46-4938-baf1-2563a6581df7",
+                    "name": "Images",
+                    "visible": true,
+                    "children": [
+                        "90b283c4-4bc9-4ccd-a552-572fba792cbd"
+                    ]
+                },
+                "ecf5104a-7a46-4938-baf1-2563a6581df7": {
+                    "type": "GEOMETRY",
+                    "id": "ecf5104a-7a46-4938-baf1-2563a6581df7",
+                    "alpha": 1,
+                    "parentId": "8beb5589-576b-4d9c-9c22-30119dc9c1f5",
+                    "name": "Dungeon layer 1",
+                    "visible": true,
+                    "children": [
+                        "430f1f56-d6e1-46e8-be5d-793490e11657",
+                        "cfcc52f5-f315-489c-a730-d72031c3f325",
+                        "dd8c5f7c-4922-4099-a837-13c49b57c7e2",
+                        "ad537454-b4af-4edb-b373-3cdb9dd60b57"
+                    ],
+                    "backgroundEffect": {},
+                    "geometryId": "83430e42-3b7d-42ce-b45f-24afd48681fb"
+                },
+                "cfcc52f5-f315-489c-a730-d72031c3f325": {
+                    "type": "FOLDER",
+                    "id": "cfcc52f5-f315-489c-a730-d72031c3f325",
+                    "alpha": 1,
+                    "parentId": "ecf5104a-7a46-4938-baf1-2563a6581df7",
+                    "name": "Grid",
+                    "visible": true,
+                    "children": [
+                        "79884df4-18b2-456d-804b-8436c80d48e9",
+                        "a72a97dd-d693-47f2-8b32-1f8a12bb2ac5"
+                    ]
+                },
+                "a72a97dd-d693-47f2-8b32-1f8a12bb2ac5": {
+                    "type": "GRID",
+                    "id": "a72a97dd-d693-47f2-8b32-1f8a12bb2ac5",
+                    "alpha": 1,
+                    "name": "Grid",
+                    "parentId": "cfcc52f5-f315-489c-a730-d72031c3f325",
+                    "visible": true,
+                    "gridType": "square",
+                    "variant": "clean",
+                    "cleanOptions": {
+                        "width": 1,
+                        "colour": {
+                            "colour": 12895428,
+                            "alpha": 1
+                        }
+                    },
+                    "roughOptions": {
+                        "width": 1,
+                        "colour": {
+                            "colour": 5592405,
+                            "alpha": 1
+                        },
+                        "roughness": {
+                            "segmentSizeMin": 1,
+                            "segmentSizeMax": 10,
+                            "segmentSkipRate": 0,
+                            "noDotRate": 0.2,
+                            "scribbleScale": 10,
+                            "scribbleAmplitude": 0.7,
+                            "shiftRate": 0.3,
+                            "shiftAmountMin": 1,
+                            "shiftAmountMax": 2,
+                            "majorNoiseScale": 0.1,
+                            "majorNoiseAmplitude": 15,
+                            "majorNoiseShift": 0.9
+                        }
+                    },
+                    "dotsOptions": {
+                        "radius": 1,
+                        "colour": {
+                            "colour": 5592405,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "79884df4-18b2-456d-804b-8436c80d48e9": {
+                    "type": "MULTIPOLYGON",
+                    "id": "79884df4-18b2-456d-804b-8436c80d48e9",
+                    "alpha": 1,
+                    "name": "Mask",
+                    "parentId": "cfcc52f5-f315-489c-a730-d72031c3f325",
+                    "mask": true,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 5,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": false,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "430f1f56-d6e1-46e8-be5d-793490e11657": {
+                    "type": "MULTIPOLYGON",
+                    "id": "430f1f56-d6e1-46e8-be5d-793490e11657",
+                    "alpha": 1,
+                    "name": "Floor",
+                    "parentId": "ecf5104a-7a46-4938-baf1-2563a6581df7",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": false,
+                        "width": 5,
+                        "colour": {
+                            "colour": 0,
+                            "alpha": 1
+                        },
+                        "roughOptions": "low"
+                    },
+                    "fill": {
+                        "visible": true,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "dd8c5f7c-4922-4099-a837-13c49b57c7e2": {
+                    "type": "MULTIPOLYGON",
+                    "id": "dd8c5f7c-4922-4099-a837-13c49b57c7e2",
+                    "alpha": 1,
+                    "name": "Walls",
+                    "parentId": "ecf5104a-7a46-4938-baf1-2563a6581df7",
+                    "mask": false,
+                    "visible": true,
+                    "blendMode": "normal",
+                    "stroke": {
+                        "visible": true,
+                        "width": 3,
+                        "colour": {
+                            "colour": 1513239,
+                            "alpha": 1
+                        },
+                        "roughOptions": "off"
+                    },
+                    "fill": {
+                        "visible": false,
+                        "colour": {
+                            "colour": 16777215,
+                            "alpha": 1
+                        }
+                    }
+                },
+                "90b283c4-4bc9-4ccd-a552-572fba792cbd": {
+                    "type": "ASSET",
+                    "id": "90b283c4-4bc9-4ccd-a552-572fba792cbd",
+                    "alpha": 1,
+                    "name": "Spiral Stairs Squared",
+                    "blendMode": "normal",
+                    "parentId": "ad537454-b4af-4edb-b373-3cdb9dd60b57",
+                    "assetId": "099b5bee-461d-5821-9b41-4a01dec48690",
+                    "visible": true,
+                    "transform": [
+                        0.9999999999999988,
+                        -3.3306690738754696e-16,
+                        3.3306690738754696e-16,
+                        0.9999999999999988,
+                        1079.25,
+                        323.25000000000006
+                    ]
+                },
+                "b865c163-5776-4cc6-a2fd-ad2ad4551a20": {
+                    "type": "ASSET",
+                    "id": "b865c163-5776-4cc6-a2fd-ad2ad4551a20",
+                    "alpha": 1,
+                    "name": "Coffin or Sarcophagus",
+                    "blendMode": "normal",
+                    "parentId": "8beb5589-576b-4d9c-9c22-30119dc9c1f5",
+                    "assetId": "2cf6cf4f-79bd-5386-9c8c-97edbcc76217",
+                    "visible": true,
+                    "transform": [
+                        1,
+                        0,
+                        0,
+                        1,
+                        649,
+                        360.5
+                    ]
+                }
+            },
+            "undoStack": [],
+            "undoHistoryPaused": false,
+            "undoStackPointer": -1
+        }
+    },
+    "data": {
+        "geometry": {
+            "83430e42-3b7d-42ce-b45f-24afd48681fb": {
+                "polygons": [
+                    [
+                        [
+                            [
+                                504.01,
+                                180.01
+                            ],
+                            [
+                                1223.99,
+                                180.01
+                            ],
+                            [
+                                1223.99,
+                                503.99
+                            ],
+                            [
+                                504.01,
+                                503.99
+                            ],
+                            [
+                                504.01,
+                                180.01
+                            ]
+                        ],
+                        [
+                            [
+                                971.99,
+                                395.99
+                            ],
+                            [
+                                971.99,
+                                468.01
+                            ],
+                            [
+                                1152.01,
+                                468.01
+                            ],
+                            [
+                                1152.01,
+                                395.99
+                            ],
+                            [
+                                971.99,
+                                395.99
+                            ]
+                        ]
+                    ],
+                    [
+                        [
+                            [
+                                504.01,
+                                504.01
+                            ],
+                            [
+                                1223.99,
+                                504.01
+                            ],
+                            [
+                                1223.99,
+                                755.99
+                            ],
+                            [
+                                504.01,
+                                755.99
+                            ],
+                            [
+                                504.01,
+                                504.01
+                            ]
+                        ]
+                    ]
+                ],
+                "polylines": []
+            }
+        },
+        "assets": {
+            "099b5bee-461d-5821-9b41-4a01dec48690": {
+                "asset": {
+                    "id": "099b5bee-461d-5821-9b41-4a01dec48690",
+                    "name": "Spiral Stairs Squared",
+                    "originalName": "Spiral Stairs Squared.png",
+                    "scale": [
+                        0.5,
+                        0.5
+                    ],
+                    "dimensions": [
+                        147,
+                        147
+                    ],
+                    "tags": [
+                        {
+                            "type": "asset-pack",
+                            "value": "b9b35942-6845-5353-a5f0-638fa56ecf64"
+                        }
+                    ]
+                },
+                "data": "data:application/octet-stream;base64,iVBORw0KGgoAAAANSUhEUgAAAJMAAACTCAYAAACK5SsVAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAADJpJREFUeNrsnX9sFVUWx++blKSypS1/taALCA0syI9m6wooZmExWXSjsCWtmrgBWzAusLFAov+s0LL+swZp/WtNoIgJiYJi3D9WaiJCIlRMls3jh3/AtrVQpOUPte3rImxIZuc79L59/fH65r03Z+beueebDKXvtTOd+z5z77nnnnNuzLZtoYtisVil86XU59POGj6CFO6hUuipX6d5fVUB/l23du2awsLC5zKdpftqd0UikSjK9uo//thf2tvbO1OwIi0XJoDU0NCw4b7Jk7M+wZUrl4UD2IQ/c/jwYfHGG38Z8/rg4KC4dPFS3jdx8tRJMXPmTHHy5Cn+RMOGCQJIS5YsyfoEXn6n/Uy7qKurJ7uJTfX14kBrK8m5z58/L/7+ySdi7bp1oX1Ifb294rsb3ykDzZ07d0RLS4vTkfx75BuwmRYsmB9vO37cptKsWTPtjo4OknP39fXZ926DRvF43K6vq7NZ94TPcX11tb11yxa33VOOlZaEipL87u6rYmhoiOap7esjfQrPnfsnj1/D6uzsFE88sVosXrxYbH7ppTHvW9xELK/DPUCq+mWV2LFz57g/48LU1fVtBdUfIXskjPvUTw2VTnxxwmiQPmtrE5WVlS5Ih957TxQVFaWH6fbt2z+DkUz5IVMNo5hNpkLrtzDjxDBtMkhrnnxSrFq1ckKQIjHMZXJL5Cs/XBe6g+RMoMT+/QcmBIltJlZa7WlqSoL0+ecnxJw5czL+DsPkUTdv3jQKpN2NjVmBxDAp5IJQDSQoG5BcmGKx2MooNAL7g/wFqe348axACqRnki6Bby59o2UDtx48aCRIv12zJutzkMMkXQIDAwP86EcYJLaZWL6BxDAxSL6BFAhM90+/3/1aUlLCn16EQZIwdVP+0eXTprlfH1r4EGnjTJkyhQkJESQXJtu2u6PQQHPnzgtkVqq7PvzwaNIh6SdIUAE/p9nNSnUW1tpqa5/N2rPNBrjPqqp6WHuQsl1rywmmwsLC/zz62KMkNyH/6HlEw5D8kDOtaJsshAEBpPXV1WQgJYe52bMf7HC+LKG4gPyQi4gNZKoGigJIiJAESJnikXiYY2UEKVOEJMPEmlCIPH3t1VfFixtfFB8dOxaIGWAFYWAi5LO8vJzk3Lnk+pkA0sYNG9wskl27dwd2XWvY3uigvMjsB2eLsrIysvPDHmCFC1ISpsn3TR7SuQFLS0vJzo1elUFim8m3XpVBYph4aGOYWDqClITp1k+3tHYf9/f3k19DRaeoSiAlYers7KygvAjSq5GrTqVjH39M3lCqLdcg9UolkEYMc5TZHZTp1ZSQQioG9cGzvWzZUqVAYpvJg6iD+nIBCUsk1b+vVgokhsmjVPE1pa61Ne3Zo1w7uTAlEkPkBsEQcYEJyvRtFXxNiEeqqKgIbNE2Z5h6enrmXO+5TmrTXB4ufeO3ZDhtlNO3ZWBbEGEkvgxz165d07KhqcNp5xHHlmcSYrZlhORf33xT6SBAtpkyuQRCzHpBFgllzDbDZIhyLWsTKkyxWGxWEBdCOT9KXSGyySCq+PhMIEG6gCR7JlKYpDOUupwfdTnCMEDKpayNEsOcrqVjdC3V4wUkPxMkg5D2SZhBlOqhcptIYcG24ZVXkg+0jiBFAqYgROk2kSv/crFaV5B4NheyogQSwxTiLDFqIDFMIc0SR4PU3LxPe5AYJo/q+raLDKQmZ/bW0LBduzYZL1+RYfIgv3bYHA8k1WKSuGcilF9+rKiDxDB5kB9+LBNAchRnmDwq1+A7Q0DCvrb9DJNH5RJ8ZwpIPMwRyzSQGCYGyVfx2hwxSHBI6uhHYpgU0L633orUEgkPcyFJ93gk32BCrDGFqLehmDFjBoOkEExuCZHVv1lNcgG5DQVVHPUDP38gEGgnSjFikIZhsm07HoUbod47JV0sdupeJKe//NJYkNgAz1PUe5GwAW4QSNR7kWgLE5UhKxtZbmLot6jTtxcuWjjmtaD2ItFymFuwYP55x5Al3TtFbmLo+/mHDW+qD7S4uHgMSEHtRcLDXEii/FDr6+pGgKRyWRuGSQOFsReJljBNnz69j3LvFDzZVHuc4LxUDlcI7XL37l3lipEqazMVTyn+Id+UHjypYRmiVA5Xqe9/+F5s27pNSx8Shmb0ql4mSvn2ti5MkyZN+m/7mXbXZ0KlfGoZSJslnb46+5XYVF8/7nvZet7hSU91gGLhdlLBJDGYGBQHD7a6r6GtUoXS1F4rCqM+ZmpZQ8yipRc/k1BJZnQBEOoaEaP/XsxuR09KksNcLBZrLC8v72tuadG2e12+bLnv5/zp1i3RvG+fA9Zc0dnVJS6cv8DjWAbFnKPROVxD4OjRIzkvS4Q5zFEY27CRnvrdU67NBAdl22dtjgH+mnZDHeUw53REyf/btu1+A5hsHPF43DZdHR0d9vrqarupsdH9Hm3iDLPu646hn3ydZduSm3ss2bw2N/opln4kOWuTxcrw5MLbjfLJEM/q0hjgrLEOyXRDAUJMsJSCMjstb7/N/qZRMn6YcwBxhzBn5mInEokR77W2HpDd+Iifx2sYDkf/vMnDnPEecLn6D+3ff2BMTzNeYVcY4ZisINYbhroXA9cEWQzSxGEk6Qq71tTUuilMEigMk2wzcY+UcxiJNMIRaXnuX+eMD0exTAcp3/LIAAo9FDzgMOBN7qEs00Hy6oScaJNEBspAmFpamnMCyYt27NzpBsyZDJQxMCEdafv2HSQgQZgFwj9lMlCWKSAFkddmOlCRhwk2kgQJdg31Qq3JQFlRB0naSEGWtTEVKItBYqAYJo8goT5SWCv8JgIFgyIyC72IO5L3gwXZfIVYJpwrnwVd/C7ioHCe8RaTeaFXQckwEopZWz6hJvhd6dhEgfqoLg5HZm0OpZUBEoYTP0HyM20+dS0PiloiZyRgwlO+dcsW9//OMOfrYqvXzJFsgFq6dKlr00UtD68gCiBh2KBctYcB7afQa8qIzdQei2EKWbt37SIP/ygtLfX9nAAKxcFe+MMLkQFKawMcyyRXr14VFy9eIgOJsmTPYytWuA/Bu4fedd0ZugkJmpGACSBduHCB3IgtIq6VKbNeXv7jy9oBlZrpqy1MQYEUlHQGCpo6deodLWEKA6TxqscxUP/XI4/8qk87AxyFI8LokdIVaqACavPmTUkjnWdzBEKJ5E//8WnkK7YBqPff/0A8//xz2gGlxTCHoe3IB0dCA+l6z/VAr1dWVubm8Ok25Fk6gBS2sY1UcDbKNYcJIMEHY2ox0lSgkAzBNlOeIKExwwQp3/KMfgGFRezBgUGlPeXKwYS1NpT+kyCFnSGbSCSU6aFUL+dToBpIchfJeDzOlf9HASUXhwcGBkTTnj3KDf2WiiCh0ahKPeci6iKkXiWjDfY1NysZYFegIkgq+VbGK6mjAlAyfEWlyUnoPRNCbRctWuiChOB/1Zx06UrqhA2ULOfzzDNPK5OkYIUNkgy1ReOYssu2H0qNKVcl68VSBSTVg8NUTFFSrfqKFTZIO7Zv1yLKUNVsErQd2lAFoKwwQUJsNaa4rPyENlQh0dMKEyTes80fjZc5fOb06ejCpCtIqviYsgVqxeOPB75AHAhMeEq4RwoWKAi+qCCBIocJN4OnBCAhm4FBii5QFjVI0lOLWtvjFW1nRQcoKyiQeMv2cICSW84GAZTFIEUbKLR9UEBZDFK0JWOhggDKYpC8aUiBIDnVgbIYJG+60XuDe6ggYMJWEFEf2uYSFrDQFajRmc55wwTP9rp1a9lGMhAomelcXlbenzdMqUskDJK5PdS0adPyg4lBYqB8sZkYpOgAdfbs1755yrOGKbWqLYOkv1DXIHXpBdnDucZDZQWTrGprEkh+F0dVUX7tpGBlA5JMRzKpR6IojhpVoCwGyXtjM1A+wITyyAAJF6GsbKu6sWrKQ/PRsWPJrBdUsfOaTJERJlQjQToyR0iapVz2epkwPRw1gbDPh8kg+bl3io5AuSOTx71e0vZM8Ddgg2TkZJncI/m9d4qOQB09esQ1c2DuZN0zyQgAHTJtg1B9XZ3R919TUyvajhe7TJSUlKRlYkzPBOudQWKNlqy+giJs6UoijuiZrvf0iG1/2uZ2a6CRJURV1cOi/Uw7N8QwULIk4vxfzJ8Ypj+//rp452/vaFfMnFpB7FCgk4tEFr5fvmx5ephQ+k8GuYVtU2AWRW38YsemTBvtoLdGYVIEAOomhBpfJirwWlNTI/bu3Tvmdcz7bD74yPV4trb2EDZ8jjnfbBw+0ql7+PBbcefo9/OEzg2d4oEoe8ViMSxAVuZxim6n7bv/J8AAanJdhDEdTgkAAAAASUVORK5CYII="
+            },
+            "2cf6cf4f-79bd-5386-9c8c-97edbcc76217": {
+                "asset": {
+                    "id": "2cf6cf4f-79bd-5386-9c8c-97edbcc76217",
+                    "name": "Coffin or Sarcophagus",
+                    "originalName": "Coffin or Sarcophagus.png",
+                    "scale": [
+                        0.5,
+                        0.5
+                    ],
+                    "dimensions": [
+                        212,
+                        142
+                    ],
+                    "tags": [
+                        {
+                            "type": "asset-pack",
+                            "value": "b9b35942-6845-5353-a5f0-638fa56ecf64"
+                        }
+                    ]
+                },
+                "data": "data:application/octet-stream;base64,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"
+            }
+        }
+    }
+}

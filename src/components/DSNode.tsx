@@ -128,7 +128,12 @@ export const DSNode: React.FC<{ openDialog: (target: string) => void, selectedNo
                 <DungeonAssetNodeDisplay openDialog={openDialog} node={node} targetWindow={targetWindow} selectedNode={selectedNode} />
             );
         }
+        case "ASSET": {
+            return (
+                <DungeonAssetNodeDisplay openDialog={openDialog} node={node} targetWindow={targetWindow} selectedNode={selectedNode} />
+            );
+        }
         default:
-            return (<div>{node.type}</div>)
+            return null;
     }
 }

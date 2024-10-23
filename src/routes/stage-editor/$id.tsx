@@ -11,7 +11,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { AdditionEntityDialog, type AdditionEntityDialogHandle } from "@/components/dialog/AdditionEntityDialog";
 import { StageGroupDialog, type StageGroupDialogHandle } from "@/components/dialog/StageGroupDialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { EVENTS_MAP_EDITOR, WINDOW_MAP_EDITOR } from "@/lib/consts";
+import { emitEvent, EVENTS_MAP_EDITOR, WINDOW_MAP_EDITOR } from "@/lib/consts";
 import type { Dungeon, PageNode } from "@/lib/renderer/dungeonScrawl/types";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { editorWindow, toggleEditorWindow } from "@/lib/window";
@@ -19,7 +19,7 @@ import { DSFileSelector } from "@/components/DSFileSelector";
 import { DSNode, type LightNode } from "@/components/DSNode";
 import { Separator } from "@/components/ui/separator";
 import { ComboBox } from "@/components/ui/combobox";
-import type { ResolvedStage } from "@/lib/types";
+import type { Entity, ResolvedStage } from "@/lib/types";
 import { Input } from "@/components/ui/input";
 import { resloveStage } from "@/lib/loader";
 import { db } from "@/lib/db";
@@ -29,7 +29,8 @@ import type { DialogHandle } from "@/components/Dialog";
 import { ActionListDialog } from "@/components/dialog/ActionListDialog";
 //import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 //import { InstanceEditorDialog, type InstanceEditorDialogHandle } from "@/components/dialog/instanceEditorDialog";
-
+import update from "immutability-helper";
+import { LayerSelectDialog } from "@/components/dialog/LayerSelectDialog";
 const loadGroups = () => db.groups
 	.toArray()
 	.then((e) => e.map((d) => ({ id: d.id.toString(), value: d.name })))
@@ -113,6 +114,7 @@ function StageEditorEditPage() {
 	const data = Route.useLoaderData();
 	const [selectedNode, setSelectedNode] = useState<string | null>(null);
 	//const ied = useRef<InstanceEditorDialogHandle>(null);
+	const selectLayerDialog = useRef<DialogHandle>(null);
 	const aedRef = useRef<AdditionEntityDialogHandle>(null);
 	const tld = useRef<DialogHandle>(null);
 	const ald = useRef<DialogHandle>(null);
@@ -121,6 +123,8 @@ function StageEditorEditPage() {
 	const form = useForm<ResolvedStage>({
 		defaultValues: data.stage
 	});
+	const setValue = form.setValue;
+	const getValue = form.getValues;
 
 	const dsFile = form.watch("dsFilepath");
 	const loadDsfile = useLiveQuery(async () => {
@@ -129,7 +133,7 @@ function StageEditorEditPage() {
 
 			await emitTo(WINDOW_MAP_EDITOR, EVENTS_MAP_EDITOR.Load, content);
 
-			const layers = Object.values(content.state.document.nodes).filter(e => e.type === "IMAGES" || e.type === "TEMPLATE").map(e => ({ id: e.id, value: e.name }));
+			const layers = Object.values(content.state.document.nodes).filter(e => e.type === "IMAGES" || e.type === "TEMPLATE").map(e => ({ value: e.id, name: e.name }));
 
 			const defaultLayer = (content.state.document.nodes[content.state.document.nodes.document.selectedPage] as PageNode).children.at(0);
 
@@ -158,10 +162,39 @@ function StageEditorEditPage() {
 		const unsub = listen<string>("editor-select", async (ev) => {
 			setSelectedNode(ev.payload);
 		});
+		const ub = listen<{ x: number, y: number; }>("editor-add-entity", async (ev) => {
+			selectLayerDialog.current?.show();
+
+			const layerId = await new Promise<UUID | null>(ok => {
+				window.addEventListener("dialog::layer-select-dialog", ev => ok((ev as CustomEvent<UUID | null>).detail), { once: true });
+			});
+			if (!layerId) return;
+
+			aedRef.current?.show();
+
+			const result = await new Promise<Entity | null>((ok) => {
+				window.addEventListener("dialog::additionEntityDialog", (ev) => ok((ev as CustomEvent<Entity | null>).detail), { once: true });
+			});
+			if (!result) return;
+
+			const x = Math.floor(Math.floor(ev.payload.x) / 36) - 10;
+			const y = Math.floor(Math.floor(ev.payload.y) / 36) - 5;
+
+			const entity = { entity: result, id: crypto.randomUUID(), x, y, z: 0, overrides: {} };
+
+			const prev = getValue("entities");
+
+			setValue("entities", update(prev, {
+				[layerId]: ev => !ev?.length ? [entity] : [...ev, entity]
+			}));
+
+			await emitEvent("addEntity", { layer: layerId, entity: entity }, WINDOW_MAP_EDITOR);
+		});
 		return () => {
 			unsub.then(e => e());
+			ub.then(e => e());
 		}
-	}, []);
+	}, [getValue, setValue]);
 
 	const onSubmit = (_state: ResolvedStage) => { }
 
@@ -171,6 +204,7 @@ function StageEditorEditPage() {
 			<ActionListDialog ref={ald} />
 			<StageGroupDialog ref={sgdRef} />
 			<TriggerListDialog ref={tld} />
+			<LayerSelectDialog options={loadDsfile?.layers} ref={selectLayerDialog} />
 			<AdditionEntityDialog ref={aedRef} onAdd={(entity) => {
 				window.dispatchEvent(new CustomEvent("dialog::additionEntityDialog", { detail: entity }));
 			}} onClose={() => {

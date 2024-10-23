@@ -2,7 +2,18 @@ import type { Geometry } from "./types";
 export class PolygonObject {
     private boundingBox: { minX: number, minY: number, maxX: number, maxY: number; }
 
-    constructor(private geomerty: Geometry) {
+    constructor(private geomerty: Geometry | { width: number, height: number, x: number, y: number }) {
+
+        if ("width" in geomerty) {
+            this.boundingBox = {
+                minX: geomerty.x,
+                minY: geomerty.y,
+                maxX: geomerty.x + geomerty.width,
+                maxY: geomerty.y + geomerty.height
+            }
+            return;
+        }
+
 
         let minX = null;
         let maxX = null;
@@ -38,12 +49,24 @@ export class PolygonObject {
         }
     }
 
+
+
     public get isEmpty(): boolean {
         return this.boundingBox.minX === 0 && this.boundingBox.minY === 0 && this.boundingBox.maxX === 0 && this.boundingBox.maxY === 0
     }
 
     public getShape() {
         return this.geomerty;
+    }
+
+    public getCenter() {
+        const offsetX = (Math.abs(this.boundingBox.maxX) - Math.abs(this.boundingBox.minX)) / 2;
+        const offsetY = (Math.abs(this.boundingBox.maxY) - Math.abs(this.boundingBox.minY)) / 2;
+
+        const x = Math.floor((window.innerWidth / 2)) - (this.boundingBox.minX + offsetX);
+        const y = Math.floor((window.innerHeight / 2)) - (this.boundingBox.minY + offsetY);
+
+        return { x, y }
     }
 
     public getBoundingBox() {

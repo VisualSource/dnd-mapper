@@ -79,35 +79,35 @@ export const TRIGGERS: { name: string; id: Trigger["type"], variant: string | nu
     }
 ];
 
-export const ACTIONS: { name: string; id: Action["type"], description: string; }[] = [
+export const ACTIONS: { name: string; value: Action["type"], description: string; }[] = [
     {
         name: "Set Asset Visibility",
-        id: "SET_VISIBILITY",
+        value: "SET_VISIBILITY",
         description: "Set a object or entity's visibility property"
     },
     {
         name: "Set Entity Position",
-        id: "SET_ENTITY_POSITION",
+        value: "SET_ENTITY_POSITION",
         description: "Move a entity to a new position"
     },
     {
         name: "Move Camera to Position",
-        id: "MOVE_CAMERA_TO_POSITION",
+        value: "MOVE_CAMERA_TO_POSITION",
         description: "Move the camera to a specific locaiton"
     },
     {
         name: "Move Camera To",
-        id: "MOVE_CAMERA_TO",
+        value: "MOVE_CAMERA_TO",
         description: "Camera move to center on a specific object or entity."
     },
     {
         name: "Series",
-        id: "SERIES",
+        value: "SERIES",
         description: "Execute a series of actions one after another"
     },
     {
         name: "Set Transform",
-        id: "SET_TRANSFORM",
+        value: "SET_TRANSFORM",
         description: "Change the transform of a entity or object"
     }
 ];
