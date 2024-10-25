@@ -9,15 +9,15 @@ import type { UUID } from "node:crypto";
 import type { Entity, ReslovedEntityInstance } from "@/lib/types";
 import { Trash2, User2 } from "lucide-react";
 
-const EntityNode: React.FC<{ targetWindow: string, entity: ReslovedEntityInstance, onRemove: () => void, setProp: (name: string, value: unknown) => void }> = ({ targetWindow, entity, onRemove, setProp }) => {
+const EntityNode: React.FC<{ layerId?: UUID, targetWindow: string, entity: ReslovedEntityInstance, onRemove: () => void, setProp: (name: string, value: unknown) => void }> = ({ targetWindow, entity, onRemove, setProp, layerId }) => {
     return (
         <details className="bg-gray-950 group mb-2">
             <summary className="flex w-full before:content-['+'] group-open:before:content-['-'] before:w-5 bg-zinc-900">
                 <div className="flex justify-between border-b mb-1 w-full" >
-                    <button onClick={() => emitEvent(EVENTS_MAP_EDITOR.CenterCameraOn, { type: "entity", target: entity.id as UUID }, targetWindow)} className="pb-1 font-semibold tracking-tight underline text-left" type="button" > {entity.overrides.name ?? entity.entity.name} </button>
+                    <button onClick={() => emitEvent(EVENTS_MAP_EDITOR.CenterCameraOn, { type: "entity", target: entity.id as UUID, layerId }, targetWindow)} className="pb-1 font-semibold tracking-tight underline text-left" type="button" > {entity.overrides.name ?? entity.entity.name} </button>
                     <div className="flex gap-2 items-center p-1 mr-2" >
                         <Checkbox defaultChecked={entity.overrides.visible ?? true} onCheckedChange={e => {
-                            emitEvent(EVENTS_MAP_EDITOR.SetVisable, { type: "entity", target: entity.id as UUID, value: e === "indeterminate" ? false : e }, targetWindow);
+                            emitEvent(EVENTS_MAP_EDITOR.SetVisable, { type: "entity", layerId, target: entity.id as UUID, value: e === "indeterminate" ? false : e }, targetWindow);
                             setProp("visible", e);
                         }} />
                         <Label>Visable</Label>
@@ -53,7 +53,7 @@ export const EntitiesNode: React.FC<{ layerId: UUID, targetWindow: string, openD
             <div>
                 <ul className="ml-2">
                     {list?.map((entity, i) => (
-                        <EntityNode key={entity.id} entity={entity} targetWindow={targetWindow} onRemove={() => {
+                        <EntityNode layerId={layerId} key={entity.id} entity={entity} targetWindow={targetWindow} onRemove={() => {
                             setValue("entities", update(entitiesList, {
                                 [layerId]: {
                                     $splice: [[i, 1]]

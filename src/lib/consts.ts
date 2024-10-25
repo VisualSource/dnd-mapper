@@ -17,9 +17,9 @@ export const EVENTS_MAP_EDITOR = {
 export type EventMap = {
 	load: unknown,
 	addEntity: { layer: UUID, entity: ReslovedEntityInstance },
-	setVisable: { type: "object" | "entity", target: UUID, value: boolean },
+	setVisable: { type: "object" | "entity", target: UUID, value: boolean, layerId?: UUID },
 	moveCamera: { x: number, y: number },
-	centerCameraOn: { type: "object" | "entity", target: UUID },
+	centerCameraOn: { type: "object" | "entity", target: UUID, layerId?: UUID },
 }
 
 export const emitEvent = <T extends keyof EventMap>(event: T, args: EventMap[T], window: string) => emitTo(window, event, args);

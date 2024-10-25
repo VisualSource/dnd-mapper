@@ -1,7 +1,6 @@
-import { ContextMenu, ContextMenuCheckboxItem, ContextMenuItem, ContextMenuLabel, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger } from "@/components/ui/context-menu";
+import { ContextMenu, ContextMenuCheckboxItem, ContextMenuContent, ContextMenuItem, ContextMenuLabel, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger } from "@/components/ui/context-menu";
 import { WINDOW_MAIN } from "@/lib/consts";
 import DSRenderer from "@/lib/renderer/DSRenderer";
-import { ContextMenuContent } from "@radix-ui/react-context-menu";
 import { createFileRoute } from "@tanstack/react-router";
 import { emitTo } from "@tauri-apps/api/event";
 import { useEffect, useRef } from "react";
@@ -13,6 +12,7 @@ export const Route = createFileRoute("/display-editor")({
 function DisplayEditorPage() {
 	const ref = useRef<HTMLCanvasElement>(null);
 	const renderer = useRef(new DSRenderer());
+	const contextMenuRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		if (ref.current) {
@@ -30,7 +30,7 @@ function DisplayEditorPage() {
 				<ContextMenuTrigger asChild>
 					<canvas ref={ref} />
 				</ContextMenuTrigger>
-				<ContextMenuContent className="w-64 bg-gray-950">
+				<ContextMenuContent ref={contextMenuRef} className="w-64 bg-gray-950">
 					<ContextMenuItem inset>
 						Back
 						<ContextMenuShortcut>⌘[</ContextMenuShortcut>
@@ -51,10 +51,31 @@ function DisplayEditorPage() {
 								<ContextMenuShortcut>⇧⌘S</ContextMenuShortcut>
 							</ContextMenuItem>
 							<ContextMenuItem onClick={() => {
-								emitTo(WINDOW_MAIN, "editor-reload-map", {})
+								emitTo(WINDOW_MAIN, "editor-reload-map", null)
 							}}>Reload Map File</ContextMenuItem>
-							<ContextMenuItem onClick={(ev) => {
-								emitTo(WINDOW_MAIN, "editor-add-entity", renderer.current.getOffset(ev as never as MouseEvent));
+							<ContextMenuItem onClick={() => {
+								if (!contextMenuRef.current) return;
+								const bb = contextMenuRef.current.getBoundingClientRect()
+								const offset = renderer.current.getOffset({ clientX: bb.x, clientY: bb.y } as never as MouseEvent);
+								const size = renderer.current.getGridCellSize();
+								const n = Math.floor(offset.x / size);
+								const m = Math.floor(offset.y / size);
+
+								emitTo(WINDOW_MAIN, "editor-add-entity", { x: n, y: m });
+
+								/*console.group("Click Event");
+								console.log();
+								console.log(ev.clientX, ev.clientY);
+								const r = renderer.current.getOffset(ev as never as MouseEvent);
+								console.log(r);
+								console.log(Math.floor(r.x / 36), Math.floor(r.y / 36));
+								console.groupEnd()*/
+
+
+								//console.log(n, m, n * 36, m * 36);
+
+								//renderer.current.addObject(n * 36, m * 36, 36 * 2, 36 * 2);
+
 							}}>Add Entity</ContextMenuItem>
 							<ContextMenuSeparator />
 							<ContextMenuItem>Developer Tools</ContextMenuItem>

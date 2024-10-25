@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useFieldArray, useForm } from "react-hook-form";
-import { FileQuestion, MoreHorizontal } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { readFile } from "@tauri-apps/plugin-fs";
 import { useLiveQuery } from "dexie-react-hooks";
 import { emitTo, listen } from "@tauri-apps/api/event";
@@ -10,7 +9,6 @@ import { useEffect, useRef, useState } from "react";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { AdditionEntityDialog, type AdditionEntityDialogHandle } from "@/components/dialog/AdditionEntityDialog";
 import { StageGroupDialog, type StageGroupDialogHandle } from "@/components/dialog/StageGroupDialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { emitEvent, EVENTS_MAP_EDITOR, WINDOW_MAP_EDITOR } from "@/lib/consts";
 import type { Dungeon, PageNode } from "@/lib/renderer/dungeonScrawl/types";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -27,6 +25,8 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { TriggerListDialog } from "@/components/editor/TriggersListDialog";
 import type { DialogHandle } from "@/components/Dialog";
 import { ActionListDialog } from "@/components/dialog/ActionListDialog";
+import { DevTool } from "@hookform/devtools";
+
 //import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 //import { InstanceEditorDialog, type InstanceEditorDialogHandle } from "@/components/dialog/instanceEditorDialog";
 import update from "immutability-helper";
@@ -177,10 +177,7 @@ function StageEditorEditPage() {
 			});
 			if (!result) return;
 
-			const x = Math.floor(Math.floor(ev.payload.x) / 36) - 10;
-			const y = Math.floor(Math.floor(ev.payload.y) / 36) - 5;
-
-			const entity = { entity: result, id: crypto.randomUUID(), x, y, z: 0, overrides: {} };
+			const entity = { entity: result, id: crypto.randomUUID(), x: ev.payload.x, y: ev.payload.y, z: 0, overrides: {} };
 
 			const prev = getValue("entities");
 
@@ -201,6 +198,7 @@ function StageEditorEditPage() {
 	return (
 
 		<div className="h-full w-full flex flex-col">
+			<DevTool control={form.control} />
 			<ActionListDialog ref={ald} />
 			<StageGroupDialog ref={sgdRef} />
 			<TriggerListDialog ref={tld} />

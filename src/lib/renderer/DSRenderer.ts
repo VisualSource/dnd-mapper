@@ -1,10 +1,10 @@
 import type { UUID } from "node:crypto";
 import { emitTo, listen, type UnlistenFn } from "@tauri-apps/api/event";
 import type { Shape, Color, Dungeon, PageNode } from "./dungeonScrawl/types";
-import { EVENTS_MAP_EDITOR, WINDOW_MAIN } from "../consts";
+import { type EventMap, EVENTS_MAP_EDITOR, WINDOW_MAIN } from "../consts";
 import { PolygonObject } from "./dungeonScrawl/shape";
 import type { ReslovedEntityInstance } from "../types";
-import { getPuckSize, loadExternalImage, type PuckSize } from "../display/utils";
+import { getPuckSize, loadExternalImage } from "../display/utils";
 
 const toHex = (value: Color) => {
     const alpha = value.alpha === 1 ? "ff" : value.alpha.toString(16).slice(2, 4);
@@ -41,7 +41,7 @@ const toHex = (value: Color) => {
         }
 */
 
-enum RenderType {
+/*enum RenderType {
     PolygonFill = 0,
     PolygonStroke = 1,
     Line = 2,
@@ -78,7 +78,7 @@ type RenderEntity = {
     debug: boolean;
 }
 
-type RenderQueue = (RenderObject | RenderEntity)[]
+type RenderQueue = (RenderObject | RenderEntity)[]*/
 
 
 export default class DSRenderer extends EventTarget {
@@ -95,7 +95,7 @@ export default class DSRenderer extends EventTarget {
     private isDragging = false;
     private didMove = false;
     private cameraZoom = 1;
-    private lastZoom = 1;
+    //private lastZoom = 1;
 
     private imageCache = new Map<string, HTMLImageElement>();
 
@@ -107,6 +107,8 @@ export default class DSRenderer extends EventTarget {
     private moveCameraEvent: Promise<UnlistenFn> | undefined;
     private centerCameraOn: Promise<UnlistenFn> | undefined;
     private addEntityEvent: Promise<UnlistenFn> | undefined;
+
+    public gridSize = 36;
 
     //https://codepen.io/chengarda/pen/wRxoyB?editors=0010
     private init(canvas: HTMLCanvasElement) {
@@ -128,7 +130,7 @@ export default class DSRenderer extends EventTarget {
 
         this.addEventListener("click", this.onClick);
 
-        this.centerCameraOn = listen<{ type: string, target: UUID }>(EVENTS_MAP_EDITOR.CenterCameraOn, async (ev) => {
+        this.centerCameraOn = listen<EventMap["centerCameraOn"]>(EVENTS_MAP_EDITOR.CenterCameraOn, async (ev) => {
             if (ev.payload.type === "object") {
                 const obj = this.objects.find(e => e.id === ev.payload.target)
                 // get center of box
@@ -137,7 +139,29 @@ export default class DSRenderer extends EventTarget {
 
                 this.cameraOffset.x = bb.x;
                 this.cameraOffset.y = bb.y;
+                return;
             }
+
+            if (!ev.payload.layerId) return;
+            const entity = this.entities[ev.payload.layerId].find(e => e.id === ev.payload.target);
+            if (!entity) return;
+
+            const cellSize = 36;
+            const ps = getPuckSize(entity.entity.puckSize);
+
+            const minX = (entity.x * cellSize);
+            const minY = (entity.y * cellSize);
+            const maxX = minX + (cellSize * ps);
+            const maxY = minY + (cellSize * ps);
+
+            const offsetX = (Math.abs(maxX) - Math.abs(minX)) / 2;
+            const offsetY = (Math.abs(maxY) - Math.abs(minY)) / 2;
+
+            const x = Math.floor((window.innerWidth / 2)) - (minX + offsetX);
+            const y = Math.floor((window.innerHeight / 2)) - (minY + offsetY);
+
+            this.cameraOffset.x = x;
+            this.cameraOffset.y = y;
         });
 
         this.loadEvent = listen<Dungeon>(EVENTS_MAP_EDITOR.Load, async (ev) => {
@@ -146,6 +170,8 @@ export default class DSRenderer extends EventTarget {
             this.entities = {};
             this.imageCache.clear();
             this.objects = [];
+
+            this.gridSize = (this.map.state.document.nodes[this.map.state.document.nodes[this.map.state.document.documentNodeId].selectedPage] as PageNode).grid.cellDiameter;
 
             const assets = Object.values(this.map.state.document.nodes).filter(e => e.type === "DUNGEON_ASSET" || e.type === "ASSET");
 
@@ -178,7 +204,7 @@ export default class DSRenderer extends EventTarget {
             }
 
         });
-        this.setVisEvent = listen<{ target: UUID, value: boolean, type: "entity" | "object" }>(EVENTS_MAP_EDITOR.SetVisable, (ev) => {
+        this.setVisEvent = listen<{ target: UUID, value: boolean, type: "entity" | "object", layerId?: UUID }>(EVENTS_MAP_EDITOR.SetVisable, (ev) => {
             if (ev.payload.type === "object") {
                 if (!this.map) return;
                 const node = this.map.state.document.nodes[ev.payload.target];
@@ -187,8 +213,8 @@ export default class DSRenderer extends EventTarget {
                 }
                 return;
             }
-
-            const entity = this.entities["" as UUID].find(e => e.id === ev.payload.target);
+            if (!ev.payload.layerId) return;
+            const entity = this.entities[ev.payload.layerId].find(e => e.id === ev.payload.target);
             if (!entity) return;
             entity.overrides.visible = ev.payload.value;
         });
@@ -246,6 +272,7 @@ export default class DSRenderer extends EventTarget {
         const gridXMaxCell = gridXCount * gridCellDiameter;
 
         for (let x = xStart; x <= gridXCount; x++) {
+
             ctx.moveTo(x * gridCellDiameter, gridYStartCell);
             ctx.lineTo(x * gridCellDiameter, gridYMaxCell);
         }
@@ -256,8 +283,18 @@ export default class DSRenderer extends EventTarget {
         }
 
         ctx.stroke();
+        ctx.font = "15px serif"
+        ctx.fillStyle = "green"
+
+        for (let x = xStart; x <= gridXCount; x++) {
+            ctx.fillText(`${x},0`, x * gridCellDiameter, gridYStartCell);
+        }
 
         ctx.restore();
+    }
+
+    public addObject(x: number, y: number, width: number, height: number) {
+        this.objects.push({ box: new PolygonObject({ width, height, x, y }), id: crypto.randomUUID() })
     }
 
     private drawPolygonFill(points: Shape, ctx: CanvasRenderingContext2D, color: string, transform?: DOMMatrix | null) {
@@ -508,83 +545,6 @@ export default class DSRenderer extends EventTarget {
         this.ctx.translate(-window.innerWidth / 2 + this.cameraOffset.x, -window.innerHeight / 2 + this.cameraOffset.y);
         this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-        /* const gridSize = 36;
-            const backgroundColor = ""
-            for (const item of this.renderQueue) {
-                if (item.type === "object") {
-                    for (const i of item.instructions) {
-                        switch (i.type) {
-                            case RenderType.PolygonFill: {
-                                const geomerty = this.map?.data.geometry[i.geomertyId];
-                                if (!geomerty) continue;
-                                this.drawPolygonFill(geomerty.polygons[0][0], this.ctx, i.color, i.transform);
-                                // remove hollow points
-                                if (geomerty.polygons[0].length > 1) {
-                                    for (let j = 1; j < geomerty.polygons[0].length; j++) {
-                                        this.drawPolygonFill(geomerty.polygons[0][j], this.ctx, backgroundColor, i.transform);
-                                    }
-                                }
-                                break;
-                            }
-                            case RenderType.PolygonStroke: {
-                                const geo = this.map?.data.geometry[i.geomertyId];
-                                if (!geo) continue;
-    
-                                for (const item of geo.polygons) {
-                                    for (const g of item) {
-                                        this.drawPolygonStroke(g, this.ctx, i.color, i.width, i.transform);
-                                    }
-                                }
-    
-                                break;
-                            }
-                            case RenderType.Line: {
-                                const geo = this.map?.data.geometry[i.geomertyId];
-                                if (!geo) continue;
-                                for (const m of geo.polylines) {
-                                    this.drawLine(m, this.ctx, i.color, i.width);
-                                }
-                                break;
-                            }
-                            case RenderType.Grid: {
-                                this.drawGrid(this.ctx, i.gridCellDiameter, i.lineWidth, i.color);
-                                break;
-                            }
-                        }
-                    }
-    
-                    if (item.debug) {
-                        const obj = this.objects.find(e => e.id === item.id);
-                        const bb = obj?.box.getBoundingBox();
-                        if (!bb) continue;
-    
-                        this.drawPolygonStroke([
-                            [bb.minX - 2, bb.minY - 2],
-                            [bb.maxX + 2, bb.minY - 2],
-                            [bb.maxX + 2, bb.maxY + 2],
-                            [bb.minX - 2, bb.maxY + 2]
-                        ], this.ctx, "yellow", 4);
-    
-                    }
-    
-                    continue;
-                }
-    
-                this.drawEntity(this.ctx, item.icon, item.x, item.y, item.puckSize, gridSize, item.transform);
-    
-                if (item.debug) {
-                    const obj = this.objects.find(e => e.id === item.id);
-                    const bb = obj?.box.getBoundingBox();
-                    if (!bb) continue;
-                    this.drawPolygonStroke([
-                        [bb.minX - 2, bb.minY - 2],
-                        [bb.maxX + 2, bb.minY - 2],
-                        [bb.maxX + 2, bb.maxY + 2],
-                        [bb.minX - 2, bb.maxY + 2]
-                    ], this.ctx, "yellow", 4);
-                }
-            }*/
-
         if (this.map) {
             const document = this.map.state.document;
             const selectedPage = this.selectedPage ?? document.nodes[document.documentNodeId].selectedPage;
@@ -598,7 +558,7 @@ export default class DSRenderer extends EventTarget {
                 }
             }
         } else {
-            this.drawGrid(this.ctx, 36, 1);
+            this.drawGrid(this.ctx, this.gridSize, 1);
         }
 
         for (const object of this.objects) {
@@ -614,6 +574,10 @@ export default class DSRenderer extends EventTarget {
 
         this.frame = requestAnimationFrame(this.draw);
 
+    }
+
+    public getGridCellSize() {
+        return this.gridSize;
     }
 
     public getOffset(ev: MouseEvent) {
@@ -639,7 +603,7 @@ export default class DSRenderer extends EventTarget {
             }
         }
         this.isDragging = false
-        this.lastZoom = this.cameraZoom
+        //this.lastZoom = this.cameraZoom
     }
     private onPointerMove = (e: MouseEvent) => {
         this.didMove = true;
