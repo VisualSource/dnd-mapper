@@ -142,9 +142,14 @@ export default class DSRenderer extends EventTarget {
                 return;
             }
 
+            console.log(this.entities);
+
             if (!ev.payload.layerId) return;
             const entity = this.entities[ev.payload.layerId].find(e => e.id === ev.payload.target);
-            if (!entity) return;
+            if (!entity) {
+                console.warn("Entity not found %s on layer %s", ev.payload.target, ev.payload.layerId);
+                return;
+            }
 
             const cellSize = 36;
             const ps = getPuckSize(entity.entity.puckSize);
@@ -215,7 +220,10 @@ export default class DSRenderer extends EventTarget {
             }
             if (!ev.payload.layerId) return;
             const entity = this.entities[ev.payload.layerId].find(e => e.id === ev.payload.target);
-            if (!entity) return;
+            if (!entity) {
+                console.warn("No entity found with if of %s and type of %s", ev.payload.target, ev.payload.type)
+                return;
+            }
             entity.overrides.visible = ev.payload.value;
         });
 

@@ -26,56 +26,67 @@ import { Route as ControlIdImport } from './routes/control.$id'
 // Create/Update Routes
 
 const StageEditorRoute = StageEditorImport.update({
+  id: '/stage-editor',
   path: '/stage-editor',
   getParentRoute: () => rootRoute,
 } as any)
 
 const EntityEditorRoute = EntityEditorImport.update({
+  id: '/entity-editor',
   path: '/entity-editor',
   getParentRoute: () => rootRoute,
 } as any)
 
 const DisplayEditorRoute = DisplayEditorImport.update({
+  id: '/display-editor',
   path: '/display-editor',
   getParentRoute: () => rootRoute,
 } as any)
 
 const DisplayRoute = DisplayImport.update({
+  id: '/display',
   path: '/display',
   getParentRoute: () => rootRoute,
 } as any)
 
 const IndexRoute = IndexImport.update({
+  id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
 const StageEditorIndexRoute = StageEditorIndexImport.update({
+  id: '/',
   path: '/',
   getParentRoute: () => StageEditorRoute,
 } as any)
 
 const EntityEditorIndexRoute = EntityEditorIndexImport.update({
+  id: '/',
   path: '/',
   getParentRoute: () => EntityEditorRoute,
 } as any)
 
 const StageEditorIdRoute = StageEditorIdImport.update({
+  id: '/$id',
   path: '/$id',
   getParentRoute: () => StageEditorRoute,
 } as any)
 
 const EntityEditorNewRoute = EntityEditorNewImport.update({
+  id: '/new',
   path: '/new',
   getParentRoute: () => EntityEditorRoute,
 } as any)
 
 const EntityEditorIdRoute = EntityEditorIdImport.update({
+  id: '/$id',
   path: '/$id',
   getParentRoute: () => EntityEditorRoute,
 } as any)
 
 const ControlIdRoute = ControlIdImport.update({
+  id: '/control/$id',
   path: '/control/$id',
   getParentRoute: () => rootRoute,
 } as any)

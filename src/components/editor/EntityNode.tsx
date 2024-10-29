@@ -1,35 +1,41 @@
-import { useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext, Controller } from "react-hook-form";
 import { Button } from "../ui/button";
-import update from "immutability-helper";
+
 import { emitEvent, EVENTS_MAP_EDITOR } from "@/lib/consts";
 
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import type { UUID } from "node:crypto";
-import type { Entity, ReslovedEntityInstance } from "@/lib/types";
+import type { Entity, ReslovedEntityInstance, ResolvedStage } from "@/lib/types";
 import { Trash2, User2 } from "lucide-react";
 
-const EntityNode: React.FC<{ layerId?: UUID, targetWindow: string, entity: ReslovedEntityInstance, onRemove: () => void, setProp: (name: string, value: unknown) => void }> = ({ targetWindow, entity, onRemove, setProp, layerId }) => {
+const EntityNode: React.FC<{ index: number, layerId: UUID, targetWindow: string, entity: ReslovedEntityInstance, onRemove: () => void }> = ({ index, targetWindow, entity, onRemove, layerId }) => {
+    const { register, control } = useFormContext<ResolvedStage>();
+
     return (
         <details className="bg-gray-950 group mb-2">
             <summary className="flex w-full before:content-['+'] group-open:before:content-['-'] before:w-5 bg-zinc-900">
                 <div className="flex justify-between border-b mb-1 w-full" >
-                    <button onClick={() => emitEvent(EVENTS_MAP_EDITOR.CenterCameraOn, { type: "entity", target: entity.id as UUID, layerId }, targetWindow)} className="pb-1 font-semibold tracking-tight underline text-left" type="button" > {entity.overrides.name ?? entity.entity.name} </button>
+                    <button onClick={() => emitEvent(EVENTS_MAP_EDITOR.CenterCameraOn, { type: "entity", target: entity.id, layerId }, targetWindow)} className="pb-1 font-semibold tracking-tight underline text-left" type="button" > {entity.overrides?.name?.length ? entity.overrides?.name : entity.entity.name}</button>
                     <div className="flex gap-2 items-center p-1 mr-2" >
-                        <Checkbox defaultChecked={entity.overrides.visible ?? true} onCheckedChange={e => {
-                            emitEvent(EVENTS_MAP_EDITOR.SetVisable, { type: "entity", layerId, target: entity.id as UUID, value: e === "indeterminate" ? false : e }, targetWindow);
-                            setProp("visible", e);
-                        }} />
+                        <Controller defaultValue={true} control={control} name={`entities.${layerId}.${index}.overrides.visible`} render={({ field }) => (
+                            <Checkbox defaultChecked={field.value} onCheckedChange={e => {
+                                const state = e === "indeterminate" ? false : e;
+                                emitEvent(EVENTS_MAP_EDITOR.SetVisable, { type: "entity", layerId, target: entity.id, value: state }, targetWindow);
+                                field.onChange(state);
+                            }} />
+                        )} />
+
                         <Label>Visable</Label>
                     </div>
                 </div>
             </summary>
             <div className="p-2 flex flex-col gap-2">
-                <input className="bg-transparent border rounded-md pl-1" type="text" placeholder="Overriden name" defaultValue={entity.overrides?.name} />
+                <input className="bg-transparent border rounded-md pl-1" type="text" placeholder="Overriden name" {...register(`entities.${layerId}.${index}.overrides.name`)} />
                 <div className="flex gap-2">
-                    <input defaultValue={entity.x} type="number" className="w-1/3 bg-transparent border rounded-md pl-1" placeholder="x" />
-                    <input defaultValue={entity.y} type="number" className="w-1/3 bg-transparent border rounded-md pl-1" placeholder="y" />
-                    <input defaultValue={entity.z} type="number" className="w-1/3 bg-transparent border rounded-md pl-1" placeholder="z" />
+                    <input type="number" className="w-1/3 bg-transparent border rounded-md pl-1" placeholder="x" {...register(`entities.${layerId}.${index}.x`, { valueAsNumber: true })} />
+                    <input type="number" className="w-1/3 bg-transparent border rounded-md pl-1" placeholder="y" {...register(`entities.${layerId}.${index}.y`, { valueAsNumber: true })} />
+                    <input type="number" className="w-1/3 bg-transparent border rounded-md pl-1" placeholder="z" {...register(`entities.${layerId}.${index}.z`, { valueAsNumber: true })} />
                 </div>
                 <div className="flex justify-end">
                     <Button onClick={onRemove} size="icon" variant="destructive" className="h-7 w-7" title="Remove Entity">
@@ -42,36 +48,16 @@ const EntityNode: React.FC<{ layerId?: UUID, targetWindow: string, entity: Reslo
 }
 
 export const EntitiesNode: React.FC<{ layerId: UUID, targetWindow: string, openDialog: (target: string) => void }> = ({ layerId, targetWindow, openDialog }) => {
-    const { setValue, watch } = useFormContext();
-
-    const entitiesList = watch("entities", {}) as Record<UUID, ReslovedEntityInstance[]>;
-    const list = entitiesList[layerId] as ReslovedEntityInstance[] | undefined;
+    const { control } = useFormContext<ResolvedStage>();
+    const { fields, append, remove } = useFieldArray({ control, name: `entities.${layerId}` });
 
     return (
         <details>
             <summary className="border-b pb-2 font-semibold tracking-tight">Entities</summary>
             <div>
                 <ul className="ml-2">
-                    {list?.map((entity, i) => (
-                        <EntityNode layerId={layerId} key={entity.id} entity={entity} targetWindow={targetWindow} onRemove={() => {
-                            setValue("entities", update(entitiesList, {
-                                [layerId]: {
-                                    $splice: [[i, 1]]
-                                }
-                            }));
-                        }} setProp={(name, value) => {
-                            setValue("entities", update(entitiesList, {
-                                [layerId]: {
-                                    [i]: {
-                                        overrides: {
-                                            [name]: {
-                                                $set: value
-                                            }
-                                        }
-                                    }
-                                }
-                            }));
-                        }} />
+                    {fields.map((entity, i) => (
+                        <EntityNode index={i} layerId={layerId} key={entity.id} entity={entity} targetWindow={targetWindow} onRemove={() => remove(i)} />
                     ))}
                 </ul>
                 <Button size="sm" variant="secondary" className="w-full" onClick={() => {
@@ -79,16 +65,9 @@ export const EntitiesNode: React.FC<{ layerId: UUID, targetWindow: string, openD
                     window.addEventListener("dialog::additionEntityDialog", async (ev) => {
                         const data = (ev as CustomEvent<Entity | null>).detail;
                         if (!data) return;
-
                         const el = { entity: data, id: crypto.randomUUID(), x: 0, y: 0, z: 0, overrides: {} };
-
-                        setValue("entities", update(entitiesList, {
-                            [layerId]: (ev) => {
-                                if (!ev?.length) return [el];
-                                return [...ev, el];
-                            }
-                        }));
-
+                        append(el);
+                        console.log(el);
                         await emitEvent("addEntity", { layer: layerId, entity: el }, targetWindow);
                     }, { once: true });
                 }}><User2 className="mr-2 h-4 w-4" /> Add Entity</Button>

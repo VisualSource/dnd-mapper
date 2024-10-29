@@ -4,7 +4,7 @@ import type { Trigger } from "./renderer/actions";
 
 export type EntityInstance = {
 	entityId: string;
-	id: string;
+	id: UUID;
 	x: number;
 	y: number;
 	z: number;

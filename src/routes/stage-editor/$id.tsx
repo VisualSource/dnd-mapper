@@ -181,9 +181,9 @@ function StageEditorEditPage() {
 
 			const prev = getValue("entities");
 
-			setValue("entities", update(prev, {
-				[layerId]: ev => !ev?.length ? [entity] : [...ev, entity]
-			}));
+			setValue(`entities.${layerId}`, update(prev[layerId], {
+				$push: [entity]
+			}), { shouldDirty: true, shouldTouch: true });
 
 			await emitEvent("addEntity", { layer: layerId, entity: entity }, WINDOW_MAP_EDITOR);
 		});
@@ -196,7 +196,6 @@ function StageEditorEditPage() {
 	const onSubmit = (_state: ResolvedStage) => { }
 
 	return (
-
 		<div className="h-full w-full flex flex-col">
 			<DevTool control={form.control} />
 			<ActionListDialog ref={ald} />
@@ -367,85 +366,3 @@ function StageEditorEditPage() {
 		</div >
 	);
 }
-
-/*
-<AdditionEntityDialog
-				onAdd={(e) =>
-					entityField.prepend({
-						entity: e,
-						instanceId: crypto.randomUUID(),
-						x: 0,
-						y: 0,
-					})
-				}
-				ref={aedRef}
-			/>
-<InstanceEditorDialog entity={entityField} ref={ied} defaultLayer={loadDsfile?.defaultLayer} layers={loadDsfile?.layers} />
-
-
-<div className="flex flex-col border p-2">
-								<h1 className="font-medium">Entities</h1>
-								<p className="text-sm text-muted-foreground">
-									All the enemy's and players that will be on the map
-								</p>
-
-								<Separator />
-								<ul className="max-h-52 my-2 overflow-y-scroll px-2 space-y-2">
-									{entityField.fields.map((e, index) => (
-										<li key={e.instanceId} className="border rounded-sm p-2 inline-flex w-full items-center gap-2">
-											<Avatar>
-												<AvatarFallback>
-													<FileQuestion />
-												</AvatarFallback>
-												<AvatarImage src={e.entity.image} alt={e.entity.name} />
-											</Avatar>
-
-											<h1 className="max-w-28 text-ellipsis whitespace-nowrap overflow-hidden">{(e?.nameOverride?.length ?? 0) > 1 ? e.nameOverride : e.entity.name}</h1>
-
-											<div>
-												<div>Layer</div>
-												<span className="text-muted-foreground text-sm overflow-hidden max-w-14 text-ellipsis whitespace-nowrap">{loadDsfile?.layers.find(l => l.id === e.layer)?.value ?? "Default"}</span>
-											</div>
-
-											<div>
-												<h3>Start Position</h3>
-												<div className="flex gap-2">
-													<span>X: <span className="text-muted-foreground">{e.x}</span></span>
-													<span>Y: <span className="text-muted-foreground">{e.y}</span></span>
-													<span>Z: <span className="text-muted-foreground">{e?.z ?? 0}</span></span>
-												</div>
-											</div>
-											<DropdownMenu>
-												<DropdownMenuTrigger asChild>
-													<Button
-														aria-haspopup="true"
-														size="icon"
-														variant="ghost"
-														className="ml-auto"
-													>
-														<MoreHorizontal className="h-4 w-4" />
-														<span className="sr-only">Toggle menu</span>
-													</Button>
-												</DropdownMenuTrigger>
-												<DropdownMenuContent align="end">
-													<DropdownMenuLabel>Actions</DropdownMenuLabel>
-													<DropdownMenuItem onClick={() => ied.current?.show(index)}>Edit</DropdownMenuItem>
-													<DropdownMenuItem onClick={() => entityField.remove(index)}>Delete</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
-										</li>
-									))}
-								</ul>
-
-								<div className="flex justify-end">
-									<Button
-										type="button"
-										onClick={() => aedRef.current?.show()}
-										variant="secondary"
-										size="sm"
-									>
-										Add Entity
-									</Button>
-								</div>
-							</div>
-*/
