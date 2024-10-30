@@ -1,9 +1,8 @@
 import { RouterProvider, createRouter } from "@tanstack/react-router";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
-
 import { displayWindow, editorWindow } from "./lib/window";
-import { getCurrentWindow } from "@tauri-apps/api/window";
 import { Toaster } from "@/components/ui/toaster";
 import { routeTree } from "./routeTree.gen";
 import { initLogger } from "./lib/logger";
@@ -19,11 +18,13 @@ initLogger();
 const router = createRouter({ routeTree });
 
 const win = getCurrentWindow();
-win.listen("tauri://close-requested", () => {
-	editorWindow.destroy();
-	displayWindow.destroy();
-	win.destroy();
-});
+if (win.label !== "main") {
+	win.listen("tauri://close-requested", () => {
+		displayWindow.destroy();
+		editorWindow.destroy();
+	});
+	document.head.querySelector("script[src='http://localhost:8097']")?.remove();
+}
 
 createRoot(document.getElementById("root") as HTMLElement).render(
 	<StrictMode>

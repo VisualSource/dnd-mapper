@@ -49,7 +49,7 @@ const EntityNode: React.FC<{ index: number, layerId: UUID, targetWindow: string,
 
 export const EntitiesNode: React.FC<{ layerId: UUID, targetWindow: string, openDialog: (target: string) => void }> = ({ layerId, targetWindow, openDialog }) => {
     const { control } = useFormContext<ResolvedStage>();
-    const { fields, append, remove } = useFieldArray({ control, name: `entities.${layerId}` });
+    const { fields, append, remove } = useFieldArray({ keyName: "fieldId", control, name: `entities.${layerId}` });
 
     return (
         <details>
@@ -57,7 +57,7 @@ export const EntitiesNode: React.FC<{ layerId: UUID, targetWindow: string, openD
             <div>
                 <ul className="ml-2">
                     {fields.map((entity, i) => (
-                        <EntityNode index={i} layerId={layerId} key={entity.id} entity={entity} targetWindow={targetWindow} onRemove={() => remove(i)} />
+                        <EntityNode index={i} layerId={layerId} key={entity.fieldId} entity={entity} targetWindow={targetWindow} onRemove={() => remove(i)} />
                     ))}
                 </ul>
                 <Button size="sm" variant="secondary" className="w-full" onClick={() => {
@@ -67,7 +67,6 @@ export const EntitiesNode: React.FC<{ layerId: UUID, targetWindow: string, openD
                         if (!data) return;
                         const el = { entity: data, id: crypto.randomUUID(), x: 0, y: 0, z: 0, overrides: {} };
                         append(el);
-                        console.log(el);
                         await emitEvent("addEntity", { layer: layerId, entity: el }, targetWindow);
                     }, { once: true });
                 }}><User2 className="mr-2 h-4 w-4" /> Add Entity</Button>

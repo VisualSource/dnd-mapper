@@ -5,7 +5,6 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { emitTo, listen } from "@tauri-apps/api/event";
 import type { UUID } from "node:crypto";
 import { useEffect, useRef, useState } from "react";
-
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { AdditionEntityDialog, type AdditionEntityDialogHandle } from "@/components/dialog/AdditionEntityDialog";
 import { StageGroupDialog, type StageGroupDialogHandle } from "@/components/dialog/StageGroupDialog";
@@ -177,7 +176,9 @@ function StageEditorEditPage() {
 			});
 			if (!result) return;
 
-			const entity = { entity: result, id: crypto.randomUUID(), x: ev.payload.x, y: ev.payload.y, z: 0, overrides: {} };
+			const id = crypto.randomUUID();
+
+			const entity = { entity: result, id, x: ev.payload.x, y: ev.payload.y, z: 0, overrides: {} };
 
 			const prev = getValue("entities");
 
