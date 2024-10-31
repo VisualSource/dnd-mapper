@@ -2,9 +2,10 @@ import type { UUID } from "node:crypto";
 import type { NodeType } from "@/lib/renderer/dungeonScrawl/types";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
-import { emitEvent } from "@/lib/consts";
+import { emitEvent, WINDOW_MAP_EDITOR } from "@/lib/consts";
 import { DungeonAssetNodeDisplay } from "./editor/DungeonAssetNodeDisplay";
 import { EntitiesNode } from "./editor/EntityNode";
+import { useEditorContext } from "./editor/EditorContext";
 
 /**
  * TRIGGERS
@@ -51,7 +52,8 @@ MOVE_CAMERA_TO_ASSET   -> target
 */
 export type LightNode = { name?: string, visible?: boolean, type: NodeType | "DOCUMENT", id: UUID, children?: LightNode[] }
 
-export const DSNode: React.FC<{ openDialog: (target: string) => void, selectedNode: string | null, node: LightNode, targetWindow: string }> = ({ openDialog, selectedNode, node, targetWindow }) => {
+export const DSNode: React.FC<{ node: LightNode }> = ({ node }) => {
+    const { selected } = useEditorContext();
     switch (node.type) {
         case "DOCUMENT":
             return (
@@ -59,7 +61,7 @@ export const DSNode: React.FC<{ openDialog: (target: string) => void, selectedNo
                     <h3 className="border-b pb-2 font-bold tracking-tight">{node.name}</h3>
 
                     {node.children?.map(e => (
-                        <DSNode openDialog={openDialog} selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
+                        <DSNode key={e.id} node={e} />
                     ))}
                 </div>
             );
@@ -71,13 +73,13 @@ export const DSNode: React.FC<{ openDialog: (target: string) => void, selectedNo
                     </summary>
                     <div className="pl-2 flex flex-col">
                         {node.children?.map(e => (
-                            <DSNode openDialog={openDialog} selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
+                            <DSNode key={e.id} node={e} />
                         ))}
                     </div>
                 </details>
             );
         case "IMAGES": {
-            const isOpen = node.children?.some(e => e.id === selectedNode);
+            const isOpen = node.children?.some(e => e.id === selected?.id);
             return (
                 <details className="pl-2" open={isOpen} data-type={node.type} data-id={node.id}>
                     <summary className="border-b pb-2 font-semibold tracking-tight">
@@ -85,13 +87,13 @@ export const DSNode: React.FC<{ openDialog: (target: string) => void, selectedNo
                     </summary>
                     <div className="flex gap-2 items-center p-1 pl-2">
                         <Checkbox defaultChecked={node.visible} onCheckedChange={e => {
-                            emitEvent("setVisable", { target: node.id, type: "object", value: e === "indeterminate" ? false : e }, targetWindow);
+                            emitEvent("setVisable", { target: node.id, type: "object", value: e === "indeterminate" ? false : e }, WINDOW_MAP_EDITOR);
                         }} />
                         <Label>Visable</Label>
                     </div>
                     <div className="pl-2 flex flex-col">
                         {node.children?.map(e => (
-                            <DSNode openDialog={openDialog} selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
+                            <DSNode key={e.id} node={e} />
                         ))}
                     </div>
                 </details>
@@ -103,12 +105,12 @@ export const DSNode: React.FC<{ openDialog: (target: string) => void, selectedNo
                     <summary className="border-b pb-2 font-semibold tracking-tight">{node?.name}: <span className="text-muted-foreground text-sm">{node.type}</span></summary>
                     <div className="flex gap-2 items-center p-1 pl-2">
                         <Checkbox defaultChecked={node.visible} onCheckedChange={e => {
-                            emitEvent("setVisable", { target: node.id, type: "object", value: e === "indeterminate" ? false : e }, targetWindow);
+                            emitEvent("setVisable", { target: node.id, type: "object", value: e === "indeterminate" ? false : e }, WINDOW_MAP_EDITOR);
                         }} />
                         <Label>Visable</Label>
                     </div>
                     <div className="pl-2 flex flex-col">
-                        <EntitiesNode layerId={node.id} targetWindow={targetWindow} openDialog={openDialog} />
+                        <EntitiesNode layerId={node.id} />
                     </div>
                 </details>
             );
@@ -118,19 +120,19 @@ export const DSNode: React.FC<{ openDialog: (target: string) => void, selectedNo
                     <h5>{node.type}</h5>
                     <div className="pl-2 flex flex-col">
                         {node.children?.map(e => (
-                            <DSNode openDialog={openDialog} selectedNode={selectedNode} targetWindow={targetWindow} key={e.id} node={e} />
+                            <DSNode key={e.id} node={e} />
                         ))}
                     </div>
                 </div>
             );
         case "DUNGEON_ASSET": {
             return (
-                <DungeonAssetNodeDisplay openDialog={openDialog} node={node} targetWindow={targetWindow} selectedNode={selectedNode} />
+                <DungeonAssetNodeDisplay node={node} />
             );
         }
         case "ASSET": {
             return (
-                <DungeonAssetNodeDisplay openDialog={openDialog} node={node} targetWindow={targetWindow} selectedNode={selectedNode} />
+                <DungeonAssetNodeDisplay node={node} />
             );
         }
         default:

@@ -1,6 +1,8 @@
 import type { UUID } from "node:crypto";
 import type { PuckSize } from "./display/utils";
 import type { Trigger } from "./renderer/actions";
+import type { Dungeon } from "./renderer/dungeonScrawl/types";
+import type { LightNode } from "@/components/DSNode";
 
 export type EntityInstance = {
 	entityId: string;
@@ -45,7 +47,9 @@ export type Entity = {
 export type StageObject = {
 	id: UUID,
 	events: Trigger[],
-	overrides: Record<string, unknown>
+	overrides: {
+		visible?: boolean
+	}
 };
 
 export type StageEntity = {
@@ -76,4 +80,9 @@ export type ReslovedEntityInstance = Omit<EntityInstance, "entityId"> & {
 };
 export type ResolvedStage = Omit<Stage, "entities"> & {
 	entities: Record<UUID, ReslovedEntityInstance[]>;
+	map: {
+		data: Dungeon,
+		nodeTree: LightNode,
+		layers: { name: string, value: UUID }[]
+	} | undefined
 };

@@ -19,11 +19,13 @@ const router = createRouter({ routeTree });
 
 const win = getCurrentWindow();
 if (win.label !== "main") {
-	win.listen("tauri://close-requested", () => {
+	document.head.querySelector("script[src='http://localhost:8097']")?.remove();
+} else {
+	win.listen("tauri://close-requested", (ev) => {
 		displayWindow.destroy();
 		editorWindow.destroy();
+		win.destroy();
 	});
-	document.head.querySelector("script[src='http://localhost:8097']")?.remove();
 }
 
 createRoot(document.getElementById("root") as HTMLElement).render(
